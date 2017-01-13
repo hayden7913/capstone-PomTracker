@@ -9,4 +9,8 @@ app.get('/getTest', function (req, res) {
   res.send('Hello World!')
 });
 
-app.listen(process.env.PORT || 3000,() => console.log("Listening on 3000"));
+const server = app.listen(process.env.PORT || 8080, () => {
+  console.log(`Your app is listening on port ${process.env.PORT || 8080}`);
+});
+
+module.exports = server;
