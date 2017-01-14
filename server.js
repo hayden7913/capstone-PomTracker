@@ -12,7 +12,7 @@ app.use(bp.json());
 
 app.use(express.static('public'));
 
-let db, server;
+
 
 
 app.get('/tasks', (req, res) => {
@@ -37,6 +37,7 @@ app.get('/tasks', (req, res) => {
 
 
 app.post('/tasks', (req,res) => {
+  console.log("hello");
 	PomTracker
 		.create({
 			"name": req.body.name,
@@ -51,16 +52,16 @@ app.post('/tasks', (req,res) => {
 		});
 });
 
-function runServer() {
-  return new Promise((resolve, reject) => {
-    mongoose.connect(DATABASE_URL, err => {
+let server;
 
+function runServer(databaseUrl=DATABASE_URL, port=PORT) {
+  return new Promise((resolve, reject) => {
+    mongoose.connect(databaseUrl, err => {
       if (err) {
         return reject(err);
       }
-
-      app.listen(PORT, () => {
-        console.log(`Your app is listening on port ${PORT}`);
+      server = app.listen(port, () => {
+        console.log(`Your app is listening on port ${port}`);
         resolve();
       })
       .on('error', err => {
@@ -72,6 +73,22 @@ function runServer() {
 }
 
 
+function closeServer() {
+  return mongoose.disconnect().then(() => {
+     return new Promise((resolve, reject) => {
+       console.log('Closing server');
+       server.close(err => {
+           if (err) {
+               return reject(err);
+           }
+           resolve();
+       });
+     });
+  });
+}
+
 if (require.main === module) {
   runServer().catch(err => console.error(err));
 };
+
+module.exports = {app, runServer, closeServer};
