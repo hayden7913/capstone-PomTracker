@@ -1,28 +1,33 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
+const faker = require('faker');
+const mongoose = require('mongoose');
 
+// this makes the should syntax available throughout
+// this module
 const should = chai.should();
+
+const {Restaurant} = require('../models');
+const {app, runServer, closeServer} = require('../server');
+
 
 chai.use(chaiHttp);
 
-let server;
 
-beforeEach(function() {
-  server = require('../server');
-});
+describe('PomTracker API resource', function() {
 
-afterEach(function() {
-  server.close();
-});
-
-describe('resource-search', function() {
-
-  it('should list should return status 200 on GET', function(done) {
-    chai.request(server)
-      .get('/')
-      .end(function(err, res) {
-        res.should.have.status(200);
-        });
-        done();
-      });
+  before(function() {
+    return runServer();
   });
+
+  afterEach(function() {
+    return tearDownDb();
+  });
+
+  after(function() {
+    return closeServer();
+  });
+
+  
+
+}
