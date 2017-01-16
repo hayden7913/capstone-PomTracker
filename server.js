@@ -9,11 +9,7 @@ const {PORT, DATABASE_URL} = require('./config');
 const {PomTracker} = require('./models');
 
 app.use(bp.json());
-
 app.use(express.static('public'));
-
-
-
 
 app.get('/tasks', (req, res) => {
   PomTracker

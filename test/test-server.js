@@ -13,6 +13,29 @@ const {app, runServer, closeServer} = require('../server');
 
 chai.use(chaiHttp);
 
+const generateParent = () => {
+  const parents = ["Node Capstone", "Goals", "Chores"];
+  return parents[Math.floor(Math.random() * parents.length)];
+}
+
+const generateTaskData = () => {
+  return {
+    name: faker.lorem.word(),
+    parent: generateParent(),
+    total: Math.floor(Math.random())
+  }
+}
+
+const seedTaskData = () => {
+  const seedData = [];
+
+  for (let i = 0; i < 10; i++) {
+    seedData.push(generateTaskData());
+  }
+  return PomTracker.insertMany(seedData);
+}
+
+
 // used to put randomish documents in db
 // so we have data to work with and assert about.
 // we use the Faker library to automatically
@@ -99,9 +122,9 @@ describe('PomTracker API resource', function() {
     return runServer();
   });
 
-/*  beforeEach(function() {
-    return seedRestaurantData();
-  });*/
+  beforeEach(function() {
+    return seedTaskData();
+  });
 
   afterEach(function() {
     return tearDownDb();
@@ -175,36 +198,32 @@ describe('PomTracker API resource', function() {
     });*/
   });
 
-/*  describe('POST endpoint', function() {
+  /*describe('POST endpoint', function() {
     // strategy: make a POST request with data,
     // then prove that the restaurant we get back has
     // right keys, and that `id` is there (which means
     // the data was inserted into db)
     it('should add a new restaurant', function() {
 
-      const newRestaurant = generateRestaurantData();
-      let mostRecentGrade;
+      const newTask = generateTaskData();
+
 
       return chai.request(app)
-        .post('/restaurants')
-        .send(newRestaurant)
+        .post('/tasks')
+        .send(newTask)
         .then(function(res) {
           res.should.have.status(201);
           res.should.be.json;
           res.body.should.be.a('object');
           res.body.should.include.keys(
-            'id', 'name', 'cuisine', 'borough', 'grade', 'address');
-          res.body.name.should.equal(newRestaurant.name);
+            'id', 'name', 'parent', 'total');
+          res.body.name.should.equal(newTask.name);
           // cause Mongo should have created id on insertion
           res.body.id.should.not.be.null;
-          res.body.cuisine.should.equal(newRestaurant.cuisine);
-          res.body.borough.should.equal(newRestaurant.borough);
+          res.body.parent.should.equal(newTask.parent);
+          res.body.total.should.equal(newTask.total);
 
-          mostRecentGrade = newRestaurant.grades.sort(
-            (a, b) => b.date - a.date)[0].grade;
-
-          res.body.grade.should.equal(mostRecentGrade);
-          return Restaurant.findById(res.body.id);
+          return Task.findById(res.body.id);
         })
         .then(function(restaurant) {
           restaurant.name.should.equal(newRestaurant.name);
