@@ -1,9 +1,15 @@
 const mongoose = require('mongoose');
 
 const pomTrackerSchema = mongoose.Schema({
-  name: {type: String, required: true},
-  parent: String,
-  total: Number
+  projects: {
+    projectName: String,
+    tasks: [{
+      taskName: {type: String, required: true},
+      total: Number,
+      log: [String]
+    }]
+  },
+  masterLog: [String]
 });
 
 pomTrackerSchema.methods.apiRepr = function() {
