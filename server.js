@@ -13,15 +13,15 @@ app.use(bp.json());
 app.use(express.static('public'));
 
 
-app.get('/tasks', (req, res) => {
+app.get('/projects', (req, res) => {
   PomTracker
     .find()
     .exec()
-    .then(tasks => {
+    .then(projects => {
       res.json({
-        tasks: tasks.map(
-          task => task.apiRepr()
-        )
+        projects: projects/*.map(
+          task =>  task.apiRepr()
+        )*/
       });
     })
     .catch(
@@ -33,35 +33,38 @@ app.get('/tasks', (req, res) => {
 });
 
 
-app.post('/tasks', (req,res) => {
+app.post('/projects', (req,res) => {
+/*  console.log({"name": req.body.projectName,
+  "tasks": req.body.tasks});*/
 	PomTracker
 		.create({
-			"name": req.body.name,
-			"parent": req.body.parent,
-			"total": req.body.total
+			"projectName": req.body.projectName,
+			"tasks": req.body.tasks
 		})
 		.then(
-			task => res.status(201).json(task.apiRepr()))
+			project => res.status(201).json(project.apiRepr())
+    )
 		.catch(err => {
 				console.error(err);
 				res.status(500).json({message: 'Internal server error'});
 		});
 });
 
-app.put('/tasks/:id', (req, res) => {
-  toUpdate = {"total": req.body.total}
+app.put('/projects/:id', (req, res) => {
+  console.log(req.body);
+  toUpdate = {"tasks": req.body.tasks}
   PomTracker
     .findByIdAndUpdate(req.params.id, {$set: toUpdate})
     .exec()
-    .then(task => res.status(204).end())
+    .then(project => res.status(204).end())
     .catch(err => res.status(500).json({message: 'Interval server error'}));
 });
 
-app.delete('/tasks/:id', (req, res) => {
+app.delete('/projects/:id', (req, res) => {
   PomTracker
     .findByIdAndRemove(req.params.id)
     .exec()
-    .then(task => res.status(204).end())
+    .then(project => {console.log("Deleted"); res.status(204).end()})
     .catch(err => res.status(500).json({message: 'Internal server error'}));
 })
 
