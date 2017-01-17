@@ -200,7 +200,7 @@ describe('PomTracker API resource', function() {
 
   describe('POST endpoint', function() {
 
-    it('should add a new restaurant', function() {
+    it('should add a new task', function() {
 
       const newTask = generateTaskData();
 
@@ -228,65 +228,57 @@ describe('PomTracker API resource', function() {
         });
     });
   });
-/*
-  describe('PUT endpoint', function() {
 
-    it('should update fields you send over', function() {
+  describe('PUT endpoint', function() {
+    it('should update a task', function() {
       const updateData = {
         total: 25
       }
 
-      Restaurant
+      PomTracker
         .findOne()
         .then(function(task) {
           updateData.id = task.id;
 
-          // make request then inspect it to make sure it reflects
-          // data we sent
           return chai.request(app)
-            .put(`/restaurants/${task.id}`)
+            .put(`/tasks/${task.id}`)
             .send(updateData);
         })
         .then(function(res) {
           res.should.have.status(204);
 
-          return Restaurant.findById(updateData.id);
+          return PomTracker.findById(updateData.id);
         })
-        .then(function(restaurant) {
-          restaurant.name.should.equal(updateData.name);
-          restaurant.cuisine.should.equal(updateData.cuisine);
+        .then(function(task) {
+          task.total.should.equal(updateData.total);
         });
-      });
-  });*/
 
-  /*describe('DELETE endpoint', function() {
-    // strategy:
-    //  1. get a restaurant
-    //  2. make a DELETE request for that restaurant's id
-    //  3. assert that response has right status code
-    //  4. prove that restaurant with the id doesn't exist in db anymore
+      });
+  });
+
+  describe('DELETE endpoint', function() {
+
     it('delete a restaurant by id', function() {
 
-      let restaurant;
+      let task;
 
-      return Restaurant
+      return PomTracker
         .findOne()
         .exec()
-        .then(function(_restaurant) {
-          restaurant = _restaurant;
-          return chai.request(app).delete(`/restaurants/${restaurant.id}`);
+        .then(function(_task) {
+          console.log(_task);
+
+          task = _task;
+          return chai.request(app).delete(`/tasks/${task.id}`);
         })
         .then(function(res) {
+          console.log("hello");
           res.should.have.status(204);
-          return Restaurant.findById(restaurant.id);
+          return PomTracker.findById(task.id);
         })
-        .then(function(_restaurant) {
-          // when a variable's value is null, chaining `should`
-          // doesn't work. so `_restaurant.should.be.null` would raise
-          // an error. `should.be.null(_restaurant)` is how we can
-          // make assertions about a null value.
-          should.not.exist(_restaurant);
+        .then(function(_task) {
+          should.not.exist(_task);
         });
     });
-  });*/
+  });
 });
