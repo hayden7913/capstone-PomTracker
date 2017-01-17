@@ -22,7 +22,7 @@ const generateTaskData = () => {
   return {
     name: faker.lorem.word(),
     parent: generateParent(),
-    total: Math.floor(Math.random())
+    total: Math.floor(Math.random()*20)
   }
 }
 
@@ -198,11 +198,8 @@ describe('PomTracker API resource', function() {
     });*/
   });
 
-  /*describe('POST endpoint', function() {
-    // strategy: make a POST request with data,
-    // then prove that the restaurant we get back has
-    // right keys, and that `id` is there (which means
-    // the data was inserted into db)
+  describe('POST endpoint', function() {
+
     it('should add a new restaurant', function() {
 
       const newTask = generateTaskData();
@@ -218,48 +215,36 @@ describe('PomTracker API resource', function() {
           res.body.should.include.keys(
             'id', 'name', 'parent', 'total');
           res.body.name.should.equal(newTask.name);
-          // cause Mongo should have created id on insertion
           res.body.id.should.not.be.null;
           res.body.parent.should.equal(newTask.parent);
           res.body.total.should.equal(newTask.total);
 
-          return Task.findById(res.body.id);
+          return PomTracker.findById(res.body.id);
         })
-        .then(function(restaurant) {
-          restaurant.name.should.equal(newRestaurant.name);
-          restaurant.cuisine.should.equal(newRestaurant.cuisine);
-          restaurant.borough.should.equal(newRestaurant.borough);
-          restaurant.name.should.equal(newRestaurant.name);
-          restaurant.grade.should.equal(mostRecentGrade);
-          restaurant.address.building.should.equal(newRestaurant.address.building);
-          restaurant.address.street.should.equal(newRestaurant.address.street);
-          restaurant.address.zipcode.should.equal(newRestaurant.address.zipcode);
+        .then(function(task) {
+          task.name.should.equal(newTask.name);
+          task.parent.should.equal(newTask.parent);
+          task.total.should.equal(newTask.total);
         });
     });
-  });*/
+  });
+/*
+  describe('PUT endpoint', function() {
 
-/*  describe('PUT endpoint', function() {
-
-    // strategy:
-    //  1. Get an existing restaurant from db
-    //  2. Make a PUT request to update that restaurant
-    //  3. Prove restaurant returned by request contains data we sent
-    //  4. Prove restaurant in db is correctly updated
     it('should update fields you send over', function() {
       const updateData = {
-        name: 'fofofofofofofof',
-        cuisine: 'futuristic fusion'
+        total: 25
       }
 
       Restaurant
         .findOne()
-        .then(function(restaurant) {
-          updateData.id = restaurant.id;
+        .then(function(task) {
+          updateData.id = task.id;
 
           // make request then inspect it to make sure it reflects
           // data we sent
           return chai.request(app)
-            .put(`/restaurants/${restaurant.id}`)
+            .put(`/restaurants/${task.id}`)
             .send(updateData);
         })
         .then(function(res) {
