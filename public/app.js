@@ -1,3 +1,20 @@
+/*
+-Okay if I identify tasks by name?
+- Add tasks
+- Delete tasks
+- Update tasks
+- Add projects
+- Delete projects
+- Change project name
+- Add log entry
+- Delete log entry
+- Update log entry
+
+- Functions: Add-push, Delete-pull, Update-set
+-
+*/
+
+
 const TASKLIST = {
   tasks: [
     {

@@ -7,13 +7,13 @@ const faker = require('faker');
 mongoose.Promise = global.Promise;
 
 const {PORT, DATABASE_URL} = require('./config');
-const {PomTracker} = require('./models');
+const {Projects} = require('./models');
 
 app.use(bp.json());
 app.use(express.static('public'));
 
 
-app.get('/projects', (req, res) => {
+/*app.get('/projects', (req, res) => {
   PomTracker
     .find()
     .exec()
@@ -21,7 +21,41 @@ app.get('/projects', (req, res) => {
       res.json({
         document: projects/*.map(
           task =>  task.apiRepr()
-        )*/
+        )
+      });
+    })
+    .catch(
+      err => {
+        console.error(err);
+        res.status(500).json({message: 'Internal Server Error'});
+      }
+    )
+});*/
+
+app.get('/projects', (req, res) => {
+  Projects
+    .find()
+    .exec()
+    .then(projects => {
+      res.json({
+        projects
+      });
+    })
+    .catch(
+      err => {
+        console.error(err);
+        res.status(500).json({message: 'Internal Server Error'});
+      }
+    )
+});
+
+app.get('/projects/:id', (req, res) => {
+  Projects
+    .findById(req.params.id)
+    .exec()
+    .then(projects => {
+      res.json({
+        projects
       });
     })
     .catch(
@@ -34,72 +68,122 @@ app.get('/projects', (req, res) => {
 
 
 app.post('/projects', (req,res) => {
-/*  console.log({"name": req.body.projectName,
-  "tasks": req.body.tasks});*/
-	PomTracker
+
+	Projects
 		.create({
-			"projectName": req.body.projectName,
-			"tasks": req.body.tasks
+      'projectName': req.body.projectName,
+      'tasks': req.body.tasks
 		})
 		.then(
-			project => res.status(201).json(project.apiRepr())
+			project => res.status(201).json(project)
     )
 		.catch(err => {
 				console.error(err);
 				res.status(500).json({message: 'Internal server error'});
 		});
 });
-//add a task to the first parent
+
+app.put('/projects/:id', (req,res) => {
+
+  Projects
+    .update({'_id': req.params.id}, req.body)
+    .exec()
+    .then(project => {res.status(204).send('Success').end()})
+    .catch(err => res.status(500).json({message: 'Interval server error'}));
+})
+
+
+//addTask(taskBody, projectName, toUpdateKey)
+
+  /*"projectName": "illum"*/
+
+
+/*"projectName": "Updated Capstone",
+"_id": "587ebfdaf63e6f71cbb188ee",
+"tasks": [
+  {
+    "total": 100,
+    "taskName": "Feedback",
+    "_id": "58801ae0cd71a9110a6ce5dd",
+    "log": []
+  }
+]*/
+
+/*
+const req.body = {
+  action: 'addTask',
+  content: {
+    'total': 125,
+    'taskName': 'change happens',
+    'log': []
+  }
+}*/
+
 app.put('/projects/:id', (req, res) => {
-  console.log(req.body);
-
-  /*const toUpdate = {
-    "masterLog": req.body.masterLog,
-    "projects": req.body.projects
-  }*/
-  const toUpdate = {
+  //console.log(req.body);
 
 
-    'projects.$.tasks': {
 
-              "total": 125,
-              "taskName": "crussshhhed",
-              "log": []
-      /*"projectName": "Updated Capstone",
-      "_id": "587ebfdaf63e6f71cbb188ee",
-      "tasks": [
-        {
-          "total": 100,
-          "taskName": "Feedback",
-          "_id": "58801ae0cd71a9110a6ce5dd",
-          "log": []
-        }
-      ]*/
-    }
+  const sampleTask = {
+    'total': 125,
+    'taskName': 'change happens',
+    'log': []
+  }
+  const args = {
+    action: '$push',
+    path: 'projects.$.tasks',
+    taskBody: sampleTask,
+    projectionKey: 'projects.projectName',
+    projectionValue: 'illum'
   }
 
-  PomTracker
-    .update(
-      {"_id": "587ebfdaf63e6f71cbb188e1", "projects.projectName": "Capstone"},
-      {$push: toUpdate}
-  )
-  .then(project => {res.status(204).send('Success').end()})
-  .catch(err => res.status(500).json({message: 'Interval server error'}));
-  /*PomTracker
-    .findById(req.params.id)
-    .exec()
-    .then(db => {
-      console.log(db);
-      db.masterlog.update({$push: toUpdate})
-    })
-    .catch(err => res.status(500).json({message: 'Internal server error'}));*/
+  const changeSomething = (args) => {
+    const updateObj = {};
+    const projectionObj = {};
+    const toUpdate = {};
 
-  /*PomTracker
-    .findByIdAndUpdate(req.params.id, {$push: toUpdate}, {multi: false})
-    .exec()
-    .then(project => {res.status(204).end()})
+    toUpdate[args.path] = args.taskBody;
+    updateObj[args.action] = toUpdate;
+    projectionObj[args.projectionKey] = args.projectionValue;
+
+    console.log(toUpdate);
+    console.log(updateObj);
+    console.log(projectionObj);
+
+    PomTracker
+      .update(
+        {'_id': '588080db514db510d59b527e', projectionObj},
+        updateObj
+    )
+    .then(project => {res.status(204).send('Success').end()})
     .catch(err => res.status(500).json({message: 'Interval server error'}));
-    */
+  }
+
+  //changeSomething(args);
+
+
+  const toUpdate = {
+    'projects.$.tasks': {
+      "total": 125,
+      "taskName": "fdsa2",
+      "log": []
+    }
+  }
+/*  const action = '$push'
+  const update = {};
+  update[action] = toUpdate;*/
+
+  const workingUpdateFunction = () => {
+      PomTracker
+        .update(
+          {"_id": "588080db514db510d59b527e", "projects.projectName": "illum"},
+          {$push: toUpdate}
+      )
+      .then(project => {res.status(204).send('Success').end()})
+      .catch(err => res.status(500).json({message: 'Interval server error'}));
+  }
+
+ workingUpdateFunction();
 });
 
 app.delete('/projects/:id', (req, res) => {

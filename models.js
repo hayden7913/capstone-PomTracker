@@ -1,23 +1,23 @@
 const mongoose = require('mongoose');
 
-const pomTrackerSchema = mongoose.Schema({
-  projects: [{
-      projectName: {type: String, required: true},
-      tasks: [{
-        taskName: {type: String, required: true},
-        total: Number,
-        log: [{
-          startTime: String,
-          endTime: String
-        }]
+const projectSchema = mongoose.Schema({
+    projectName: {type: String, required: true},
+    tasks: [{
+      taskName: {type: String, required: true},
+      total: Number,
+      log: [{
+        startTime: String,
+        endTime: String
       }]
-  }],
-  masterLog: [{
-    startTime: String,
-    endTime: String,
-    taskName: String
-  }]
+    }]
 });
+
+/*,
+masterLog: [{
+  startTime: String,
+  endTime: String,
+  taskName: String
+}]*/
 /*
 
 pomTrackerSchema.methods.apiRepr = function() {
@@ -28,6 +28,6 @@ pomTrackerSchema.methods.apiRepr = function() {
   };
 }*/
 
-const PomTracker = mongoose.model('PomTracker', pomTrackerSchema);
+const Projects = mongoose.model('Projects', projectSchema);
 
-module.exports = {PomTracker};
+module.exports = {Projects};
