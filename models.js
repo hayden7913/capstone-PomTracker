@@ -19,6 +19,7 @@ const pomTrackerSchema = mongoose.Schema({
   }]
 });
 /*
+
 pomTrackerSchema.methods.apiRepr = function() {
   return {
     id: this.id,

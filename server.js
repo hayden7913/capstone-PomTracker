@@ -49,20 +49,57 @@ app.post('/projects', (req,res) => {
 				res.status(500).json({message: 'Internal server error'});
 		});
 });
-
+//add a task to the first parent
 app.put('/projects/:id', (req, res) => {
   console.log(req.body);
-  
-  const toUpdate = {
+
+  /*const toUpdate = {
     "masterLog": req.body.masterLog,
     "projects": req.body.projects
+  }*/
+  const toUpdate = {
+
+
+    'projects.$.tasks': {
+
+              "total": 125,
+              "taskName": "crussshhhed",
+              "log": []
+      /*"projectName": "Updated Capstone",
+      "_id": "587ebfdaf63e6f71cbb188ee",
+      "tasks": [
+        {
+          "total": 100,
+          "taskName": "Feedback",
+          "_id": "58801ae0cd71a9110a6ce5dd",
+          "log": []
+        }
+      ]*/
+    }
   }
 
   PomTracker
-    .findByIdAndUpdate(req.params.id, {$set: toUpdate})
+    .update(
+      {"_id": "587ebfdaf63e6f71cbb188e1", "projects.projectName": "Capstone"},
+      {$push: toUpdate}
+  )
+  .then(project => {res.status(204).send('Success').end()})
+  .catch(err => res.status(500).json({message: 'Interval server error'}));
+  /*PomTracker
+    .findById(req.params.id)
     .exec()
-    .then(project => {/*console.log(project)*/;res.status(204).end()})
+    .then(db => {
+      console.log(db);
+      db.masterlog.update({$push: toUpdate})
+    })
+    .catch(err => res.status(500).json({message: 'Internal server error'}));*/
+
+  /*PomTracker
+    .findByIdAndUpdate(req.params.id, {$push: toUpdate}, {multi: false})
+    .exec()
+    .then(project => {res.status(204).end()})
     .catch(err => res.status(500).json({message: 'Interval server error'}));
+    */
 });
 
 app.delete('/projects/:id', (req, res) => {
