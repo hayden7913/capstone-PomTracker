@@ -19,7 +19,7 @@ app.get('/projects', (req, res) => {
     .exec()
     .then(projects => {
       res.json({
-        projects: projects/*.map(
+        document: projects/*.map(
           task =>  task.apiRepr()
         )*/
       });
@@ -52,11 +52,16 @@ app.post('/projects', (req,res) => {
 
 app.put('/projects/:id', (req, res) => {
   console.log(req.body);
-  toUpdate = {"tasks": req.body.tasks}
+  
+  const toUpdate = {
+    "masterLog": req.body.masterLog,
+    "projects": req.body.projects
+  }
+
   PomTracker
     .findByIdAndUpdate(req.params.id, {$set: toUpdate})
     .exec()
-    .then(project => res.status(204).end())
+    .then(project => {/*console.log(project)*/;res.status(204).end()})
     .catch(err => res.status(500).json({message: 'Interval server error'}));
 });
 
@@ -66,32 +71,78 @@ app.delete('/projects/:id', (req, res) => {
     .exec()
     .then(project => {console.log("Deleted"); res.status(204).end()})
     .catch(err => res.status(500).json({message: 'Internal server error'}));
-})
+});
 
+/*console.log(req.body);
+toUpdate = {};
+const key = `projects.${req.params.id}.projectName`
+toUpdate[key]= req.body.projectName;
+*/
 
 //////Generate Data
-const generateParent = () => {
-  const parents = ["Node Capstone", "Goals", "Chores"];
+const generateProjectName = () => {
+  const parents = ["Node Capstone", "React Tutorial", "Clean Garage"];
   return parents[Math.floor(Math.random() * parents.length)];
 }
 
-const generateTaskData = () => {
+const generateTime = () => {
+  const hours = Math.floor(Math.random() * 24);
+  let minutes = Math.floor(Math.random() * 60);
+  if (minutes.toString().length === 1) {
+    minutes = `0${minutes}`
+  }
+  return `${hours}:${minutes}`
+}
+
+const generateTaskLogEntry = () => {
   return {
-    name: faker.lorem.word(),
-    parent: generateParent(),
-    total: Math.floor(Math.random()*20)
+    startTime: generateTime(),
+    endTime: generateTime()
   }
 }
 
-const seedTaskData = () => {
-  const seedData = [];
-
-  for (let i = 0; i < 10; i++) {
-    seedData.push(generateTaskData());
+const generateMasterLogEntry = () => {
+  return {
+    startTime: generateTime(),
+    endTime: generateTime(),
+    taskName: faker.lorem.word()
   }
+}
+
+const generateDataArray = (callback, maxLength) => {
+  let arr = [];
+  for (let i = 0; i < Math.random() * maxLength + 1; i++) {
+    arr.push(callback())
+  }
+  return arr
+}
+
+const generateTask = () => {
+  return {
+    taskName: faker.lorem.word(),
+    total: Math.floor(Math.random()*20),
+    log: generateDataArray(generateTaskLogEntry, 2)
+
+  }
+}
+
+const generateProject = () => {
+  return {
+    projectName: faker.lorem.word(),
+    tasks: generateDataArray(generateTask, 3),
+  }
+}
+
+const seedProjectData = () => {
+  const seedData = {
+    projects: generateDataArray(generateProject, 2),
+    masterLog: generateDataArray(generateMasterLogEntry, 2)
+  }
+
   return PomTracker.insertMany(seedData);
 }
 
+//seedProjectData()
 
 let server;
 
