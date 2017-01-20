@@ -12,26 +12,6 @@ const {Projects} = require('./models');
 app.use(bp.json());
 app.use(express.static('public'));
 
-
-/*app.get('/projects', (req, res) => {
-  PomTracker
-    .find()
-    .exec()
-    .then(projects => {
-      res.json({
-        document: projects/*.map(
-          task =>  task.apiRepr()
-        )
-      });
-    })
-    .catch(
-      err => {
-        console.error(err);
-        res.status(500).json({message: 'Internal Server Error'});
-      }
-    )
-});*/
-
 app.get('/projects', (req, res) => {
   Projects
     .find()
@@ -66,6 +46,24 @@ app.get('/projects/:id', (req, res) => {
     )
 });
 
+app.get('/projects/:id/tasks', (req, res) => {
+  Projects
+    .findById(req.params.id)
+    .exec()
+    .then(projects => {
+      const tasks = projects.tasks
+      res.json({
+        tasks
+      });
+    })
+    .catch(
+      err => {
+        console.error(err);
+        res.status(500).json({message: 'Internal Server Error'});
+      }
+    )
+});
+
 
 app.post('/projects', (req,res) => {
 
@@ -76,6 +74,24 @@ app.post('/projects', (req,res) => {
 		})
 		.then(
 			project => res.status(201).json(project)
+    )
+		.catch(err => {
+				console.error(err);
+				res.status(500).json({message: 'Internal server error'});
+		});
+});
+
+app.post('/projects/:id', (req,res) => {
+  const toUpdate = {
+    'tasks' : req.body
+  };
+
+	Projects
+    .findByIdAndUpdate(req.params.id, {'$push': toUpdate})
+		.then(
+			project => {
+        res.status(201).json(project)
+      }
     )
 		.catch(err => {
 				console.error(err);

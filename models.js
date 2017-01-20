@@ -1,15 +1,17 @@
 const mongoose = require('mongoose');
 
+const taskSchema = mongoose.Schema({
+    taskName: {type: String, required: true},
+    total: Number,
+    log: [{
+      startTime: String,
+      endTime: String
+    }]
+});
+
 const projectSchema = mongoose.Schema({
     projectName: {type: String, required: true},
-    tasks: [{
-      taskName: {type: String, required: true},
-      total: Number,
-      log: [{
-        startTime: String,
-        endTime: String
-      }]
-    }]
+    tasks: [taskSchema]
 });
 
 /*,
