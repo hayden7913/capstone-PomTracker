@@ -9,42 +9,17 @@ mongoose.Promise = global.Promise;
 const {PORT, DATABASE_URL} = require('./config');
 const {Projects} = require('./models');
 
+const projectRouter = require('./projectRouter')
+
 app.use(bp.json());
 app.use(express.static('public'));
 
-app.get('/projects', (req, res) => {
-  Projects
-    .find()
-    .exec()
-    .then(projects => {
-      res.json({
-        projects
-      });
-    })
-    .catch(
-      err => {
-        console.error(err);
-        res.status(500).json({message: 'Internal Server Error'});
-      }
-    )
-});
+const taskRouter = express.Router({mergeParams: true});
 
-app.get('/projects/:id', (req, res) => {
-  Projects
-    .findById(req.params.id)
-    .exec()
-    .then(projects => {
-      res.json({
-        projects
-      });
-    })
-    .catch(
-      err => {
-        console.error(err);
-        res.status(500).json({message: 'Internal Server Error'});
-      }
-    )
-});
+
+projectRouter.use('/tasks', taskRouter);
+
+
 
 app.get('/projects/:id/tasks', (req, res) => {
   Projects
@@ -106,7 +81,9 @@ app.put('/projects/:id', (req,res) => {
     .exec()
     .then(project => {res.status(204).send('Success').end()})
     .catch(err => res.status(500).json({message: 'Interval server error'}));
-})
+});
+
+app.use('/projects', projectRouter);
 
 
 //addTask(taskBody, projectName, toUpdateKey)
