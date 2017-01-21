@@ -60,15 +60,7 @@ projectRouter.post('/:id', (req,res) => {
  		});
  });
 
-/*
- app.put('/projects/:id', (req,res) => {
+//put and delete endpoints ...
 
-   Projects
-     .update({'_id': req.params.id}, req.body)
-     .exec()
-     .then(project => {res.status(204).send('Success').end()})
-     .catch(err => res.status(500).json({message: 'Interval server error'}));
- });
-*/
 
 module.exports = projectRouter;

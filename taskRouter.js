@@ -26,7 +26,7 @@ taskRouter.put('/:id', (req, res) => {
 });
 
 //deletes targeted task
-taskRouter.put('/:id', (req, res) => {
+taskRouter.delete('/:id', (req, res) => {
   //...code
 });
 
