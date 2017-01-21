@@ -9,19 +9,39 @@ mongoose.Promise = global.Promise;
 const {PORT, DATABASE_URL} = require('./config');
 const {Projects} = require('./models');
 
-const projectRouter = require('./projectRouter')
+const projectRouter = require('./projectRouter');
+const taskRouter = require('./taskRouter');
 
 app.use(bp.json());
 app.use(express.static('public'));
 
-const taskRouter = express.Router({mergeParams: true});
-
-
-projectRouter.use('/tasks', taskRouter);
+//const projectRouter = express.Router();
 
 
 
-app.get('/projects/:id/tasks', (req, res) => {
+projectRouter.use('/:id/tasks', taskRouter);
+
+/*projectRouter.route('/').get((req, res) => {
+  Projects
+    .find()
+    .exec()
+    .then(projects => {
+      res.json({
+        projects
+      });
+    })
+    .catch(
+      err => {
+        console.error(err);
+        res.status(500).json({message: 'Internal Server Error'});
+      }
+    )
+});*/
+
+
+
+
+/*taskRouter.route('/').get((req, res) => {
   Projects
     .findById(req.params.id)
     .exec()
@@ -37,7 +57,10 @@ app.get('/projects/:id/tasks', (req, res) => {
         res.status(500).json({message: 'Internal Server Error'});
       }
     )
-});
+});*/
+
+
+
 
 
 app.post('/projects', (req,res) => {
@@ -83,8 +106,8 @@ app.put('/projects/:id', (req,res) => {
     .catch(err => res.status(500).json({message: 'Interval server error'}));
 });
 
-app.use('/projects', projectRouter);
 
+app.use('/projects', projectRouter);
 
 //addTask(taskBody, projectName, toUpdateKey)
 

@@ -36,4 +36,24 @@ projectRouter.get('/:id', (req, res) => {
     )
 });
 
+/*projectRouter.get('/:id/tasks', (req, res) => {
+  Projects
+    .findById(req.params.id)
+    .exec()
+    .then(projects => {
+      console.log(projects);
+      const tasks = projects.tasks
+      res.json({
+        tasks
+      });
+    })
+    .catch(
+      err => {
+        console.error(err);
+        res.status(500).json({message: 'Internal Server Error'});
+      }
+    )
+});
+*/
+
 module.exports = projectRouter;
