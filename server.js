@@ -15,11 +15,9 @@ const taskRouter = require('./taskRouter');
 app.use(bp.json());
 app.use(express.static('public'));
 
-//const projectRouter = express.Router();
-
-
 
 projectRouter.use('/:id/tasks', taskRouter);
+app.use('/projects', projectRouter);
 
 /*projectRouter.route('/').get((req, res) => {
   Projects
@@ -63,51 +61,12 @@ projectRouter.use('/:id/tasks', taskRouter);
 
 
 
-app.post('/projects', (req,res) => {
-
-	Projects
-		.create({
-      'projectName': req.body.projectName,
-      'tasks': req.body.tasks
-		})
-		.then(
-			project => res.status(201).json(project)
-    )
-		.catch(err => {
-				console.error(err);
-				res.status(500).json({message: 'Internal server error'});
-		});
-});
-
-app.post('/projects/:id', (req,res) => {
-  const toUpdate = {
-    'tasks' : req.body
-  };
-
-	Projects
-    .findByIdAndUpdate(req.params.id, {'$push': toUpdate})
-		.then(
-			project => {
-        res.status(201).json(project)
-      }
-    )
-		.catch(err => {
-				console.error(err);
-				res.status(500).json({message: 'Internal server error'});
-		});
-});
-
-app.put('/projects/:id', (req,res) => {
-
-  Projects
-    .update({'_id': req.params.id}, req.body)
-    .exec()
-    .then(project => {res.status(204).send('Success').end()})
-    .catch(err => res.status(500).json({message: 'Interval server error'}));
-});
 
 
-app.use('/projects', projectRouter);
+
+
+
+
 
 //addTask(taskBody, projectName, toUpdateKey)
 

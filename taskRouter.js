@@ -20,4 +20,14 @@ taskRouter.get('/', (req, res) => {
     )
 });
 
+//updates content of targeted task
+taskRouter.put('/:id', (req, res) => {
+  //...code
+});
+
+//deletes targeted task
+taskRouter.put('/:id', (req, res) => {
+  //...code
+});
+
 module.exports = taskRouter;
