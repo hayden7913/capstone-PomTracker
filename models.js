@@ -14,22 +14,6 @@ const projectSchema = mongoose.Schema({
     tasks: [taskSchema]
 });
 
-/*,
-masterLog: [{
-  startTime: String,
-  endTime: String,
-  taskName: String
-}]*/
-/*
-
-pomTrackerSchema.methods.apiRepr = function() {
-  return {
-    id: this.id,
-    projectName: this.projectName,
-    tasks: this.tasks
-  };
-}*/
-
 const Projects = mongoose.model('Projects', projectSchema);
 
 module.exports = {Projects};

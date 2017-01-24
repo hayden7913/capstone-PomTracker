@@ -7,33 +7,61 @@ const mongoose = require('mongoose');
 // this module
 const should = chai.should();
 
-const {PomTracker} = require('../models');
+const {Projects} = require('../models');
 const {app, runServer, closeServer} = require('../server');
-
 
 chai.use(chaiHttp);
 
-const generateParent = () => {
-  const parents = ["Node Capstone", "Goals", "Chores"];
+const generateProjectName = () => {
+  const parents = ["Node Capstone", "React Tutorial", "Remodel Kitchen"];
   return parents[Math.floor(Math.random() * parents.length)];
 }
 
-const generateTaskData = () => {
+const generateTime = () => {
+  const hours = Math.floor(Math.random() * 24);
+  let minutes = Math.floor(Math.random() * 60);
+  if (minutes.toString().length === 1) {
+    minutes = `0${minutes}`
+  }
+  return `${hours}:${minutes}`
+}
+
+const generateTaskLogEntry = () => {
   return {
-    name: faker.lorem.word(),
-    parent: generateParent(),
-    total: Math.floor(Math.random()*20)
+    startTime: generateTime(),
+    endTime: generateTime()
   }
 }
 
-const seedTaskData = () => {
-  const seedData = [];
-
-  for (let i = 0; i < 10; i++) {
-    seedData.push(generateTaskData());
+const generateDataArray = (callback, maxLength) => {
+  let arr = [];
+  for (let i = 0; i < Math.random() * maxLength + 1; i++) {
+    arr.push(callback())
   }
-  return PomTracker.insertMany(seedData);
+  return arr
 }
+
+const generateTask = () => {
+  return {
+    taskName: faker.lorem.word(),
+    total: Math.floor(Math.random()*20),
+    log: generateDataArray(generateTaskLogEntry, 3)
+
+  }
+}
+
+const generateProject = () => {
+  return {
+    projectName: faker.lorem.word(),
+    tasks: generateDataArray(generateTask, 3),
+  }
+}
+
+const seedProjectData = () => {
+  const seedData = generateDataArray(generateProject, 2);
+  return Projects.insertMany(seedData);
+}
+
 
 
 // used to put randomish documents in db
@@ -41,15 +69,15 @@ const seedTaskData = () => {
 // we use the Faker library to automatically
 // generate placeholder values for author, title, content
 // and then we insert that data into mongo
-/*function seedRestaurantData() {
+/*function seedProjectsData() {
   console.info('seeding blog post data');
   const seedData = [];
 
   for (let i=1; i<=10; i++) {
-    seedData.push(generateRestaurantData());
+    seedData.push(generateProjectsData());
   }
   // this will return a promise
-  return Restaurant.insertMany(seedData);
+  return Projects.insertMany(seedData);
 }
 
 // used to generate data to put in db
@@ -75,10 +103,10 @@ function generateGrade() {
   }
 }
 
-// generate an object represnting a restaurant.
+// generate an object represnting a Projects.
 // can be used to generate seed data for db
 // or request.body data
-function generateRestaurantData() {
+function generateProjectsData() {
   return {
     name: faker.company.companyName(),
     borough: generateBoroughName(),
@@ -112,18 +140,18 @@ function tearDownDb() {
   });
 }
 
-describe('PomTracker API resource', function() {
+describe('Projects API resource', function() {
 
   // we need each of these hook functions to return a promise
   // otherwise we'd need to call a `done` callback. `runServer`,
-  // `seedRestaurantData` and `tearDownDb` each return a promise,
+  // `seedProjectsData` and `tearDownDb` each return a promise,
   // so we return the value returned by these function calls.
   before(function() {
     return runServer();
   });
 
   beforeEach(function() {
-    return seedTaskData();
+    return seedProjectData();
   });
 
   afterEach(function() {
@@ -139,145 +167,138 @@ describe('PomTracker API resource', function() {
   // on proving something small
   describe('GET endpoint', function() {
 
-    it('should return all existing tasks', function() {
+    it('should return all existing projects', function() {
       // strategy:
-      //    1. get back all restaurants returned by by GET request to `/restaurants`
+      //    1. get back all Projectss returned by by GET request to `/Projectss`
       //    2. prove res has right status, data type
-      //    3. prove the number of restaurants we got back is equal to number
+      //    3. prove the number of Projectss we got back is equal to number
       //       in db.
       //
       // need to have access to mutate and access `res` across
       // `.then()` calls below, so declare it here so can modify in place
       let res;
       return chai.request(app)
-        .get('/tasks')
+        .get('/projects')
         .then(function(_res) {
           // so subsequent .then blocks can access resp obj.
           res = _res;
           res.should.have.status(200);
           // otherwise our db seeding didn't work
-          res.body.tasks.should.have.length.of.at.least(1);
-          return PomTracker.count();
+          res.body.projects.should.have.length.of.at.least(1);
+          return Projects.count();
         })
         .then(function(count) {
-          res.body.tasks.should.have.length.of(count);
+          res.body.projects.should.have.length.of(count);
         });
     });
 
 
-    /*it('should return restaurants with right fields', function() {
-      // Strategy: Get back all restaurants, and ensure they have expected keys
+    /*it('should return Projectss with right fields', function() {
+      // Strategy: Get back all Projectss, and ensure they have expected keys
 
-      let resRestaurant;
+      let resProjects;
       return chai.request(app)
-        .get('/restaurants')
+        .get('/Projectss')
         .then(function(res) {
           res.should.have.status(200);
           res.should.be.json;
-          res.body.restaurants.should.be.a('array');
-          res.body.restaurants.should.have.length.of.at.least(1);
+          res.body.Projectss.should.be.a('array');
+          res.body.Projectss.should.have.length.of.at.least(1);
 
-          res.body.restaurants.forEach(function(restaurant) {
-            restaurant.should.be.a('object');
-            restaurant.should.include.keys(
+          res.body.Projectss.forEach(function(Projects) {
+            Projects.should.be.a('object');
+            Projects.should.include.keys(
               'id', 'name', 'cuisine', 'borough', 'grade', 'address');
           });
-          resRestaurant = res.body.restaurants[0];
-          return Restaurant.findById(resRestaurant.id);
+          resProjects = res.body.Projectss[0];
+          return Projects.findById(resProjects.id);
         })
-        .then(function(restaurant) {
+        .then(function(Projects) {
 
-          resRestaurant.id.should.equal(restaurant.id);
-          resRestaurant.name.should.equal(restaurant.name);
-          resRestaurant.cuisine.should.equal(restaurant.cuisine);
-          resRestaurant.borough.should.equal(restaurant.borough);
-          resRestaurant.address.should.contain(restaurant.address.building);
+          resProjects.id.should.equal(Projects.id);
+          resProjects.name.should.equal(Projects.name);
+          resProjects.cuisine.should.equal(Projects.cuisine);
+          resProjects.borough.should.equal(Projects.borough);
+          resProjects.address.should.contain(Projects.address.building);
 
-          resRestaurant.grade.should.equal(restaurant.grade);
+          resProjects.grade.should.equal(Projects.grade);
         });
     });*/
   });
 
   describe('POST endpoint', function() {
 
-    it('should add a new task', function() {
+    it('should add a new project', function() {
 
-      const newTask = generateTaskData();
-
-
+      const newProject = generateProject();
       return chai.request(app)
-        .post('/tasks')
-        .send(newTask)
+        .post('/projects')
+        .send(newProject)
         .then(function(res) {
           res.should.have.status(201);
           res.should.be.json;
           res.body.should.be.a('object');
           res.body.should.include.keys(
-            'id', 'name', 'parent', 'total');
-          res.body.name.should.equal(newTask.name);
-          res.body.id.should.not.be.null;
-          res.body.parent.should.equal(newTask.parent);
-          res.body.total.should.equal(newTask.total);
-
-          return PomTracker.findById(res.body.id);
+            '_id', 'projectName', 'tasks');
+          res.body._id.should.not.be.null;
+          res.body.projectName.should.equal(newProject.projectName);
+          res.body.tasks.should.have.length.of(newProject.tasks.length);
+          return Projects.findById(res.body._id);
         })
-        .then(function(task) {
-          task.name.should.equal(newTask.name);
-          task.parent.should.equal(newTask.parent);
-          task.total.should.equal(newTask.total);
+        .then(function(project) {
+          project.projectName.should.equal(newProject.projectName);
+          project.tasks.should.have.length.of(newProject.tasks.length);
         });
     });
   });
 
   describe('PUT endpoint', function() {
-    it('should update a task', function() {
-      const updateData = {
-        total: 25
-      }
 
-      PomTracker
+  it('should update fields you send over', function() {
+      const updateData = {
+        projectName: 'Updated Project Name'
+      }
+      return Projects
         .findOne()
-        .then(function(task) {
-          updateData.id = task.id;
+        .exec()
+        .then(function(projects) {
+          updateData.id = projects.id;
 
           return chai.request(app)
-            .put(`/tasks/${task.id}`)
+            .put(`/projects/${projects.id}`)
             .send(updateData);
         })
         .then(function(res) {
           res.should.have.status(204);
 
-          return PomTracker.findById(updateData.id);
+          return Projects.findById(updateData.id).exec();
         })
-        .then(function(task) {
-          task.total.should.equal(updateData.total);
+        .then(function(projects) {
+          projects.projectName.should.equal(updateData.projectName);
         });
-
       });
-  });
+    });
 
   describe('DELETE endpoint', function() {
 
-    it('delete a restaurant by id', function() {
+    it('Delete a project by id', function() {
 
-      let task;
+      let project;
 
-      return PomTracker
+      return Projects
         .findOne()
         .exec()
-        .then(function(_task) {
-          console.log(_task);
+        .then(function(_project) {
 
-          task = _task;
-          return chai.request(app).delete(`/tasks/${task.id}`);
+          project = _project;
+          return chai.request(app).delete(`/projects/${project.id}`);
         })
         .then(function(res) {
-          console.log("hello");
           res.should.have.status(204);
-          return PomTracker.findById(task.id);
+          return Projects.findById(project.id);
         })
-        .then(function(_task) {
-          should.not.exist(_task);
+        .then(function(_project) {
+          should.not.exist(_project);
         });
     });
   });

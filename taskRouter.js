@@ -2,7 +2,8 @@ const express = require('express');
 const taskRouter = express.Router({mergeParams: true});
 const {Projects} = require('./models');
 
-taskRouter.get('/', (req, res) => {
+taskRouter.route('/')
+  .get((req, res) => {
   Projects
     .findById(req.params.id)
     .exec()
@@ -21,13 +22,30 @@ taskRouter.get('/', (req, res) => {
 });
 
 //updates content of targeted task
-taskRouter.put('/:id', (req, res) => {
-  //...code
-});
-
-//deletes targeted task
-taskRouter.delete('/:id', (req, res) => {
-  //...code
-});
+taskRouter.route('/:taskId')
+  .put((req, res) => {
+    const toUpdate = {
+      'tasks.$.taskName': req.body.taskName,
+      'tasks.$.total': 25,
+      'tasks.$.log': []
+    }
+    Projects
+      .update(
+        {'_id': req.params.id, 'tasks._id': req.params.taskId},
+        {$set: toUpdate})
+      .exec()
+      .then(project => res.status(204).end())
+      .catch(err => res.status(500).json({message: 'Internal server error'}));
+  })
+  //deletes targeted task
+  .delete((req, res) => {
+    Projects
+      .update(
+       {'_id': req.params.id},
+       {$pull: {'tasks': {'_id': req.params.taskId}}})
+      .exec()
+      .then(project => res.status(204).end())
+      .catch(err => res.status(500).json({message: 'Internal server error'}));
+  });
 
 module.exports = taskRouter;

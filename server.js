@@ -15,7 +15,6 @@ const taskRouter = require('./taskRouter');
 app.use(bp.json());
 app.use(express.static('public'));
 
-
 projectRouter.use('/:id/tasks', taskRouter);
 app.use('/projects', projectRouter);
 
@@ -23,7 +22,7 @@ app.use('/projects', projectRouter);
 
 //Generate Data
 const generateProjectName = () => {
-  const parents = ["Node Capstone", "React Tutorial", "Clean Garage"];
+  const parents = ["Node Capstone", "React Tutorial", "Remodel Kitchen"];
   return parents[Math.floor(Math.random() * parents.length)];
 }
 
@@ -43,14 +42,6 @@ const generateTaskLogEntry = () => {
   }
 }
 
-const generateMasterLogEntry = () => {
-  return {
-    startTime: generateTime(),
-    endTime: generateTime(),
-    taskName: faker.lorem.word()
-  }
-}
-
 const generateDataArray = (callback, maxLength) => {
   let arr = [];
   for (let i = 0; i < Math.random() * maxLength + 1; i++) {
@@ -63,7 +54,7 @@ const generateTask = () => {
   return {
     taskName: faker.lorem.word(),
     total: Math.floor(Math.random()*20),
-    log: generateDataArray(generateTaskLogEntry, 2)
+    log: generateDataArray(generateTaskLogEntry, 0)
 
   }
 }
@@ -76,16 +67,22 @@ const generateProject = () => {
 }
 
 const seedProjectData = () => {
-  const seedData = {
-    projects: generateDataArray(generateProject, 2),
-    masterLog: generateDataArray(generateMasterLogEntry, 2)
-  }
-
-  return PomTracker.insertMany(seedData);
+  const seedData = generateDataArray(generateProject, 2);
+  return Projects.insertMany(seedData);
 }
 
 //seedProjectData()
 
+function tearDownDb() {
+  return new Promise((resolve, reject) => {
+    console.warn('Deleting database');
+    mongoose.connection.dropDatabase()
+      .then(result => resolve(result))
+      .catch(err => reject(err));
+  });
+}
+
+//tearDownDb();
 let server;
 
 function runServer(databaseUrl=DATABASE_URL, port=PORT) {
