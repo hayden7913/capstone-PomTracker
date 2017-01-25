@@ -71,7 +71,7 @@ const seedProjectData = () => {
   return Projects.insertMany(seedData);
 }
 
-//seedProjectData()
+// seedProjectData()
 
 function tearDownDb() {
   return new Promise((resolve, reject) => {

@@ -33,10 +33,10 @@ projectRouter.route('/')
       });
   });
 
-projectRouter.route('/:id')
+projectRouter.route('/:projectId')
   .get((req, res) => {
     Projects
-      .findById(req.params.id)
+      .findById(req.params.projectId)
       .exec()
       .then(projects => {
         res.json({
@@ -52,7 +52,7 @@ projectRouter.route('/:id')
   .post((req, res) => {
     const toUpdate = {'tasks' : req.body};
    	Projects
-      .findByIdAndUpdate(req.params.id, {'$push': toUpdate})
+      .findByIdAndUpdate(req.params.projectId, {'$push': toUpdate})
    		.then(project => res.status(201).json(project))
    		.catch(err => {
    				console.error(err);
@@ -65,14 +65,14 @@ projectRouter.route('/:id')
        'projectName': req.body.projectName
      }
      Projects
-       .findByIdAndUpdate(req.params.id, {$set: toUpdate})
+       .findByIdAndUpdate(req.params.projectId, {$set: toUpdate})
        .exec()
        .then(restaurant => res.status(204).end())
        .catch(err => res.status(500).json({message: 'Internal server error'}));
    })
    .delete((req, res) => {
      Projects
-       .findByIdAndRemove(req.params.id)
+       .findByIdAndRemove(req.params.projectId)
        .exec()
        .then(restaurant => res.status(204).end())
        .catch(err => res.status(500).json({message: 'Internal server error'}));

@@ -8,7 +8,7 @@ taskRouter.route('/')
     .findById(req.params.id)
     .exec()
     .then(projects => {
-      const tasks = projects.tasks
+      const tasks = projects.tasks;
       res.json({
         tasks
       });
@@ -26,8 +26,8 @@ taskRouter.route('/:taskId')
   .put((req, res) => {
     const toUpdate = {
       'tasks.$.taskName': req.body.taskName,
-      'tasks.$.total': 25,
-      'tasks.$.log': []
+      'tasks.$.total': req.body.total,
+      'tasks.$.log': req.body.log
     }
     Projects
       .update(

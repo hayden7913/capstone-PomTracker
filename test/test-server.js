@@ -62,75 +62,6 @@ const seedProjectData = () => {
   return Projects.insertMany(seedData);
 }
 
-
-
-// used to put randomish documents in db
-// so we have data to work with and assert about.
-// we use the Faker library to automatically
-// generate placeholder values for author, title, content
-// and then we insert that data into mongo
-/*function seedProjectsData() {
-  console.info('seeding blog post data');
-  const seedData = [];
-
-  for (let i=1; i<=10; i++) {
-    seedData.push(generateProjectsData());
-  }
-  // this will return a promise
-  return Projects.insertMany(seedData);
-}
-
-// used to generate data to put in db
-function generateBoroughName() {
-  const boroughs = [
-    'Manhattan', 'Queens', 'Brooklyn', 'Bronx', 'Staten Island'];
-  return boroughs[Math.floor(Math.random() * boroughs.length)];
-}
-
-// used to generate data to put in db
-function gnerateCuisineType() {
-  const cuisines = ['Italian', 'Thai', 'Colombian'];
-  return cuisines[Math.floor(Math.random() * cuisines.length)];
-}
-
-// used to generate data to put in db
-function generateGrade() {
-  const grades = ['A', 'B', 'C', 'D', 'F'];
-  const grade = grades[Math.floor(Math.random() * grades.length)];
-  return {
-    date: faker.date.past(),
-    grade: grade
-  }
-}
-
-// generate an object represnting a Projects.
-// can be used to generate seed data for db
-// or request.body data
-function generateProjectsData() {
-  return {
-    name: faker.company.companyName(),
-    borough: generateBoroughName(),
-    cuisine: gnerateCuisineType(),
-    address: {
-      building: faker.address.streetAddress(),
-      street: faker.address.streetName(),
-      zipcode: faker.address.zipCode()
-    },
-    grades: [generateGrade(), generateGrade(), generateGrade()]
-  }
-}*/
-
-
-// this function deletes the entire database.
-// we'll call it in an `afterEach` block below
-// to ensure  ata from one test does not stick
-// around for next one
-//
-// we have this function return a promise because
-// mongoose operations are asynchronous. we can either
-// call a `done` callback or return a promise in our
-// `before`, `beforeEach` etc. functions.
-// https://mochajs.org/#asynchronous-hooks
 function tearDownDb() {
   return new Promise((resolve, reject) => {
     console.warn('Deleting database');
@@ -165,17 +96,10 @@ describe('Projects API resource', function() {
   // note the use of nested `describe` blocks.
   // this allows us to make clearer, more discrete tests that focus
   // on proving something small
-  describe('GET endpoint', function() {
+  describe('/projects GET endpoint', function() {
 
     it('should return all existing projects', function() {
-      // strategy:
-      //    1. get back all Projectss returned by by GET request to `/Projectss`
-      //    2. prove res has right status, data type
-      //    3. prove the number of Projectss we got back is equal to number
-      //       in db.
-      //
-      // need to have access to mutate and access `res` across
-      // `.then()` calls below, so declare it here so can modify in place
+
       let res;
       return chai.request(app)
         .get('/projects')
@@ -193,40 +117,54 @@ describe('Projects API resource', function() {
     });
 
 
-    /*it('should return Projectss with right fields', function() {
-      // Strategy: Get back all Projectss, and ensure they have expected keys
+    it('should return projects with right fields', function() {
 
-      let resProjects;
+      let resProject;
       return chai.request(app)
-        .get('/Projectss')
+        .get('/projects')
         .then(function(res) {
           res.should.have.status(200);
           res.should.be.json;
-          res.body.Projectss.should.be.a('array');
-          res.body.Projectss.should.have.length.of.at.least(1);
+          res.body.projects.should.be.a('array');
+          res.body.projects.should.have.length.of.at.least(1);
 
-          res.body.Projectss.forEach(function(Projects) {
-            Projects.should.be.a('object');
-            Projects.should.include.keys(
-              'id', 'name', 'cuisine', 'borough', 'grade', 'address');
+          res.body.projects.forEach(function(project) {
+            project.should.be.a('object');
+            project.should.include.keys(
+              '_id', 'projectName', 'tasks');
           });
-          resProjects = res.body.Projectss[0];
-          return Projects.findById(resProjects.id);
+
+          res.body.projects.forEach(function(project) {
+            project.tasks.forEach(function(task) {
+              task.should.be.a('object');
+              task.should.include.keys(
+                '_id', 'taskName', 'total', 'log');
+            });
+          });
+          resProject = res.body.projects[0];
+
+          return Projects.findById(resProject._id).exec();
         })
-        .then(function(Projects) {
+        .then(function(project) {
+          resProject.projectName.should.equal(project.projectName);
 
-          resProjects.id.should.equal(Projects.id);
-          resProjects.name.should.equal(Projects.name);
-          resProjects.cuisine.should.equal(Projects.cuisine);
-          resProjects.borough.should.equal(Projects.borough);
-          resProjects.address.should.contain(Projects.address.building);
+          resProject.tasks.forEach(function(resTask, index) {
+            let task = project.tasks[index];
+            resTask.taskName.should.equal(task.taskName);
+            resTask.total.should.equal(task.total);
 
-          resProjects.grade.should.equal(Projects.grade);
+            resTask.log.forEach(function(resEntry, index) {
+              let entry = task.log[index];
+              resEntry.startTime.should.equal(entry.startTime);
+              resEntry.endTime.should.equal(entry.endTime);
+
+            });
+          });
         });
-    });*/
+    });
   });
 
-  describe('POST endpoint', function() {
+  describe('/projects POST endpoint', function() {
 
     it('should add a new project', function() {
 
@@ -247,39 +185,80 @@ describe('Projects API resource', function() {
         })
         .then(function(project) {
           project.projectName.should.equal(newProject.projectName);
-          project.tasks.should.have.length.of(newProject.tasks.length);
+
+          newProject.tasks.forEach(function(newTask, index) {
+            let task = project.tasks[index];
+            newTask.taskName.should.equal(task.taskName);
+            newTask.total.should.equal(task.total);
+
+            newTask.log.forEach(function(newEntry, index) {
+              let entry = task.log[index];
+              newEntry.startTime.should.equal(entry.startTime);
+              newEntry.endTime.should.equal(entry.endTime);
+          });
+        });
+      });
+    });
+  });
+
+  describe('/projects/:projectId GET endpoint', function() {
+
+    it('should return a single project with corrrect fields', function() {
+      let resProject;
+
+      return Projects
+        .findOne()
+        .exec()
+        .then(function(project) {
+          resProject = project;
+
+          return chai.request(app)
+            .get(`/projects/${resProject.id}`)
+            .then(function(res) {
+              res.should.have.status(200);
+              res.should.be.json;
+              res.body.projects.should.be.a('object');
+              res.body.projects.should.include.keys(
+                '_id', 'projectName', 'tasks');
+
+              res.body.projects.tasks.forEach(function(task) {
+                task.should.include.keys(
+                  '_id', 'taskName', 'total', 'log'
+                );
+              });
+            });
         });
     });
   });
 
-  describe('PUT endpoint', function() {
+  describe('/projects/:projectId PUT endpoint', function() {
 
-  it('should update fields you send over', function() {
-      const updateData = {
-        projectName: 'Updated Project Name'
-      }
-      return Projects
-        .findOne()
-        .exec()
-        .then(function(projects) {
-          updateData.id = projects.id;
+    it('should update specified fields', function() {
+        const updateData = {
+          projectName: 'Updated Project Name'
+        }
+        return Projects
+          .findOne()
+          .exec()
+          .then(function(projects) {
+            updateData.id = projects.id;
 
-          return chai.request(app)
-            .put(`/projects/${projects.id}`)
-            .send(updateData);
-        })
-        .then(function(res) {
-          res.should.have.status(204);
+            return chai.request(app)
+              .put(`/projects/${projects.id}`)
+              .send(updateData);
+          })
+          .then(function(res) {
+            res.should.have.status(204);
 
-          return Projects.findById(updateData.id).exec();
-        })
-        .then(function(projects) {
-          projects.projectName.should.equal(updateData.projectName);
+            return Projects.findById(updateData.id).exec();
+          })
+          .then(function(projects) {
+            projects.projectName.should.equal(updateData.projectName);
+          });
         });
       });
-    });
 
-  describe('DELETE endpoint', function() {
+  describe('/projects/:projectId DELETE endpoint', function() {
 
     it('Delete a project by id', function() {
 
@@ -302,4 +281,58 @@ describe('Projects API resource', function() {
         });
     });
   });
+
+  describe('/projects/:projectId/tasks GET endpoint', function() {
+
+    it('should get tasks with correct fields from a single project', function() {
+
+      return Projects
+        .findOne()
+        .exec()
+        .then(function(project) {
+          const projectId = project.id;
+          return chai.request(app)
+            .get(`/projects/${projectId}/tasks/`)
+            .then(function(res) {
+              res.should.have.status(200);
+              res.should.be.json;
+              res.body.tasks.should.be.a('array');
+              res.body.tasks.forEach(function(task) {
+                task.should.include.keys(
+                  '_id', 'taskName', 'total', 'log'
+                );
+              });
+            });
+        });
+    });
+  });
+
+  describe('/projects/:projectId/tasks PUT endpoint', function() {
+
+    it('should update specified fields of a task', function() {
+        const updateData = {
+          'taskName': 'Updated Task',
+          'total': 25,
+          'log': []
+        }
+        return Projects
+          .findOne()
+          .exec()
+          .then(function(projects) {
+            updateData.id = projects.id;
+            const taskId = project.tasks[0].id;
+            return chai.request(app)
+              .put(`/projects/${projects.id}/tasks/${taskId}`)
+              .send(updateData);
+          })
+          .then(function(res) {
+            res.should.have.status(204);
+
+            return Projects.findById(updateData.id).exec();
+          })
+          .then(function(projects) {
+            projects.projectName.should.equal(updateData.projectName);
+          });
+        });
+      });
 });
