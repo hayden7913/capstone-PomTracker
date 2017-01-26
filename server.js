@@ -1,125 +1,25 @@
-const express = require('express');
-const app = express();
-const bp = require('body-parser');
-const mongoose = require('mongoose');
-const faker = require('faker');
+var express = require('express');
+var webpackDevMiddleware = require('webpack-dev-middleware');
+var webpack = require('webpack');
+var webpackConfig = require('./webpack.config.js');
+var app = express();
 
-mongoose.Promise = global.Promise;
+var compiler = webpack(webpackConfig);
 
-const {PORT, DATABASE_URL} = require('./config');
-const {Projects} = require('./models');
+app.use(express.static(__dirname + '/public'));
 
-const projectRouter = require('./projectRouter');
-const taskRouter = require('./taskRouter');
+app.use(webpackDevMiddleware(compiler, {
+  hot: true,
+  filename: 'bundle.js',
+  publicPath: '/',
+  stats: {
+    colors: true,
+  },
+  historyApiFallback: true,
+}));
 
-app.use(bp.json());
-app.use(express.static('public'));
-
-projectRouter.use('/:id/tasks', taskRouter);
-app.use('/projects', projectRouter);
-
-
-
-//Generate Data
-const generateProjectName = () => {
-  const parents = ["Node Capstone", "React Tutorial", "Remodel Kitchen"];
-  return parents[Math.floor(Math.random() * parents.length)];
-}
-
-const generateTime = () => {
-  const hours = Math.floor(Math.random() * 24);
-  let minutes = Math.floor(Math.random() * 60);
-  if (minutes.toString().length === 1) {
-    minutes = `0${minutes}`
-  }
-  return `${hours}:${minutes}`
-}
-
-const generateTaskLogEntry = () => {
-  return {
-    startTime: generateTime(),
-    endTime: generateTime()
-  }
-}
-
-const generateDataArray = (callback, maxLength) => {
-  let arr = [];
-  for (let i = 0; i < Math.random() * maxLength + 1; i++) {
-    arr.push(callback())
-  }
-  return arr
-}
-
-const generateTask = () => {
-  return {
-    taskName: faker.lorem.word(),
-    total: Math.floor(Math.random()*20),
-    log: generateDataArray(generateTaskLogEntry, 0)
-
-  }
-}
-
-const generateProject = () => {
-  return {
-    projectName: faker.lorem.word(),
-    tasks: generateDataArray(generateTask, 3),
-  }
-}
-
-const seedProjectData = () => {
-  const seedData = generateDataArray(generateProject, 2);
-  return Projects.insertMany(seedData);
-}
-
-// seedProjectData()
-
-function tearDownDb() {
-  return new Promise((resolve, reject) => {
-    console.warn('Deleting database');
-    mongoose.connection.dropDatabase()
-      .then(result => resolve(result))
-      .catch(err => reject(err));
-  });
-}
-
-//tearDownDb();
-let server;
-
-function runServer(databaseUrl=DATABASE_URL, port=PORT) {
-  return new Promise((resolve, reject) => {
-    mongoose.connect(databaseUrl, err => {
-      if (err) {
-        return reject(err);
-      }
-      server = app.listen(port, () => {
-        console.log(`Your app is listening on port ${port}`);
-        resolve();
-      })
-      .on('error', err => {
-        mongoose.disconnect();
-        reject(err);
-      });
-    });
-  });
-}
-
-
-function closeServer() {
-  return mongoose.disconnect().then(() => {
-     return new Promise((resolve, reject) => {
-       console.log('Closing server');
-       server.close(err => {
-           if (err) {
-               return reject(err);
-           }
-           resolve();
-       });
-     });
-  });
-}
-
-if (require.main === module) {
-  runServer().catch(err => console.error(err));
-};
-
-module.exports = {app, runServer, closeServer};
+var server = app.listen(3000, function() {
+  var host = server.address().address;
+  var port = server.address().port;
+  console.log('Example app listening at http://%s:%s', host, port);
+});
