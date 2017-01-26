@@ -19,6 +19,9 @@ projectRouter.route('/')
         });
   })
   .post((req,res) => {
+    const requiredProjectFields = ['projectName', 'tasks'];
+    const requiredTaskFields = ['taskName', 'total', 'log'];
+    
     Projects
       .create({
         'projectName': req.body.projectName,
