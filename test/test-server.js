@@ -1,15 +1,4 @@
-/*it('should respond with a bad request error if fields are missing', function() {
-  const newProject = generateProject();
-  delete newProject.tasks;
 
-  return chai.request(app)
-    .post('/projects')
-    .send(newProject)
-    .then(function(res) {
-      res.should.have.status(400);
-      console.log(res);
-  });
-});*/
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -211,6 +200,22 @@ describe('Projects API resource', function() {
           });
         });
       });
+    });
+
+    it('should respond with a bad request error if fields are missing', function() {
+      const newProject = generateProject();
+      delete newProject.tasks;
+
+      return chai.request(app)
+        .post('/projects')
+        .send(newProject)
+        .then(function(res) {
+          res.should.have.status(400);
+          console.log(res);
+        })
+        .catch(function(err) {
+          console.log(err)
+        })
     });
   });
 

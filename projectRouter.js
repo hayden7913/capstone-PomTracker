@@ -19,7 +19,6 @@ projectRouter.route('/')
         });
   })
   .post((req,res) => {
-
     const requiredProjectFields = ['projectName', 'tasks'];
     const requiredTaskFields = ['taskName', 'total', 'log'];
 
@@ -67,7 +66,6 @@ projectRouter.route('/:projectId')
         });
   })
   .post((req, res) => {
-
     const requiredTaskFields = ['taskName', 'total', 'log'];
     requiredTaskFields.forEach(field => {
       if (! (field in req.body && req.body[field])) {

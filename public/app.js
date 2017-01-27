@@ -43,19 +43,110 @@ const TASKLIST = {
     }
   ]
 };
+//display all projects
+//display a single project
+//display all of a projects tasks
 
-const displayTaskNames = (data) => {
-  const taskListArray = data[Object.keys(data)[0]];
-  const resHtml = taskListArray.map(task => {
-    return `<p>${task.name}</p>`
+
+
+const baseUrl = 'http://localHost:8080/projects';
+
+const displayPrettyJson = data => {
+  $('body').append(`<pre> ${JSON.stringify(data, null, 2)} </pre>`);
+}
+
+const displayData = data => {
+  const resHtml = data.map(element =>
+      `<p>${element}</p>`
+  );
+  $('body').append(resHtml);
+}
+
+const getProjectNames = callback => {
+  $.getJSON(baseUrl, data => {
+      //const projectNames = data.projects.map(project => project.projectName);
+      callback(data);
+  })
+}
+
+const getOneProjectName = callback => {
+  $.getJSON(baseUrl, data => {
+    const projectId = data.projects[0]._id;
+    $.getJSON(`${baseUrl}/${projectId}`, data => {
+      callback([data.projects.projectName])
+    });
   });
-  $("body").append(resHtml);
 }
 
-const getTaskList = (callback) => {
-  setTimeout(() => {callback(TASKLIST)}, 100);
+const getProjectTasks = callback => {
+  $.getJSON(baseUrl, data => {
+    const projectId = data.projects[0]._id;
+    const taskId = data.projects[0].tasks[0]._id;
+    console.log(taskId);
+    $.getJSON(`${baseUrl}/${projectId}/tasks`, data => {
+      console.log(JSON.stringify(data, null, 2));
+      //const taskNames = data.tasks.map(task => task.taskName);
+      callback(data.tasks);
+    });
+  });
 }
 
+const createProject = callback => {
+  const newProject = {
+      "projectName": "Yet Another New Project",
+      "tasks": [
+        {
+          "taskName": "Sapmle Task",
+          "total": 16,
+          "log": [
+            {
+              "startTime": "8:23",
+              "endTime": "13:34"
+            }
+          ]
+        }
+      ]
+    };
 
+  $.post(baseUrl, newProject, callback(displayPrettyJson), "json");
+}
 
-$(() => getTaskList(displayTaskNames))
+const createTask = callback => {
+  const newProject = {
+          "taskName": "Another Sapmle Task",
+          "total": 16,
+          "log": [
+            {
+              "startTime": "8:23",
+              "endTime": "13:34"
+            }
+          ]
+    };
+
+  $.post(baseUrl, newProject, callback(displayPrettyJson), "json");
+}
+
+const updateProject = callback => {
+  $.ajax({
+    url: "/tasks",
+    type: "PUT",
+    data: proj,
+    success: (data) => {console.log("save successful")}
+  });
+}
+//create a new project
+
+//create a task
+//update a project's name
+//delete a project
+//update properties of a task
+//delete a task
+
+ $(() => {
+   //getProjectNames(displayPrettyJson);
+   //getOneProjectName(displayData);
+   //getProjectTasks(displayPrettyJson);
+   //createProject(getProjectNames)
+   //createProject(getProjectNames)
+
+ })

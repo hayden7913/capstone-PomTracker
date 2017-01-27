@@ -2,7 +2,7 @@ const express = require('express');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpack = require('webpack');
 const webpackConfig = require('./webpack.config.js');
-const bp = require('body-parser');
+const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const faker = require('faker');
 const app = express();
@@ -16,7 +16,10 @@ const compiler = webpack(webpackConfig);
 const projectRouter = require('./projectRouter');
 const taskRouter = require('./taskRouter');
 
-app.use(bp.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.use(express.static(__dirname + '/public'));
 
 app.use(webpackDevMiddleware(compiler, {
@@ -91,7 +94,7 @@ const seedProjectData = () => {
   return Projects.insertMany(seedData);
 }
 
-seedProjectData()
+// seedProjectData()
 
 function tearDownDb() {
   return new Promise((resolve, reject) => {
