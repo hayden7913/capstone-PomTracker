@@ -9,7 +9,7 @@ export default class App extends React.Component {
     super(props);
 
     this.state = {
-      projects: [],
+      projectNames: [],
     };
   }
 
@@ -20,16 +20,21 @@ export default class App extends React.Component {
     .then((res) => {
       return res.json();
     })
-    .then(projects => this.state.projects)
+    .then(data => {
+      let projectNames = data.projects.map((project, index) =>
+          <li key={index}> {project.projectName} </li>
+      );
+       this.setState({projectNames: projectNames});
+    })
   }
 
   render() {
-    console.log(this.state.projects);
+    console.log(this.state.projectNames);
 
     return (
       <div>
         <ul>
-          {this.state.projects}
+          {this.state.projectNames}
         </ul>
       </div>
     );

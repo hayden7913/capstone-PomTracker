@@ -19,7 +19,7 @@ projectRouter.route('/')
         });
   })
   .post((req,res) => {
-    
+
     const requiredProjectFields = ['projectName', 'tasks'];
     const requiredTaskFields = ['taskName', 'total', 'log'];
 
@@ -30,10 +30,12 @@ projectRouter.route('/')
     });
 
     requiredTaskFields.forEach(field => {
-      if (! (field in req.body && req.body[field])) {
-        return res.status(400).json({message: `Must specify value for ${field}`});
-      }
+      req.body.tasks.forEach(task => {
+        if (! (field in task && task[field])) {
+          return res.status(400).json({message: `Must specify value for ${field}`})
+        }
     });
+  });
 
     Projects
       .create({
@@ -84,16 +86,15 @@ projectRouter.route('/:projectId')
    		});
    })
    .put((req, res) => {
-
-     if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
+     if (!((req.params.projectId && req.body._id) && (req.params.projectId === req.body._id))) {
        const message = (
-         `Request path id (${req.params.id}) and request body id ` +
-         `(${req.body.id}) must match`);
+         `Request path id (${req.params.projectId}) and request body id ` +
+         `(${req.body._id}) must match`);
        console.error(message);
        res.status(400).json({message: message});
      }
 
-     if (! ('projectName' in req.body && req.body[projectName])) {
+     if (! ('projectName' in req.body && req.body['projectName'])) {
        return res.status(400).json({message: `Must specify value for projectName`});
      }
 
@@ -114,13 +115,6 @@ projectRouter.route('/:projectId')
        .then(restaurant => res.status(204).end())
        .catch(err => res.status(404).json({message: 'Not Found'}));
    });
-
-
-
-
-
-
-
 
 
 module.exports = projectRouter;

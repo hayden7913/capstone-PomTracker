@@ -1,3 +1,16 @@
+/*it('should respond with a bad request error if fields are missing', function() {
+  const newProject = generateProject();
+  delete newProject.tasks;
+
+  return chai.request(app)
+    .post('/projects')
+    .send(newProject)
+    .then(function(res) {
+      res.should.have.status(400);
+      console.log(res);
+  });
+});*/
+
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const faker = require('faker');
@@ -240,17 +253,16 @@ describe('Projects API resource', function() {
         return Projects
           .findOne()
           .exec()
-          .then(function(projects) {
-            updateData.id = projects.id;
-
+          .then(function(project) {
+            updateData._id = project._id;
             return chai.request(app)
-              .put(`/projects/${projects.id}`)
+              .put(`/projects/${project._id}`)
               .send(updateData);
           })
           .then(function(res) {
             res.should.have.status(204);
 
-            return Projects.findById(updateData.id).exec();
+            return Projects.findById(updateData._id).exec();
           })
           .then(function(projects) {
             projects.projectName.should.equal(updateData.projectName);
