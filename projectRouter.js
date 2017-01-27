@@ -19,9 +19,22 @@ projectRouter.route('/')
         });
   })
   .post((req,res) => {
+    
     const requiredProjectFields = ['projectName', 'tasks'];
     const requiredTaskFields = ['taskName', 'total', 'log'];
-    
+
+    requiredProjectFields.forEach(field => {
+      if (! (field in req.body && req.body[field])) {
+        return res.status(400).json({message: `Must specify value for ${field}`});
+      }
+    });
+
+    requiredTaskFields.forEach(field => {
+      if (! (field in req.body && req.body[field])) {
+        return res.status(400).json({message: `Must specify value for ${field}`});
+      }
+    });
+
     Projects
       .create({
         'projectName': req.body.projectName,
@@ -48,25 +61,46 @@ projectRouter.route('/:projectId')
       })
       .catch(err => {
           console.error(err);
-          res.status(500).json({message: 'Internal Server Error'});
+          res.status(404).json({message: 'Project Not Found'});
         });
   })
-  //adds a task
   .post((req, res) => {
+
+    const requiredTaskFields = ['taskName', 'total', 'log'];
+    requiredTaskFields.forEach(field => {
+      if (! (field in req.body && req.body[field])) {
+        return res.status(400).json({message: `Must specify value for ${field}`});
+      }
+    });
+
     const toUpdate = {'tasks' : req.body};
+
    	Projects
       .findByIdAndUpdate(req.params.projectId, {'$push': toUpdate})
    		.then(project => res.status(201).json(project))
    		.catch(err => {
    				console.error(err);
-   				res.status(500).json({message: 'Internal server error'});
+   				res.status(404).json({message: 'Project Not Found'});
    		});
    })
-   //changes project name
    .put((req, res) => {
+
+     if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
+       const message = (
+         `Request path id (${req.params.id}) and request body id ` +
+         `(${req.body.id}) must match`);
+       console.error(message);
+       res.status(400).json({message: message});
+     }
+
+     if (! ('projectName' in req.body && req.body[projectName])) {
+       return res.status(400).json({message: `Must specify value for projectName`});
+     }
+
      const toUpdate = {
        'projectName': req.body.projectName
      }
+
      Projects
        .findByIdAndUpdate(req.params.projectId, {$set: toUpdate})
        .exec()
@@ -78,7 +112,7 @@ projectRouter.route('/:projectId')
        .findByIdAndRemove(req.params.projectId)
        .exec()
        .then(restaurant => res.status(204).end())
-       .catch(err => res.status(500).json({message: 'Internal server error'}));
+       .catch(err => res.status(404).json({message: 'Not Found'}));
    });
 
 

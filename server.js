@@ -36,6 +36,11 @@ app.get('/test', (req, res) => {
   res.send('test success');
 })
 
+app.use('*', function(req, res) {
+  res.status(404).json({message: 'Not Found'});
+});
+
+
 const generateProjectName = () => {
   const parents = ["Node Capstone", "React Tutorial", "Remodel Kitchen"];
   return parents[Math.floor(Math.random() * parents.length)];

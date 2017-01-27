@@ -307,9 +307,11 @@ describe('Projects API resource', function() {
     });
   });
 
-  describe('/projects/:projectId/tasks PUT endpoint', function() {
+  describe('/projects/:projectId/tasks/:taskId PUT endpoint', function() {
 
     it('should update specified fields of a task', function() {
+        let taskId;
+
         const updateData = {
           'taskName': 'Updated Task',
           'total': 25,
@@ -318,11 +320,11 @@ describe('Projects API resource', function() {
         return Projects
           .findOne()
           .exec()
-          .then(function(projects) {
-            updateData.id = projects.id;
-            const taskId = project.tasks[0].id;
+          .then(function(project) {
+            updateData.id = project.id;
+            taskId = project.tasks[0].id;
             return chai.request(app)
-              .put(`/projects/${projects.id}/tasks/${taskId}`)
+              .put(`/projects/${project.id}/tasks/${taskId}`)
               .send(updateData);
           })
           .then(function(res) {
@@ -330,9 +332,34 @@ describe('Projects API resource', function() {
 
             return Projects.findById(updateData.id).exec();
           })
-          .then(function(projects) {
-            projects.projectName.should.equal(updateData.projectName);
+          .then(function(project) {
+            project.tasks[0].taskName.should.equal(updateData.taskName);
           });
         });
       });
+
+      describe('/projects/:projectId/tasks/:taskId PUT endpoint', function() {
+
+        it('should delete a specified task', function() {
+            let project, taskId;
+
+            return Projects
+              .findOne()
+              .exec()
+              .then(function(_project) {
+                project = _project;
+                taskId = project.tasks[0].id;
+                return chai.request(app)
+                  .delete(`/projects/${project.id}/tasks/${taskId}`);
+              })
+              .then(function(res) {
+                res.should.have.status(204);
+
+                return Projects.findById(project.id);
+              })
+              .then(function(project) {
+                should.not.exist(project.tasks.id(taskId));
+              });
+            });
+          });
 });
