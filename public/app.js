@@ -1,54 +1,3 @@
-/*
--Okay if I identify tasks by name?
-- Add tasks
-- Delete tasks
-- Update tasks
-- Add projects
-- Delete projects
-- Change project name
-- Add log entry
-- Delete log entry
-- Update log entry
-
-- Functions: Add-push, Delete-pull, Update-set
--
-*/
-
-
-const TASKLIST = {
-  tasks: [
-    {
-      "id": "11111",
-      "name": "Design MVP",
-      "parent": "Node Capstone",
-      "total": "1"
-    },
-    {
-      "id": "22222",
-      "name": "Set up CI",
-      "parent": "Node Capstone",
-      "total": "0.5"
-    },
-    {
-      "id": "33333",
-      "name": "Implement MVP",
-      "parent": "Node Capstone",
-      "total": "4"
-    },
-    {
-      "id": "44444",
-      "name": "Gather User Feedback and Iterate",
-      "parent": "Node Capstone",
-      "total": "4"
-    }
-  ]
-};
-//display all projects
-//display a single project
-//display all of a projects tasks
-
-
-
 const baseUrl = 'http://localHost:8080/projects';
 
 const displayPrettyJson = data => {
@@ -64,7 +13,6 @@ const displayData = data => {
 
 const getProjectNames = callback => {
   $.getJSON(baseUrl, data => {
-      //const projectNames = data.projects.map(project => project.projectName);
       callback(data);
   })
 }
@@ -83,8 +31,6 @@ const getProjectTasks = callback => {
     const projectId = data.projects[0]._id;
     const taskId = data.projects[0].tasks[0]._id;
     $.getJSON(`${baseUrl}/${projectId}/tasks`, data => {
-      console.log(JSON.stringify(data, null, 2));
-      //const taskNames = data.tasks.map(task => task.taskName);
       callback(data.tasks);
     });
   });
@@ -163,7 +109,6 @@ const updateTask = callback => {
   $.getJSON(baseUrl, data => {
     const projectId = data.projects[0]._id;
     const taskId = data.projects[0].tasks[0]._id;
-    console.log(projectId);
 
     $.ajax({
       url: `${baseUrl}/${projectId}/tasks/${taskId}`,
@@ -171,9 +116,7 @@ const updateTask = callback => {
       data: taskUpdates,
       success: callback(displayPrettyJson)
     });
-
   });
-
 }
 
 const deleteProject = callback => {
@@ -187,15 +130,19 @@ const deleteProject = callback => {
   		});
   });
 }
-//create a new project
-//create a task
 
-//update a project's name
-//update properties of a task
+const deleteTask = callback => {
+  $.getJSON(baseUrl, data => {
+    const projectId = data.projects[0]._id;
+    const taskId = data.projects[0].tasks[0]._id;
 
-//delete a project
-
-//delete a task
+    $.ajax({
+      url: `${baseUrl}/${projectId}/tasks/${taskId}`,
+      type: 'DELETE',
+      success: callback(displayPrettyJson)
+    });
+  });
+}
 
  $(() => {
    //getProjectNames(displayPrettyJson);
@@ -205,5 +152,37 @@ const deleteProject = callback => {
    //createTask(getOneProjectName);
    //updateProjectName(getOneProjectName);
    //updateTask(getOneProjectName);
-   deleteProject(getOneProjectName)
+   //deleteProject(getProjectNames)
+   //deleteTask(getOneProjectName)
  })
+
+//ignore the following:
+ /*const TASKLIST = {
+   tasks: [
+     {
+       "id": "11111",
+       "name": "Design MVP",
+       "parent": "Node Capstone",
+       "total": "1"
+     },
+     {
+       "id": "22222",
+       "name": "Set up CI",
+       "parent": "Node Capstone",
+       "total": "0.5"
+     },
+     {
+       "id": "33333",
+       "name": "Implement MVP",
+       "parent": "Node Capstone",
+       "total": "4"
+     },
+     {
+       "id": "44444",
+       "name": "Gather User Feedback and Iterate",
+       "parent": "Node Capstone",
+       "total": "4"
+     }
+   ]
+ };
+*/
