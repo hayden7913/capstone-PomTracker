@@ -4,12 +4,13 @@ const displayPrettyJson = data => {
   $('body').append(`<pre> ${JSON.stringify(data, null, 2)} </pre>`);
 }
 
+/*
 const displayData = data => {
   const resHtml = data.map(element =>
       `<p>${element}</p>`
   );
   $('body').append(resHtml);
-}
+}*/
 
 const getProjectNames = callback => {
   $.getJSON(baseUrl, data => {

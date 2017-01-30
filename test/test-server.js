@@ -214,7 +214,7 @@ describe('Projects API resource', function() {
           console.log(res);
         })
         .catch(function(err) {
-          console.log(err)
+          err.should.have.status(400);
         })
     });
   });
