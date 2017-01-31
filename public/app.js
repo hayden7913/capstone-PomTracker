@@ -144,7 +144,7 @@ const deleteTask = callback => {
 }
 
  $(() => {
-   //getProjectNames(displayPrettyJson);
+   getProjectNames(displayPrettyJson);
    //getOneProjectName(displayData);
    //getProjectTasks(displayPrettyJson);
    //createProject(getProjectNames);

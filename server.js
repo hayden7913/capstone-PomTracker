@@ -1,7 +1,4 @@
 const express = require('express');
-const webpackDevMiddleware = require('webpack-dev-middleware');
-const webpack = require('webpack');
-const webpackConfig = require('./webpack.config.js');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const faker = require('faker');
@@ -12,7 +9,6 @@ mongoose.Promise = global.Promise;
 const {PORT, DATABASE_URL} = require('./config');
 const {Projects} = require('./models');
 
-const compiler = webpack(webpackConfig);
 const projectRouter = require('./projectRouter');
 const taskRouter = require('./taskRouter');
 
@@ -20,27 +16,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + '/public'));
 
-app.use(webpackDevMiddleware(compiler, {
-  hot: true,
-  filename: 'bundle.js',
-  publicPath: '/',
-  stats: {
-    colors: true,
-  },
-  historyApiFallback: true,
-}));
-
 projectRouter.use('/:id/tasks', taskRouter);
 app.use('/projects', projectRouter);
-
-app.get('/test', (req, res) => {
-  res.send('test success');
-})
 
 app.use('*', function(req, res) {
   res.status(404).json({message: 'Not Found'});
 });
-
 
 const generateProjectName = () => {
   const parents = ["Node Capstone", "React Tutorial", "Remodel Kitchen"];
@@ -123,7 +104,6 @@ function runServer(databaseUrl=DATABASE_URL, port=PORT) {
     });
   });
 }
-
 
 function closeServer() {
   return mongoose.disconnect().then(() => {

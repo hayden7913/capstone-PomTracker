@@ -4,14 +4,11 @@ const {Projects} = require('./models');
 
 projectRouter.route('/')
   .get((req, res) => {
+
     Projects
       .find()
       .exec()
-      .then(projects => {
-        res.json({
-          projects
-        });
-      })
+      .then(projects => res.json({projects}))
       .catch(
         err => {
           console.error(err);
@@ -19,6 +16,7 @@ projectRouter.route('/')
         });
   })
   .post((req,res) => {
+
     const requiredProjectFields = ['projectName', 'tasks'];
     const requiredTaskFields = ['taskName', 'total', 'log'];
 
@@ -47,9 +45,7 @@ projectRouter.route('/')
       'projectName': req.body.projectName,
       'tasks': req.body.tasks
     })
-    .then(
-      project => res.status(201).json(project)
-    )
+    .then(project => res.status(201).json(project))
     .catch(err => {
         console.error(err);
         res.status(500).json({message: 'Internal server error'});
@@ -58,14 +54,11 @@ projectRouter.route('/')
 
 projectRouter.route('/:projectId')
   .get((req, res) => {
+
     Projects
       .findById(req.params.projectId)
       .exec()
-      .then(projects => {
-        res.json({
-          projects
-        });
-      })
+      .then(projects => res.json({projects}))
       .catch(err => {
           console.error(err);
           res.status(404).json({message: 'Project Not Found'});
@@ -96,6 +89,7 @@ projectRouter.route('/:projectId')
    		});
    })
    .put((req, res) => {
+
      if (!((req.params.projectId && req.body._id) && (req.params.projectId === req.body._id))) {
        const message = (
          `Request path id (${req.params.projectId}) and request body id ` +
@@ -115,14 +109,14 @@ projectRouter.route('/:projectId')
      Projects
        .findByIdAndUpdate(req.params.projectId, {$set: toUpdate})
        .exec()
-       .then(restaurant => res.status(204).end())
+       .then(project => res.status(204).end())
        .catch(err => res.status(500).json({message: 'Internal server error'}));
    })
    .delete((req, res) => {
      Projects
        .findByIdAndRemove(req.params.projectId)
        .exec()
-       .then(restaurant => res.status(204).end())
+       .then(project => res.status(204).end())
        .catch(err => res.status(404).json({message: 'Not Found'}));
    });
 

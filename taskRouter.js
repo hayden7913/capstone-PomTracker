@@ -4,6 +4,7 @@ const {Projects} = require('./models');
 
 taskRouter.route('/')
   .get((req, res) => {
+
   Projects
     .findById(req.params.id)
     .exec()
@@ -20,11 +21,12 @@ taskRouter.route('/')
       }
     )
 });
-//updates content of targeted task
+
 taskRouter.route('/:taskId')
   .put((req, res) => {
 
     const requiredTaskFields = ['taskName', 'total', 'log'];
+
     for (let i=0; i<requiredTaskFields.length; i++) {
       const field = requiredTaskFields[i];
       if (!(field in req.body)) {
@@ -33,7 +35,7 @@ taskRouter.route('/:taskId')
         return res.status(400).send(message);
       }
     }
-    
+
     const toUpdate = {
       'tasks.$.taskName': req.body.taskName,
       'tasks.$.total': req.body.total,
@@ -48,8 +50,8 @@ taskRouter.route('/:taskId')
       .then(project => res.status(204).end())
       .catch(err => res.status(500).json({message: 'Internal server error'}));
   })
-  //deletes targeted task
   .delete((req, res) => {
+    
     Projects
       .update(
        {'_id': req.params.id},
