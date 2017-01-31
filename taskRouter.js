@@ -20,18 +20,20 @@ taskRouter.route('/')
       }
     )
 });
-
 //updates content of targeted task
 taskRouter.route('/:taskId')
   .put((req, res) => {
 
     const requiredTaskFields = ['taskName', 'total', 'log'];
-    requiredTaskFields.forEach(field => {
-      if (! (field in req.body && req.body[field])) {
-        return res.status(400).json({message: `Must specify value for ${field}`});
+    for (let i=0; i<requiredTaskFields.length; i++) {
+      const field = requiredTaskFields[i];
+      if (!(field in req.body)) {
+        const message = `Missing \`${field}\` in request body`
+        console.error(message);
+        return res.status(400).send(message);
       }
-    });
-
+    }
+    
     const toUpdate = {
       'tasks.$.taskName': req.body.taskName,
       'tasks.$.total': req.body.total,
