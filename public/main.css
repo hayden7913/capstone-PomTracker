@@ -1,0 +1,57 @@
+body {
+ 	padding: 10px;
+}
+
+.wrapper {
+  display: block;
+  margin-top: 10px;
+}
+
+.error {
+  margin-left: 5px;
+  color: red;
+}
+.timeMod {
+	width: 400px;
+	padding: 10px;
+}
+
+.topRow {
+	margin-top: -10px;
+	position: relative;
+	font-size: 25px;
+	margin-bottom: 5px;
+
+}
+
+.topRow > * {
+	display: inline-block;
+}
+
+#newProj {
+	margin-bottom: 10px;
+}
+
+.sell {
+	position: absolute;
+	width: 75px;
+	height: 25px;
+	right: 0px;
+	top: -30px;
+}
+
+.timeMod > * {
+	margin-top: 15px;
+}
+
+.title {
+	font-weight: bold;
+	margin-right: 10px;
+}
+.customInput {
+	width: 50px;
+}
+
+.controlButtons {
+	margin-top: 10px;
+}

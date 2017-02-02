@@ -24,7 +24,7 @@ app.use(express.static(__dirname + '/public'));
 app.use('/users/', usersRouter);
 
 projectRouter.use('/:id/tasks', taskRouter);
-app.use('/projects', projectRouter 
+app.use('/projects', projectRouter);
 
 app.use('*', function(req, res) {
   res.status(404).json({message: 'Not Found'});

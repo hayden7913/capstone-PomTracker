@@ -1,9 +1,49 @@
-<html>
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
+	<meta charset="UTF-8">
+	<title>TimerTest</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="main.css">
 </head>
 <body>
-  <div id="root"></div>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="app.js" ></script>
+
+	<div id="projects"></div>
+
+	<form class="form-inline " id="newProject">
+		<div class="wrapper">
+			<div class="form-group">
+				<label for="Project">Create New Project:</label>
+				<input type="text" class="form-control" id="projectName" placeholder="Enter Project">
+			</div>
+			<button type="submit" class="btn btn-default">Submit</button>
+			<span id="duplicateProjectError" class="error"></span>
+		</div>
+	</form>
+	<form class="form-inline " id="newTask">
+	  <div class="wrapper">
+			<div class="form-group">
+				<label for="Task">Create New Task:</label>
+				<input type="text" class="form-control" id="taskName" placeholder="Enter Task">
+			</div>
+
+			<div class="form-group">
+			  <label for="project">Project:</label>
+			  <select class="form-control" id="selectProject">
+			  </select>
+			</div>
+
+		<button type="submit" class="btn btn-default">Submit</button>
+		<span id="duplicateTaskError" class="error"></span>
+	</form>
+	  </div>
+
+    <div id="taskList"></div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+	<script src="app.js"></script>
+
 </body>
 </html>
