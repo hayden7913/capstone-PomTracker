@@ -106,7 +106,6 @@ const updateAllTasks = (state) => {
 }
 
 const setState = (state, elems, data) => {
-
 	  state.projects = data.projects.map(project => {
 	    const tasks = project.tasks.map(task => new Task (task.taskName, task.total, task._id, task.log));
 	    return new Project(project.projectName, tasks, project._id);
@@ -286,6 +285,7 @@ const renderProjectOptions = (state, elems) => {
 }
 
 const renderOneProject = (state, elems, project) => {
+	console.log(project);
 	const resHtml = $(
 		`<div>
 			<div id="projectWrapper">
@@ -371,7 +371,7 @@ const main = () => {
 		projectName: $("#projectName"),
 		taskName:$("#taskName")
 	};
-
+	
   getProjects(state, elems, setState);
 	initProjectSubmitHandler(state, elems);
 	initTaskSubmitHandler(state, elems);
