@@ -9,9 +9,6 @@ mongoose.Promise = global.Promise;
 const {PORT, DATABASE_URL} = require('./config');
 const {Projects} = require('./models');
 
-const {router: usersRouter} = require('./users');
-
-
 
 const projectRouter = require('./projectRouter');
 const taskRouter = require('./taskRouter');
@@ -21,7 +18,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + '/public'));
 
 
-app.use('/users/', usersRouter);
 
 projectRouter.use('/:id/tasks', taskRouter);
 app.use('/projects', projectRouter);
