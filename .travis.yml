@@ -4,6 +4,6 @@ deploy:
   provider: heroku
   api_key:
     secure: E6/DYgk8vwOnZZkm114LxRNWhh+9w+WudC6cbPqJ4ol0ow0Hi/+RjmEhXMSVdeLLpVCCnzGZZUnK2pV39eK6nFuhPC6D8SdKI5TG6dn2ULiIgd2RW6dy/mbg8wiZl8RqoK2IZYjXkDXBBHod0cPAOPoNOA3psFr0FwQof+AF3A7j0+Q+nPeMUEe/EeXX6J9Yf8Y9AwHN0znimyEAn27PfgQJNMMt6UbOr3EAd7fryG1fOy5ZjhvubpYIgoivGV5wsosPLBlQBHJC9SnLpSOSmgJWdOTH6c/DNSkQ5dYA/cNFSKFCFL0c98JE1DQmj1emZn9n3JBPBGxKlDF9oFWIXL59lVOTPhYS6Om+qJWzAUh4rZpEv3+QknHN0kuy4BZUANKlAGD/OKQBW15GoolKocA/PXcIsaAqprzGAO5yuSCmongTohUykAitAVoPGgudEf07U/fNAeic6PcpCEwAK/T6nWUf5IDsa26OV34zDheFkxKnL9h+rDOIOvxbb8KeIxpPO5Net3GvuqBj+Jr8btVBPKlyDbqCMME0nKmZEtOhaLGrm82nUJwYGTTWq2bzU19hTQX69Cxuyxu0VpWIhg7Pjisc3sPCzgvCWrDzsIb7p3AMqGsF5y3rqGPZqJb8bxYC4ESySC1LEM5fOL0xpJcc6cSqnLzPloK4TKyfboI=
-  app: resource-search
+  app: backend-pomtracker
   on:
-    repo: hayden7913/resource-search
+    repo: hayden7913/backend-pomtracker
