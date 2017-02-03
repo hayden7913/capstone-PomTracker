@@ -57,15 +57,21 @@ Task.prototype.undo = function(state, elems) {
 	renderProjectList(state, elems);
 }
 
-function Project(name , tasks) {
-  this.projectName = name;
+function Project(name , tasks, id) {
+  this.name = name;
   this.tasks = tasks;
+  this.id = id;
 }
 
 Project.prototype.calculateTotalProjectTime = function () {
-   return this.tasks
-            	.map(task => task.totalTime)
-            	.reduce((a,b) => a+b)
+
+    if (this.tasks.length) {
+      return this.tasks
+               	 .map(task => task.totalTime)
+               	 .reduce((a,b) => a+b);
+    } else {
+      return 0;
+    }
 }
 
 const sampleTask1 = new Task("sample task", 1 , "Sample Project");
@@ -103,7 +109,7 @@ const setState = (state, elems, data) => {
 
 	  state.projects = data.projects.map(project => {
 	    const tasks = project.tasks.map(task => new Task (task.taskName, task.total, task._id, task.log));
-	    return new Project(project.projectName, tasks);
+	    return new Project(project.projectName, tasks, project._id);
 	  });
 
     renderProjectOptions(state, elems);
@@ -135,34 +141,41 @@ const getProjects = (state, elems, callback) => {
 }
 
 
-const deleteTask = (state, idx, elems) => {
-	/*$.ajax({
-			url: "/tasks",
-			type: "DELETE",
-			data: state.tasks[idx]
-		});*/
-		bootbox.confirm(
-			`Are you sure you want to delete \"${name}\"`,
-			 () => {
-				 state.tasks.splice(idx, 1);
-				 renderTaskList(state, elems);
-			 });
+const deleteTask = (state, elems, _task, _project) => {
+  const confirmMessage = `Are you sure you want to delete \"${_task.name}\"`;
+  const deleteProject = (result) => {
+
+    if (result) {
+
+      const projectIndex = state.projects.findIndex(project => project.id === _project.id );
+      const taskIndex = state.projects[projectIndex].tasks.findIndex(task => task.id === _task.id);
+      state.projects[projectIndex].tasks.splice(taskIndex, 1);
+
+      renderProjectList(state, elems);
+      renderTaskList(state, elems);
+    }
+  }
+
+  bootbox.confirm(confirmMessage, deleteProject);
 }
 
-const deleteProject = (state, elems, projectName) => {
-	state.tasks.forEach(task => {
-		if (task.project === projectName) {
-			task.project = null;
-		}
-	});
+const deleteProject = (state, elems, _project) => {
 
-	state.projects = state.projects.filter(project => {
-		return project !== projectName;
-	});
+  const confirmMessage = `Are you sure you want to delete \"${_project.name}\" and all of it's tasks?`;
+  const deleteProject = (result) => {
 
-	renderProjectList(state, elems);
-	renderProjectOptions(state, elems);
-	//updateAllTasks(state);
+    if (result) {
+      const projectIndex = state.projects.findIndex(project => project.id === _project.id );
+
+      state.projects.splice(projectIndex, 1);
+
+      renderProjectList(state, elems);
+      renderProjectOptions(state, elems);
+      renderTaskList(state, elems);
+    }
+  }
+
+  bootbox.confirm(confirmMessage, deleteProject);
 }
 
 const getProjectValues = () => {
@@ -176,14 +189,14 @@ const getProjectValues = () => {
 
 
 
-const renderTask = (state, elems, task, projectName, projectIndex) => {
+const renderTask = (state, elems, task, project) => {
  let template = $(
 	`<div id="wrapper">
 		<div class="timeMod well">
 				<div class="topRow">
 					<span class="title">${task.name}</span>
 					<span class="acctotal">${task.totalTime.toFixed(2)}</span>
-					<span class="project">${projectName}<span>
+					<span class="project">${project.name}<span>
 				</div>
 			<div class="btn-group timeButtons">
 				<button type="button" class="js-btn5 btn btn-primary">5</button>
@@ -237,7 +250,7 @@ const renderTask = (state, elems, task, projectName, projectIndex) => {
  	})
 
  	template.find("#js-delete").click( () => {
-		deleteTask(state, idx, elems)
+		deleteTask(state, elems, task, project)
 		/*bootbox.confirm(
 			`Are you sure you want to delete \"${name}\"`,
 			 () => 'deleted' //deleteTask(state, idx)
@@ -257,43 +270,34 @@ const renderTaskList = (state, elems) => {
     state.projects
     .map((project, projectIndex) =>
       project.tasks.map((task, taskIndex) =>
-        renderTask(
-          state, elems, task, project.projectName, projectIndex)
-      )
-    )
+        renderTask(state, elems, task, project)));
 
-
-
-    /*state.tasks.map((task, idx) => {
-		return renderTask(state, elems, task.name, task.totalTime, task.project, idx)
-	});
-*/
 	elems.taskList.html(flatten(resHtml.reverse()));
 }
 
 const renderProjectOptions = (state, elems) => {
 	resHtml = state.projects
-	//.filter(project => project.projectName !== "")
+	//.filter(project => project.name !== "")
 	.map((project) => {
-		return `<option value="${project.projectName}">${project.projectName}</option>`;
+		return `<option value="${project.name}">${project.name}</option>`;
 	});
 
 	elems.projectSelect.html(resHtml);
 }
 
-const renderOneProject = (state, elems, projectName, value) => {
+const renderOneProject = (state, elems, project) => {
 	const resHtml = $(
 		`<div>
 			<div id="projectWrapper">
-				<span class="project">${projectName}</span>
-				<span class="projectValue">${value}</span>
+				<span class="project">${project.name}</span>
+				<span class="projectValue">${project.calculateTotalProjectTime()}</span>
 				<button id="deleteProject" class="btn btn-outline-secondary">X</button>
 			</div>
 		</div>`
 	);
 
 	resHtml.find("#deleteProject").click(() => {
-		deleteProject(state, elems, projectName);
+		deleteProject(state, elems, project);
 	});
 	return resHtml;
 }
@@ -303,11 +307,29 @@ const renderProjectList = (state, elems) => {
 
   const resHtml =
     state.projects
-		.map(project => {
-      return renderOneProject(
-        state, elems, project.projectName, project.calculateTotalProjectTime());
-	   });
+		     .map(project => renderOneProject(state, elems, project));
+
 	$("#projects").html(resHtml);
+}
+
+const saveProject = callback => {
+  const newProject = {
+      'projectName': 'Yet Another New Project',
+      'tasks': [
+        {
+          'taskName': 'Sample Task',
+          'total': 16,
+          'log': [
+            {
+              'startTime': '8:23',
+              'endTime': '13:34'
+            }
+          ]
+        }
+      ]
+    };
+
+  $.post(baseUrl, newProject, callback(displayPrettyJson), 'json');
 }
 
 const initProjectSubmitHandler = (state,elems) => {
@@ -315,7 +337,7 @@ const initProjectSubmitHandler = (state,elems) => {
 		e.preventDefault();
 		let name;
 		name = elems.projectName.val();
-		state.projects.push(name);
+		state.projects.push(new Project(name, []));
 		renderProjectOptions(state, elems);
 		renderProjectList(state, elems);
 		elems.projectName.val("");
