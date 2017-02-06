@@ -15,10 +15,14 @@ const minutesToHours = (min) => {
 	return Number((Number(min)/60).toFixed(2));
 }
 
-function Task(name, totalTime, log, id) {
+const displayErrror = (element, error) => {
+	element.text('error');
+}
+
+function Task(name, totalTime, log , id) {
 	this.name = name;
 	this.totalTime = Number(totalTime);
-  this.log = log;
+  this.log = log;//log === [] ? this.log = [null] : this.log = log;
   this.id = id;
 	this.history = [totalTime];
 }
@@ -71,48 +75,6 @@ Project.prototype.calculateTotalProjectTime = function () {
     }
 }
 
-const displayErrror = (element, error) => {
-	element.text('error');
-}
-
-const saveTask = (task) => {
-	const callback = () => console.log("Task Saved");
-	const postObj = {
-		"name": task.name,
-		"project": task.project,
-		"totalTime": task.totalTime
-	}
-	$.post("/tasks", postObj, callback, "json");
-}
-
-const updateAllTasks = (state) => {
-	state.tasks.forEach((task) => {
-		$.ajax({
-			url: "/tasks",
-			type: "PUT",
-			data: task,
-			success: (data) => {console.log("save successful")}
-		});
-	});
-}
-
-const updateTask = (state, elems, task, projectId) => {
-	const updatedTask = {
-    'taskName': task.name,
-    'totalTime': task.totalTime,
-    'log': task.log,
-		'_id': task.id
-  }
-
-    $.ajax({
-      url: `/projects/${projectId}/tasks/${task.id}`,
-      type: 'PUT',
-      data: updatedTask,
-      success: () => console.log("saved")
-    });
-}
-
-
 const setState = (state, elems, data) => {
 	  state.projects = data.projects.map(project => {
 	    const tasks = project.tasks.map(task => new Task (task.taskName, task.totalTime, task.log, task._id));
@@ -126,6 +88,83 @@ const setState = (state, elems, data) => {
 
 const getProjects = (state, elems, callback) => {
 	$.getJSON("/projects", data => callback(state, elems, data))
+}
+
+const getProjectById = (state, elems, projectId) => {
+	$.getJSON(`/projects/${projectId}`, (data) => pushNewTask(state, elems, data, projectId) )
+}
+
+
+const pushNewProject = (state, elems, data) => {
+	state.projects.push(new Project(data.projectName, data.tasks, data._id))
+	renderProjectOptions(state, elems);
+	renderProjectList(state, elems);
+	renderTaskList(state, elems)
+}
+
+const createProject = (state, elems, name) => {
+	const newProject = {
+			'projectName': name,
+			'tasks': []
+		};
+
+  $.post('/projects', newProject, (data) => pushNewProject(state, elems, data), 'json');
+}
+
+const pushNewTask = (state, elems, data, parentProjectId) => {
+	const projectIndex = state.projects.findIndex(project => project.id === parentProjectId );
+	const newTask = data.projects.tasks.pop();
+	state.projects[projectIndex].tasks.push(new Task(newTask.taskName, 0 , newTask.log, newTask._id))
+	renderTaskList(state, elems)
+}
+
+const createTask = (state, elems, name, parentProjectId) => {
+	const newTask = {
+			'taskName': name,
+			'totalTime': 0,
+			'log': []
+		};
+
+  $.post(`/projects/${parentProjectId}`, newTask, () => getProjectById(state, elems, parentProjectId), 'json');
+}
+
+const updateTask = (state, elems, task, projectId) => {
+	const updatedTask = {
+    'taskName': task.name,
+    'totalTime': task.totalTime,
+    'log': task.log,
+		'_id': task.id
+  }
+
+    $.ajax({
+      url: `/projects/${projectId}/tasks/${task.id}`,
+      type: 'PUT',
+      data: updatedTask
+    });
+}
+
+const deleteProject = (state, elems, _project) => {
+
+  const confirmMessage = `Are you sure you want to delete \"${_project.name}\" and all of it's tasks?`;
+  const onConfirm = (result) => {
+
+    if (result) {
+      const projectIndex = state.projects.findIndex(project => project.id === _project.id );
+
+      state.projects.splice(projectIndex, 1);
+
+			$.ajax({
+					url: `/projects/${_project.id}`,
+					type: 'DELETE'
+			});
+
+      renderProjectList(state, elems);
+      renderProjectOptions(state, elems);
+      renderTaskList(state, elems);
+    }
+  }
+
+  bootbox.confirm(confirmMessage, onConfirm);
 }
 
 const deleteTask = (state, elems, _task, _project) => {
@@ -153,40 +192,6 @@ const deleteTask = (state, elems, _task, _project) => {
 
   bootbox.confirm(confirmMessage, onConfirm);
 }
-
-const deleteProject = (state, elems, _project) => {
-
-  const confirmMessage = `Are you sure you want to delete \"${_project.name}\" and all of it's tasks?`;
-  const onConfirm = (result) => {
-
-    if (result) {
-      const projectIndex = state.projects.findIndex(project => project.id === _project.id );
-
-      state.projects.splice(projectIndex, 1);
-
-			$.ajax({
-					url: `/projects/${_project.id}`,
-					type: 'DELETE'
-			});
-
-      renderProjectList(state, elems);
-      renderProjectOptions(state, elems);
-      renderTaskList(state, elems);
-    }
-  }
-
-  bootbox.confirm(confirmMessage, onConfirm);
-}
-
-const getProjectValues = () => {
-	const obj = {};
-		state.tasks.forEach((task) => {
-			obj[task.project] ? obj[task.project] += task.totalTime : obj[task.project] = task.totalTime;
-		});
-
-		return obj;
-}
-
 
 
 const renderTask = (state, elems, task, project) => {
@@ -314,7 +319,6 @@ const renderOneProject = (state, elems, project) => {
 }
 
 const renderProjectList = (state, elems) => {
-//	const projects = getProjectValues();
 
   const resHtml =
     state.projects
@@ -322,44 +326,6 @@ const renderProjectList = (state, elems) => {
 
 	$("#projects").html(resHtml);
 }
-
-const pushNewProject = (state, elems, data) => {
-	state.projects.push(new Project(data.projectName, data.tasks, data._id))
-	renderProjectOptions(state, elems);
-	renderProjectList(state, elems);
-	renderTaskList(state, elems)
-}
-
-const pushNewTask = (state, elems, data, parentProjectId) => {
-	const projectIndex = state.projects.findIndex(project => project.id === parentProjectId );
-	const newTask = data.projects.tasks.pop();
-	state.projects[projectIndex].tasks.push(new Task(newTask.taskName, 0 , newTask.log, newTask._id))
-	renderTaskList(state, elems)
-}
-
-const createProject = (state, elems, name) => {
-	const newProject = {
-			'projectName': name,
-			'tasks': []
-		};
-
-  $.post('/projects', newProject, (data) => pushNewProject(state, elems, data), 'json');
-}
-
-const getProjectById = (state, elems, projectId) => {
-	$.getJSON(`/projects/${projectId}`, (data) => pushNewTask(state, elems, data, projectId) )
-}
-
-const createTask = (state, elems, name, parentProjectId) => {
-	const newTask = {
-			'taskName': name,
-			'totalTime': 0,
-			'log': []
-		};
-
-  $.post(`/projects/${parentProjectId}`, newTask, () => getProjectById(state, elems, parentProjectId), 'json');
-}
-
 
 
 const initProjectSubmitHandler = (state,elems) => {
