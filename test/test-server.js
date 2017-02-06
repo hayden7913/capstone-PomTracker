@@ -46,7 +46,7 @@ const generateDataArray = (callback, maxLength) => {
 const generateTask = () => {
   return {
     taskName: faker.lorem.word(),
-    total: Math.floor(Math.random()*20),
+    totalTime: Math.floor(Math.random()*20),
     log: generateDataArray(generateTaskLogEntry, 3)
 
   }
@@ -131,7 +131,7 @@ describe('Projects API resource', function() {
             project.tasks.forEach(function(task) {
               task.should.be.a('object');
               task.should.include.keys(
-                '_id', 'taskName', 'total', 'log');
+                '_id', 'taskName', 'totalTime', 'log');
             });
           });
           resProject = res.body.projects[0];
@@ -144,7 +144,7 @@ describe('Projects API resource', function() {
           resProject.tasks.forEach(function(resTask, index) {
             let task = project.tasks[index];
             resTask.taskName.should.equal(task.taskName);
-            resTask.total.should.equal(task.total);
+            resTask.totalTime.should.equal(task.totalTime);
 
             resTask.log.forEach(function(resEntry, index) {
               let entry = task.log[index];
@@ -189,7 +189,7 @@ describe('Projects API resource', function() {
           newProject.tasks.forEach(function(newTask, index) {
             let task = project.tasks[index];
             newTask.taskName.should.equal(task.taskName);
-            newTask.total.should.equal(task.total);
+            newTask.totalTime.should.equal(task.totalTime);
 
             newTask.log.forEach(function(newEntry, index) {
               let entry = task.log[index];
@@ -236,7 +236,7 @@ describe('Projects API resource', function() {
 
               res.body.projects.tasks.forEach(function(task) {
                 task.should.include.keys(
-                  '_id', 'taskName', 'total', 'log'
+                  '_id', 'taskName', 'totalTime', 'log'
                 );
               });
             });
@@ -369,7 +369,7 @@ describe('Projects API resource', function() {
               res.body.tasks.should.be.a('array');
               res.body.tasks.forEach(function(task) {
                 task.should.include.keys(
-                  '_id', 'taskName', 'total', 'log'
+                  '_id', 'taskName', 'totalTime', 'log'
                 );
               });
             });
@@ -393,7 +393,7 @@ describe('Projects API resource', function() {
         let taskId;
         const updateData = {
           'taskName': 'Updated Task',
-          'total': 25,
+          'totalTime': 25,
           'log': []
         }
 
