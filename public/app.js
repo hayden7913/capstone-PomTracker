@@ -4,19 +4,23 @@ const state = {
 	tasks: [],
 	errorMessage: {
 		duplicateProject: 'That project already exists. Please use a different project name',
-		duplicateTask: 'That task already exists. Please use a different project name',
+		duplicateTask: 'That task already exists. Please use a different task name',
 		invalidTime: 'Please enter a time that is greater than 0'
 	}
 }
 
+Array.prototype.flatten = function() {
+  return this.reduce((cv, pv) => cv.concat(pv), []);
+}
+
 const flatten = arr => arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []);
+
+const findElementById = (array, id) => {
+	return array.find(element => element.id === id);
+}
 
 const minutesToHours = (min) => {
 	return Number((Number(min)/60).toFixed(2));
-}
-
-const displayErrror = (element, error) => {
-	element.text('error');
 }
 
 function Task(name, totalTime, log , id) {
@@ -249,7 +253,7 @@ const renderTask = (state, elems, task, project) => {
  		if (code == 13) {
  			e.preventDefault();
 			const input = Number($(`#customInput${task.id}`).val());
- 			task.addTime(input);
+ 			task.addTime(state, elems, input);
 			updateTask(state, elems, task, project.id);
 			renderProjectList(state, elems);
  			renderTaskList(state, elems);
@@ -267,28 +271,22 @@ const renderTask = (state, elems, task, project) => {
 
  	template.find("#js-delete").click( () => {
 		deleteTask(state, elems, task, project)
-		/*bootbox.confirm(
-			`Are you sure you want to delete \"${name}\"`,
-			 () => 'deleted' //deleteTask(state, idx)
-		);*/
  	});
 
  	template.find(".btn").click(() => {
  		renderTaskList(state, elems);
- 		//updateAllTasks(state);
-
  	});
+
  	return template;
 }
 
 const renderTaskList = (state, elems) => {
 	let resHtml =
-    state.projects
-    .map((project, projectIndex) =>
-      project.tasks.map((task, taskIndex) =>
-        renderTask(state, elems, task, project)));
+    state.projects.map(project =>
+			project.tasks.map(task =>
+				renderTask(state, elems, task, project)));
 
-	elems.taskList.html(flatten(resHtml.reverse()));
+	elems.taskList.html(flatten(resHtml).reverse());
 }
 
 const renderProjectOptions = (state, elems) => {
@@ -306,7 +304,7 @@ const renderOneProject = (state, elems, project) => {
 		`<div>
 			<div id="projectWrapper">
 				<span class="project">${project.name}</span>
-				<span class="projectValue">${project.calculateTotalProjectTime()}</span>
+				<span class="projectValue">${project.calculateTotalProjectTime().toFixed(2)}</span>
 				<button id="deleteProject" class="btn btn-outline-secondary">X</button>
 			</div>
 		</div>`
@@ -328,12 +326,30 @@ const renderProjectList = (state, elems) => {
 }
 
 
+const displayError = (element, error) => {
+	element.text(error);
+}
+
+const alreadyExists = (array, name) => {
+	const index = array.findIndex(element => element === name);
+	if (index === -1) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
+
 const initProjectSubmitHandler = (state,elems) => {
 	$(elems.newProject).on("submit", (e) => {
 		e.preventDefault();
-		let name;
-		name = elems.projectName.val();
-		createProject(state, elems, name);
+
+		const name = elems.projectName.val();
+		const projectNames = state.projects.map(project => project.name);
+		const errorElement = $("#duplicateProjectError");
+
+		errorElement.text("");
+		alreadyExists(projectNames, name) ? displayError(errorElement, state.errorMessage.duplicateProject) : createProject(state, elems, name);
 		renderProjectOptions(state, elems);
 		renderProjectList(state, elems);
 		elems.projectName.val("");
@@ -347,9 +363,12 @@ const initTaskSubmitHandler = (state, elems) => {
 		const name = elems.taskName.val();
 		const parentProjectId = $("#selectProject").val();
 		const taskProject = parentProjectId === "none" ? undefined : parentProjectId;
-		createTask(state, elems, name, parentProjectId);
-		//renderTaskList(state, elems);
-		//saveTask(state.tasks[state.tasks.length-1]);
+		const parentProject = findElementById(state.projects, parentProjectId);
+		const taskNames = parentProject.tasks.map(task => task.name);
+		const errorElement = $("#duplicateTaskError");
+
+		errorElement.text("");
+		alreadyExists(taskNames, name) ? displayError(errorElement, state.errorMessage.duplicateTask) : createTask(state, elems, name, parentProjectId);;
 		elems.taskName.val("");
 
 	});
