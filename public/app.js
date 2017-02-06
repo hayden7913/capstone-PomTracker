@@ -15,7 +15,7 @@ const minutesToHours = (min) => {
 	return Number((Number(min)/60).toFixed(2));
 }
 
-function Task(name, totalTime, id, log) {
+function Task(name, totalTime, log, id) {
 	this.name = name;
 	this.totalTime = Number(totalTime);
   this.log = log;
@@ -74,11 +74,7 @@ Project.prototype.calculateTotalProjectTime = function () {
     }
 }
 
-const sampleTask1 = new Task("sample task", 1 , "Sample Project");
-const sampleTask2 = new Task("another sample task" , 2 , "Sample Project");
 
-state.tasks.push(sampleTask1);
-state.tasks.push(sampleTask2);
 
 const displayErrror = (element, error) => {
 	element.text('error');
@@ -107,7 +103,7 @@ const updateAllTasks = (state) => {
 
 const setState = (state, elems, data) => {
 	  state.projects = data.projects.map(project => {
-	    const tasks = project.tasks.map(task => new Task (task.taskName, task.total, task._id, task.log));
+	    const tasks = project.tasks.map(task => new Task (task.taskName, task.totalTime, task.log, task._id));
 	    return new Project(project.projectName, tasks, project._id);
 	  });
 
@@ -278,14 +274,13 @@ const renderProjectOptions = (state, elems) => {
 	resHtml = state.projects
 	//.filter(project => project.name !== "")
 	.map((project) => {
-		return `<option value="${project.name}">${project.name}</option>`;
+		return `<option value="${project.id}">${project.name}</option>`;
 	});
 
 	elems.projectSelect.html(resHtml);
 }
 
 const renderOneProject = (state, elems, project) => {
-	console.log(project);
 	const resHtml = $(
 		`<div>
 			<div id="projectWrapper">
@@ -312,37 +307,54 @@ const renderProjectList = (state, elems) => {
 	$("#projects").html(resHtml);
 }
 
-const saveProject = callback => {
-  const newProject = {
-      'projectName': 'Yet Another New Project',
-      'tasks': [
-        {
-          'taskName': 'Sample Task',
-          'total': 16,
-          'log': [
-            {
-              'startTime': '8:23',
-              'endTime': '13:34'
-            }
-          ]
-        }
-      ]
-    };
-
-  $.post(baseUrl, newProject, callback(displayPrettyJson), 'json');
+const pushNewProject = (state, elems, data) => {
+	state.projects.push(new Project(data.projectName, data.tasks, data._id))
+	renderProjectOptions(state, elems);
+	renderProjectList(state, elems);
+	renderTaskList(state, elems)
 }
+
+const pushNewTask = (state, elems, data, parentProjectId) => {
+	const projectIndex = state.projects.findIndex(project => project.id === parentProjectId );
+	const newTask = data.projects.tasks.pop();
+	state.projects[projectIndex].tasks.push(new Task(newTask.taskName, 0 , newTask.log, newTask._id))
+	renderTaskList(state, elems)
+}
+
+const createProject = (state, elems, name) => {
+	const newProject = {
+			'projectName': name,
+			'tasks': []
+		};
+
+  $.post('/projects', newProject, (data) => pushNewProject(state, elems, data), 'json');
+}
+
+const getProjectById = (state, elems, projectId) => {
+	$.getJSON(`/projects/${projectId}`, (data) => pushNewTask(state, elems, data, projectId) )
+}
+
+const createTask = (state, elems, name, parentProjectId) => {
+	const newTask = {
+			'taskName': name,
+			'totalTime': 0,
+			'log': []
+		};
+
+  $.post(`/projects/${parentProjectId}`, newTask, () => getProjectById(state, elems, parentProjectId), 'json');
+}
+
+
 
 const initProjectSubmitHandler = (state,elems) => {
 	$(elems.newProject).on("submit", (e) => {
 		e.preventDefault();
 		let name;
 		name = elems.projectName.val();
-		state.projects.push(new Project(name, []));
+		createProject(state, elems, name);
 		renderProjectOptions(state, elems);
 		renderProjectList(state, elems);
 		elems.projectName.val("");
-		//saveTask(state.tasks[state.tasks.length-1]);
-		//renderTaskList(state, elems);
 	});
 }
 
@@ -351,12 +363,13 @@ const initTaskSubmitHandler = (state, elems) => {
 		e.preventDefault();
 
 		const name = elems.taskName.val();
-		const selectedProject = $("#selectProject :selected").text();
-		const taskProject = selectedProject === "none" ? undefined : selectedProject;
-		state.tasks.push(new Task(name, 0, taskProject));
+		const parentProjectId = $("#selectProject").val();
+		const taskProject = parentProjectId === "none" ? undefined : parentProjectId;
+		createTask(state, elems, name, parentProjectId);
+		//renderTaskList(state, elems);
 		//saveTask(state.tasks[state.tasks.length-1]);
-		renderTaskList(state, elems);
 		elems.taskName.val("");
+
 	});
 }
 
@@ -371,7 +384,7 @@ const main = () => {
 		projectName: $("#projectName"),
 		taskName:$("#taskName")
 	};
-	
+
   getProjects(state, elems, setState);
 	initProjectSubmitHandler(state, elems);
 	initTaskSubmitHandler(state, elems);

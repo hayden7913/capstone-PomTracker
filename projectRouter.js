@@ -4,7 +4,6 @@ const {Projects} = require('./models');
 
 projectRouter.route('/')
   .get((req, res) => {
-
     Projects
       .find()
       .exec()
@@ -17,28 +16,11 @@ projectRouter.route('/')
   })
   .post((req,res) => {
 
-    const requiredProjectFields = ['projectName', 'tasks'];
-    const requiredTaskFields = ['taskName', 'total', 'log'];
-
-    for (let i=0; i<requiredProjectFields.length; i++) {
-      const field = requiredProjectFields[i];
-      if (!(field in req.body)) {
-        const message = `Missing \`${field}\` in request body`
-        console.error(message);
-        return res.status(400).send(message);
-      }
+    if (!('projectName' in req.body)) {
+      const message = `Missing projectName in request body`
+      console.error(message);
+      return res.status(400).send(message);
     }
-
-    for (let i=0; i<req.body.tasks.length; i++) {
-      for (let j=0; j<requiredTaskFields.length; j++) {
-        const field = requiredTaskFields[j];
-        if (!(field in req.body.tasks[i])) {
-          const message = `Missing \`${field}\` in request body`
-          console.error(message);
-          return res.status(400).send(message);
-        }
-      }
-  }
 
   Projects
     .create({
@@ -51,7 +33,7 @@ projectRouter.route('/')
         res.status(500).json({message: 'Internal server error'});
     });
 });
-    
+
 projectRouter.route('/:projectId')
   .get((req, res) => {
 
@@ -65,24 +47,22 @@ projectRouter.route('/:projectId')
         });
   })
   .post((req, res) => {
-
+    console.log(req.body);
     const toUpdate = {'tasks' : req.body};
-    const requiredTaskFields = ['taskName', 'total', 'log'];
+    const requiredTaskFields = ['taskName', 'totalTime'];
 
-    for (let i=0; i<req.body.tasks.length; i++) {
-      for (let j=0; j<requiredTaskFields.length; j++) {
-        const field = requiredTaskFields[j];
-        if (!(field in req.body.tasks[i])) {
-          const message = `Missing \`${field}\` in request body`
-          console.error(message);
-          return res.status(400).send(message);
-        }
+    for (let j=0; j<requiredTaskFields.length; j++) {
+      const field = requiredTaskFields[j];
+      if (!(field in req.body)) {
+        const message = `Missing \`${field}\` in request body`
+        console.error(message);
+        return res.status(400).send(message);
       }
     }
 
    	Projects
       .findByIdAndUpdate(req.params.projectId, {'$push': toUpdate})
-   		.then(project => res.status(201).json(project))
+   		.then(project => {res.status(201).json(project);console.log(project)})
    		.catch(err => {
    				console.error(err);
    				res.status(404).json({message: 'Project Not Found'});

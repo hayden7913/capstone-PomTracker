@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const taskSchema = mongoose.Schema({
-    taskName: {type: String, required: true},
-    total: Number,
+    taskName: String,
+    totalTime: Number,
     log: [{
       startTime: String,
       endTime: String

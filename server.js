@@ -58,7 +58,7 @@ const generateDataArray = (callback, maxLength) => {
 const generateTask = () => {
   return {
     taskName: faker.lorem.word(),
-    total: Math.floor(Math.random()*20),
+    totalTime: Math.floor(Math.random()*20),
     log: generateDataArray(generateTaskLogEntry, 0)
 
   }
@@ -67,16 +67,22 @@ const generateTask = () => {
 const generateProject = () => {
   return {
     projectName: faker.lorem.word(),
-    tasks: generateDataArray(generateTask, 3),
+    tasks: generateDataArray(generateTask, 1),
   }
 }
 
 const seedProjectData = () => {
-  const seedData = generateDataArray(generateProject, 2);
+  const seedData = generateDataArray(generateProject, 1);
   return Projects.insertMany(seedData);
 }
 
-// seedProjectData()
+Projects
+  .findOne()
+  .exec()
+  .then(project => {if (!project) seedProjectData()})
+
+
+//seedProjectData()
 
 function tearDownDb() {
   return new Promise((resolve, reject) => {

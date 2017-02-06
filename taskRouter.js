@@ -25,7 +25,7 @@ taskRouter.route('/')
 taskRouter.route('/:taskId')
   .put((req, res) => {
 
-    const requiredTaskFields = ['taskName', 'total', 'log'];
+    const requiredTaskFields = ['taskName', 'totalTime', 'log'];
 
     for (let i=0; i<requiredTaskFields.length; i++) {
       const field = requiredTaskFields[i];
@@ -38,7 +38,7 @@ taskRouter.route('/:taskId')
 
     const toUpdate = {
       'tasks.$.taskName': req.body.taskName,
-      'tasks.$.total': req.body.total,
+      'tasks.$.totalTime': req.body.totalTime,
       'tasks.$.log': req.body.log
     }
 
@@ -51,7 +51,7 @@ taskRouter.route('/:taskId')
       .catch(err => res.status(500).json({message: 'Internal server error'}));
   })
   .delete((req, res) => {
-    
+
     Projects
       .update(
        {'_id': req.params.id},

@@ -201,9 +201,9 @@ describe('Projects API resource', function() {
     });
 
     it('should respond with a Bad Request error if fields are missing', function() {
-      
+
       const newProject = generateProject();
-      delete newProject.tasks;
+      delete newProject.projectName;
 
       return chai.request(app)
         .post('/projects')
