@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const faker = require('faker');
+/*const faker = require('faker');*/
 const app = express();
 
 mongoose.Promise = global.Promise;
@@ -70,17 +70,17 @@ const generateProject = () => {
     tasks: generateDataArray(generateTask, 1),
   }
 }
-
+/*
 const seedProjectData = () => {
   const seedData = generateDataArray(generateProject, 1);
   return Projects.insertMany(seedData);
-}
+}*/
 
-Projects
+/*Projects
   .findOne()
   .exec()
   .then(project => {if (!project) seedProjectData()})
-
+*/
 
 //seedProjectData()
 
