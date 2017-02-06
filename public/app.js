@@ -30,10 +30,7 @@ Task.prototype.addTime = function(state, elems, t) {
 		 this.history.push(this.totalTime);
 	}
 
-	if(this.projectAddTime) {
-		this.projectAddTime(t);
-	}
-
+	renderTaskList(state,elems);
 	renderProjectList(state, elems);
 }
 
@@ -74,8 +71,6 @@ Project.prototype.calculateTotalProjectTime = function () {
     }
 }
 
-
-
 const displayErrror = (element, error) => {
 	element.text('error');
 }
@@ -101,6 +96,23 @@ const updateAllTasks = (state) => {
 	});
 }
 
+const updateTask = (state, elems, task, projectId) => {
+	const updatedTask = {
+    'taskName': task.name,
+    'totalTime': task.totalTime,
+    'log': task.log,
+		'_id': task.id
+  }
+
+    $.ajax({
+      url: `/projects/${projectId}/tasks/${task.id}`,
+      type: 'PUT',
+      data: updatedTask,
+      success: () => console.log("saved")
+    });
+}
+
+
 const setState = (state, elems, data) => {
 	  state.projects = data.projects.map(project => {
 	    const tasks = project.tasks.map(task => new Task (task.taskName, task.totalTime, task.log, task._id));
@@ -110,59 +122,52 @@ const setState = (state, elems, data) => {
     renderProjectOptions(state, elems);
   	renderProjectList(state, elems);
   	renderTaskList(state, elems);
-
-	/*	renderTaskList(state, elems);
-		renderProjectOptions(state, elems);
-		renderProjectList(state, elems);*/
-
-	/*const callback = (data) => {
-		state.tasks = data.tasks.map( task => {
-
-			if(state.projects.indexOf(task.project) === -1) {
-				state.projects.push(task.project);
-			}
-
-			return new Task(task.name, task.totalTime, task.history, task.project)
-		});
-
-		renderTaskList(state, elems);
-		renderProjectOptions(state, elems);
-		renderProjectList(state, elems);
-	}*/
 }
 
 const getProjects = (state, elems, callback) => {
 	$.getJSON("/projects", data => callback(state, elems, data))
 }
 
-
 const deleteTask = (state, elems, _task, _project) => {
+
   const confirmMessage = `Are you sure you want to delete \"${_task.name}\"`;
-  const deleteProject = (result) => {
+  const onConfirm = (result) => {
 
     if (result) {
-
       const projectIndex = state.projects.findIndex(project => project.id === _project.id );
       const taskIndex = state.projects[projectIndex].tasks.findIndex(task => task.id === _task.id);
+
       state.projects[projectIndex].tasks.splice(taskIndex, 1);
 
+			$.ajax({
+					url: `/projects/${_project.id}/tasks/${_task.id}`,
+					type: 'DELETE',
+					success: ( ) => console.log('Deleted')
+			});
+
+			renderProjectOptions(state, elems);
       renderProjectList(state, elems);
       renderTaskList(state, elems);
     }
   }
 
-  bootbox.confirm(confirmMessage, deleteProject);
+  bootbox.confirm(confirmMessage, onConfirm);
 }
 
 const deleteProject = (state, elems, _project) => {
 
   const confirmMessage = `Are you sure you want to delete \"${_project.name}\" and all of it's tasks?`;
-  const deleteProject = (result) => {
+  const onConfirm = (result) => {
 
     if (result) {
       const projectIndex = state.projects.findIndex(project => project.id === _project.id );
 
       state.projects.splice(projectIndex, 1);
+
+			$.ajax({
+					url: `/projects/${_project.id}`,
+					type: 'DELETE'
+			});
 
       renderProjectList(state, elems);
       renderProjectOptions(state, elems);
@@ -170,7 +175,7 @@ const deleteProject = (state, elems, _project) => {
     }
   }
 
-  bootbox.confirm(confirmMessage, deleteProject);
+  bootbox.confirm(confirmMessage, onConfirm);
 }
 
 const getProjectValues = () => {
@@ -212,19 +217,26 @@ const renderTask = (state, elems, task, project) => {
 
  	template.find(".js-btn5").click( () => {
  		task.addTime(state, elems, 5);
+		updateTask(state, elems, task, project.id);
  	});
 
  	template.find(".js-btn15").click( () => {
 		task.addTime(state, elems, 15);
+		updateTask(state, elems, task, project.id);
+
 
  	});
  	template.find(".js-btn25").click( () => {
  		task.addTime(state, elems, 25);
+		updateTask(state, elems, task, project.id);
+
 
  	});
 
  	template.find("#js-reset").click( () => {
  		task.reset(state, elems);
+		updateTask(state, elems, task, project.id);
+
  	});
 
  	template.find(`#customInput${task.id}`).on("keyup", (e) => {
@@ -233,6 +245,8 @@ const renderTask = (state, elems, task, project) => {
  			e.preventDefault();
 			const input = Number($(`#customInput${task.id}`).val());
  			task.addTime(input);
+			updateTask(state, elems, task, project.id);
+			renderProjectList(state, elems);
  			renderTaskList(state, elems);
  			//updateAllTasks(state);
  			//this.reset;
@@ -241,6 +255,8 @@ const renderTask = (state, elems, task, project) => {
 
  	template.find("#js-undo").click( () => {
  		task.undo(state, elems);
+		updateTask(state, elems, task, project.id);
+		renderProjectList(state, elems);
  		renderTaskList(state, elems);
  	})
 
