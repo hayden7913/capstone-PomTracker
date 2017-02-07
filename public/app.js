@@ -91,20 +91,21 @@ const setState = (state, elems, data) => {
 }
 
 const getProjects = (state, elems, callback) => {
-	$.getJSON("/projects", data => callback(state, elems, data))
+	$.getJSON("/projects", data => callback(state, elems, data) );
 }
 
-const getProjectById = (state, elems, projectId) => {
-	$.getJSON(`/projects/${projectId}`, (data) => pushNewTask(state, elems, data, projectId) )
-}
 
 
 const pushNewProject = (state, elems, data) => {
-	state.projects.push(new Project(data.projectName, data.tasks, data._id))
-	renderProjectOptions(state, elems);
-	renderProjectList(state, elems);
-	renderTaskList(state, elems)
+
+		state.projects.push(new Project(data.projectName, data.tasks, data._id))
+		renderProjectOptions(state, elems);
+		renderProjectList(state, elems);
+		renderTaskList(state, elems)
+
 }
+
+
 
 const createProject = (state, elems, name) => {
 	const newProject = {
@@ -112,24 +113,46 @@ const createProject = (state, elems, name) => {
 			'tasks': []
 		};
 
-  $.post('/projects', newProject, (data) => pushNewProject(state, elems, data), 'json');
+		$.ajax({
+      url: `/projects`,
+      type: 'POST',
+			data: newProject,
+      success: data => pushNewProject(state, elems, data),
+			error: err => $("#duplicateProjectError").text(err.responseText)
+    });
+
 }
 
-const pushNewTask = (state, elems, data, parentProjectId) => {
+
+const pushNewTask = (state, elems, parentProjectId, data) => {
 	const projectIndex = state.projects.findIndex(project => project.id === parentProjectId );
 	const newTask = data.projects.tasks.pop();
 	state.projects[projectIndex].tasks.push(new Task(newTask.taskName, 0 , newTask.log, newTask._id))
 	renderTaskList(state, elems)
 }
 
+
+const getProjectById = (state, elems, projectId, callback) => {
+	$.getJSON(`/projects/${projectId}`, data => callback(data));
+}
+
 const createTask = (state, elems, name, parentProjectId) => {
+
 	const newTask = {
 			'taskName': name,
 			'totalTime': 0,
 			'log': []
 		};
 
-  $.post(`/projects/${parentProjectId}`, newTask, () => getProjectById(state, elems, parentProjectId), 'json');
+		const testFunc = pushNewTask.bind(null, state, elems, parentProjectId);
+
+		$.ajax({
+      url: `/projects/${parentProjectId}`,
+      type: 'POST',
+			data: newTask,
+      success: () => getProjectById(state, elems, parentProjectId, testFunc),
+			error: err => $("#duplicateTaskError").text(err.responseText)
+    });
 }
 
 const updateTask = (state, elems, task, projectId) => {
@@ -326,9 +349,7 @@ const renderProjectList = (state, elems) => {
 }
 
 
-const displayError = (element, error) => {
-	element.text(error);
-}
+
 
 const alreadyExists = (array, name) => {
 	const index = array.findIndex(element => element === name);
@@ -349,7 +370,8 @@ const initProjectSubmitHandler = (state,elems) => {
 		const errorElement = $("#duplicateProjectError");
 
 		errorElement.text("");
-		alreadyExists(projectNames, name) ? displayError(errorElement, state.errorMessage.duplicateProject) : createProject(state, elems, name);
+		//alreadyExists(projectNames, name) ? displayError(errorElement, state.errorMessage.duplicateProject) :
+		createProject(state, elems, name);
 		renderProjectOptions(state, elems);
 		renderProjectList(state, elems);
 		elems.projectName.val("");
@@ -368,7 +390,7 @@ const initTaskSubmitHandler = (state, elems) => {
 		const errorElement = $("#duplicateTaskError");
 
 		errorElement.text("");
-		alreadyExists(taskNames, name) ? displayError(errorElement, state.errorMessage.duplicateTask) : createTask(state, elems, name, parentProjectId);;
+		createTask(state, elems, name, parentProjectId);
 		elems.taskName.val("");
 
 	});

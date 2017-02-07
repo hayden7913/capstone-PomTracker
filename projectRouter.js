@@ -23,15 +23,25 @@ projectRouter.route('/')
     }
 
   Projects
-    .create({
-      'projectName': req.body.projectName,
-      'tasks': req.body.tasks
+    .findOne({'projectName': req.body.projectName})
+    .exec()
+    .then(project => {
+      if (project) {
+        const message = 'That project already exists. Please use a different project name';
+        res.status(409).send(message)
+      } else {
+        Projects
+          .create({
+            'projectName': req.body.projectName,
+            'tasks': req.body.tasks
+          })
+          .then(project => res.status(201).json(project))
+          .catch(err => {
+              console.error(err);
+              res.status(500).json({message: 'Internal server error'});
+          });
+      }
     })
-    .then(project => res.status(201).json(project))
-    .catch(err => {
-        console.error(err);
-        res.status(500).json({message: 'Internal server error'});
-    });
 });
 
 projectRouter.route('/:projectId')
@@ -47,6 +57,7 @@ projectRouter.route('/:projectId')
         });
   })
   .post((req, res) => {
+    console.log('hello');
     const toUpdate = {'tasks' : req.body};
     const requiredTaskFields = ['taskName', 'totalTime'];
 
