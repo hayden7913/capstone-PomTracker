@@ -4,19 +4,8 @@ const state = {
 	tasks: [],
 	errorMessage: {
 		duplicateProject: 'That project already exists. Please use a different project name',
-		duplicateTask: 'That task already exists. Please use a different task name',
-		invalidTime: 'Please enter a time that is greater than 0'
+		duplicateTask: 'That task already exists. Please use a different task name'
 	}
-}
-
-Array.prototype.flatten = function() {
-  return this.reduce((cv, pv) => cv.concat(pv), []);
-}
-
-const flatten = arr => arr.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []);
-
-const findElementById = (array, id) => {
-	return array.find(element => element.id === id);
 }
 
 const minutesToHours = (min) => {
@@ -26,35 +15,39 @@ const minutesToHours = (min) => {
 function Task(name, totalTime, log , id) {
 	this.name = name;
 	this.totalTime = Number(totalTime);
-  this.log = log;//log === [] ? this.log = [null] : this.log = log;
+  this.log = log;
   this.id = id;
 	this.history = [totalTime];
 }
 
 Task.prototype.addTime = function(state, elems, t) {
-	this.totalTime += minutesToHours(t);
 
-	if (this.history) {
-		 this.history.push(this.totalTime);
+	if (this.totalTime + t < 0)  {
+		this.totalTime = 0;
+	} else {
+		this.totalTime += minutesToHours(t);
+
+		if (this.history) {
+			 this.history.push(this.totalTime);
+		}
+
+		renderTaskList(state,elems);
+		renderProjectList(state, elems);
 	}
 
-	renderTaskList(state,elems);
-	renderProjectList(state, elems);
 }
 
 Task.prototype.reset = function(state, elems) {
 	this.totalTime = 0;
 
-	if(this.history) {
-		this.history.push(0);
-	}
+		this.history.push(0)
 
 	renderProjectList(state, elems);
 }
 
 Task.prototype.undo = function(state, elems) {
 
-	if (this.history && this.history.length > 1) {
+	if (this.history.length > 1) {
 		this.history.pop();
 		this.totalTime = this.history[this.history.length - 1];
 	}
@@ -69,27 +62,18 @@ function Project(name , tasks, id) {
 }
 
 Project.prototype.calculateTotalProjectTime = function () {
-
-    if (this.tasks.length) {
-      return this.tasks
-               	 .map(task => task.totalTime)
-               	 .reduce((a,b) => a+b);
-    } else {
-      return 0;
-    }
+	return this.tasks.length ? this.tasks.map(task => task.totalTime).reduce((a,b) => a+b) : 0;
 }
 
-
 const pushNewProject = (state, elems, data) => {
-
 		state.projects.push(new Project(data.projectName, data.tasks, data._id))
 		renderProjectOptions(state, elems);
 		renderProjectList(state, elems);
-		renderTaskList(state, elems)
-
+		renderTaskList(state, elems);
 }
 
 const createProject = (state, elems, name) => {
+
 	const newProject = {
 			'projectName': name,
 			'tasks': []
@@ -126,11 +110,15 @@ const getProjects = (state, elems, callback) => {
 	$.getJSON("/projects", data => callback(state, elems, data) );
 }
 
+const findIndexById = (array, id) => {
+	return array.findIndex(element => element.id === id);
+}
 
 const pushNewTask = (state, elems, parentProjectId, data) => {
-	const projectIndex = state.projects.findIndex(project => project.id === parentProjectId );
+	const projectIndex = findIndexById(state.projects, parentProjectId);
 	const newTask = data.projects.tasks.pop();
 	state.projects[projectIndex].tasks.push(new Task(newTask.taskName, 0 , newTask.log, newTask._id))
+
 	renderTaskList(state, elems)
 }
 
@@ -146,18 +134,17 @@ const createTask = (state, elems, name, parentProjectId) => {
 			'log': []
 		};
 
-		const testFunc = pushNewTask.bind(null, state, elems, parentProjectId);
-
 		$.ajax({
       url: `/projects/${parentProjectId}`,
       type: 'POST',
 			data: newTask,
-      success: () => getProjectById(state, elems, parentProjectId, testFunc),
+      success: () => getProjectById(state, elems, parentProjectId, pushNewTask.bind(null, state, elems, parentProjectId)),
 			error: err => elems.taskError.text(err.responseText)
     });
 }
 
 const updateTask = (state, elems, task, projectId) => {
+
 	const updatedTask = {
     'taskName': task.name,
     'totalTime': task.totalTime,
@@ -178,7 +165,7 @@ const deleteProject = (state, elems, _project) => {
   const onConfirm = (result) => {
 
     if (result) {
-      const projectIndex = state.projects.findIndex(project => project.id === _project.id );
+      const projectIndex = findIndexById(state.projects, _project.id);
 
       state.projects.splice(projectIndex, 1);
 
@@ -202,7 +189,7 @@ const deleteTask = (state, elems, _task, _project) => {
   const onConfirm = (result) => {
 
     if (result) {
-      const projectIndex = state.projects.findIndex(project => project.id === _project.id );
+      const projectIndex = findIndexById(state.projects, _project.id);
       const taskIndex = state.projects[projectIndex].tasks.findIndex(task => task.id === _task.id);
 
       state.projects[projectIndex].tasks.splice(taskIndex, 1);
@@ -225,55 +212,64 @@ const deleteTask = (state, elems, _task, _project) => {
 
 const renderTask = (state, elems, task, project) => {
 
- const projectName = project.name === "none" ? "" : project.name;
- let template = $(
-	`<div id="wrapper">
-		<div class="timeMod well">
-				<div class="topRow">
-					<span class="title">${task.name}</span>
-					<span class="acctotal">${task.totalTime.toFixed(2)}</span>
-					<span class="project">${projectName}<span>
-				</div>
-			<div class="btn-group timeButtons">
-				<button type="button" class="js-btn5 btn btn-primary">5</button>
-				<button type="button" class="js-btn15 btn btn-primary">15</button>
-				<button type="button" class="js-btn25 btn btn-primary" value="25">25</button>
-				<input type="text" name="" id="customInput${task.id}" class="customInput form-control">
-				<span id="invalidTimeError"></span>
 
+	const projectName = project.name === "none" ? "" : project.name;
+	const template = $(
+		`<div id="wrapper">
+			<div class="timeMod well">
+					<div class="topRow">
+						<span class="title">${task.name}</span>
+						<span class="acctotal">${task.totalTime.toFixed(2)}</span>
+						<span class="project">${projectName}<span>
+					</div>
+				<div class="btn-group timeButtons">
+					<button type="button" class="js-btn5 btn btn-primary">5</button>
+					<button type="button" class="js-btn15 btn btn-primary">15</button>
+					<button type="button" class="js-btn25 btn btn-primary" value="25">25</button>
+					<input type="text" name="" id="customInput${task.id}" class="customInput form-control">
+					<span id="invalidTimeError"></span>
+
+				</div>
+				<div class="controlButtons">
+					<button type="button" id="js-reset" class="btn btn-primary" >Reset</button>
+					<button type="button" id="js-undo" class="btn btn-primary" >Undo</button>
+					<button type="button" id="js-delete" class="btn btn-primary" >Delete</button>
+				</div>
 			</div>
-			<div class="controlButtons">
-				<button type="button" id="js-reset" class="btn btn-primary" >Reset</button>
-				<button type="button" id="js-undo" class="btn btn-primary" >Undo</button>
-				<button type="button" id="js-delete" class="btn btn-primary" >Delete</button>
-			</div>
-		</div>
-	</div>`)
+		</div>`);
 
 
  	template.find(".js-btn5").click( () => {
  		task.addTime(state, elems, 5);
-		updateTask(state, elems, task, project.id);
+
  	});
 
  	template.find(".js-btn15").click( () => {
 		task.addTime(state, elems, 15);
-		updateTask(state, elems, task, project.id);
-
 
  	});
+
  	template.find(".js-btn25").click( () => {
  		task.addTime(state, elems, 25);
-		updateTask(state, elems, task, project.id);
-
-
  	});
 
  	template.find("#js-reset").click( () => {
  		task.reset(state, elems);
-		updateTask(state, elems, task, project.id);
-
  	});
+
+	template.find("#js-undo").click( () => {
+		task.undo(state, elems);
+	});
+
+	template.find("#js-delete").click( () => {
+		deleteTask(state, elems, task, project)
+	});
+
+	template.find(".btn").click(() => {
+		updateTask(state, elems, task, project.id);
+		renderProjectList(state, elems);
+		renderTaskList(state, elems);
+	});
 
  	template.find(`#customInput${task.id}`).on("keyup", (e) => {
  		const code = e.which;
@@ -281,30 +277,18 @@ const renderTask = (state, elems, task, project) => {
  			e.preventDefault();
 			const input = Number($(`#customInput${task.id}`).val());
  			task.addTime(state, elems, input);
+			this.reset;
 			updateTask(state, elems, task, project.id);
 			renderProjectList(state, elems);
  			renderTaskList(state, elems);
- 			//updateAllTasks(state);
- 			//this.reset;
  		}
- 	})
-
- 	template.find("#js-undo").click( () => {
- 		task.undo(state, elems);
-		updateTask(state, elems, task, project.id);
-		renderProjectList(state, elems);
- 		renderTaskList(state, elems);
- 	})
-
- 	template.find("#js-delete").click( () => {
-		deleteTask(state, elems, task, project)
- 	});
-
- 	template.find(".btn").click(() => {
- 		renderTaskList(state, elems);
  	});
 
  	return template;
+}
+
+Array.prototype.flatten = function() {
+  return this.reduce((cv, pv) => cv.concat(pv), []);
 }
 
 const renderTaskList = (state, elems) => {
@@ -313,7 +297,7 @@ const renderTaskList = (state, elems) => {
 			project.tasks.map(task =>
 				renderTask(state, elems, task, project)));
 
-	elems.taskList.html(flatten(resHtml).reverse());
+	elems.taskList.html(resHtml.flatten().reverse());
 }
 
 const renderProjectOptions = (state, elems) => {
@@ -349,10 +333,8 @@ const renderOneProject = (state, elems, project) => {
 }
 
 const renderProjectList = (state, elems) => {
-
   const resHtml =
-    state.projects
-				 .map(project => {
+    state.projects.map(project => {
 						if (project.name != "none") {
 							return renderOneProject(state, elems, project);
 						}
@@ -360,19 +342,6 @@ const renderProjectList = (state, elems) => {
 
 	$("#projects").html(resHtml);
 }
-
-
-
-
-const alreadyExists = (array, name) => {
-	const index = array.findIndex(element => element === name);
-	if (index === -1) {
-		return false;
-	} else {
-		return true;
-	}
-}
-
 
 const initProjectSubmitHandler = (state,elems) => {
 	$(elems.newProject).on("submit", (e) => {
@@ -388,14 +357,15 @@ const initProjectSubmitHandler = (state,elems) => {
 	});
 }
 
+
+
+
 const initTaskSubmitHandler = (state, elems) => {
 	$(elems.newTask).on("submit", (e) => {
 		e.preventDefault();
 
 		const name = elems.taskName.val();
 		const parentProjectId = $("#selectProject").val();
-		const taskProject = parentProjectId === "none" ? undefined : parentProjectId;
-		const parentProject = findElementById(state.projects, parentProjectId);
 
 		elems.taskError.text("");
 		createTask(state, elems, name, parentProjectId);

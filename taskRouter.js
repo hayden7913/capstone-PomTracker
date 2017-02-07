@@ -4,26 +4,26 @@ const {Projects} = require('./models');
 
 taskRouter.route('/')
   .get((req, res) => {
-
-  Projects
-    .findById(req.params.id)
-    .exec()
-    .then(projects => {
-      const tasks = projects.tasks;
-      res.json({
-        tasks
+    Projects
+      .findById(req.params.id)
+      .exec()
+      .then(projects => {
+        const tasks = projects.tasks;
+        res.json({
+          tasks
+        });
+      })
+      .catch(
+        err => {
+          console.error(err);
+          res.status(404).json({message: 'Not Found'});
       });
-    })
-    .catch(
-      err => {
-        console.error(err);
-        res.status(404).json({message: 'Not Found'});
-      }
-    )
 });
 
 taskRouter.route('/:taskId')
   .put((req, res) => {
+
+
     const requiredTaskFields = ['taskName', 'totalTime'];
 
     for (let i=0; i<requiredTaskFields.length; i++) {
@@ -35,9 +35,11 @@ taskRouter.route('/:taskId')
       }
     }
 
+    const totalTime = req.body.totalTime < 0 ? 0 : req.body.totalTime;
+    
     const toUpdate = {
       'tasks.$.taskName': req.body.taskName,
-      'tasks.$.totalTime': req.body.totalTime,
+      'tasks.$.totalTime': totalTime,
       'tasks.$.log': req.body.log
     }
 
@@ -50,7 +52,6 @@ taskRouter.route('/:taskId')
       .catch(err => res.status(500).json({message: 'Internal server error'}));
   })
   .delete((req, res) => {
-
     Projects
       .update(
        {'_id': req.params.id},

@@ -1,12 +1,8 @@
-
-
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const faker = require('faker');
 const mongoose = require('mongoose');
 
-// this makes the should syntax available throughout
-// this module
 const should = chai.should();
 
 const {Projects} = require('../models');
@@ -22,9 +18,11 @@ const generateProjectName = () => {
 const generateTime = () => {
   const hours = Math.floor(Math.random() * 24);
   let minutes = Math.floor(Math.random() * 60);
+
   if (minutes.toString().length === 1) {
     minutes = `0${minutes}`
   }
+
   return `${hours}:${minutes}`
 }
 
@@ -37,9 +35,11 @@ const generateTaskLogEntry = () => {
 
 const generateDataArray = (callback, maxLength) => {
   let arr = [];
+
   for (let i = 0; i < Math.random() * maxLength + 1; i++) {
     arr.push(callback())
   }
+
   return arr;
 }
 
@@ -213,28 +213,27 @@ describe('Projects API resource', function() {
         })
     });
 
-    it('should respond with a Conflict error if an atempt is made to create a project that already exists'), function() {
+    it('should respond with a Conflict error if an atempt is made to create a project that already exists', function() {
+      
       let newProject;
-      Projects
+       return Projects
         .findOne()
         .exec()
         .then(function(project) {
-          return Projects
-            .create({
-              'projectName': project.projectName,
-              'tasks': []
+          newProject = {
+            'projectName': project.projectName,
+            'tasks': []
+          }
+          return chai.request(app)
+            .post('/projects')
+            .send(newProject)
+            })
+            .then(function(project) {
+            })
+            .catch(function(err) {
+              err.should.have.status(409)
             })
         })
-        .then( function(project) {
-          console.log(project);
-        }
-
-        )
-    }
-    /*.catch(function(err){
-      console.log(err);
-      err.should.have.status(409);
-    })*/
   });
 
   describe('/projects/:projectId GET endpoint', function() {
@@ -352,7 +351,6 @@ describe('Projects API resource', function() {
         .findOne()
         .exec()
         .then(function(_project) {
-
           project = _project;
           return chai.request(app).delete(`/projects/${project.id}`);
         })

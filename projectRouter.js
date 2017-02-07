@@ -30,23 +30,22 @@ projectRouter.route('/')
         const message = 'That project already exists. Please use a different project name';
         res.status(409).send(message)
       } else {
-        Projects
+        return Projects
           .create({
             'projectName': req.body.projectName,
             'tasks': req.body.tasks
           })
-          .then(project => res.status(201).json(project))
-          .catch(err => {
-              console.error(err);
-              res.status(500).json({message: 'Internal server error'});
-          });
-      }
-    })
+        }
+      })
+      .then(project => res.status(201).json(project))
+      .catch(err => {
+            console.error(err);
+            res.status(500).json({message: 'Internal server error'});
+        });
 });
 
 projectRouter.route('/:projectId')
   .get((req, res) => {
-
     Projects
       .findById(req.params.projectId)
       .exec()
@@ -57,7 +56,6 @@ projectRouter.route('/:projectId')
         });
   })
   .post((req, res) => {
-
     const toUpdate = {'tasks' : req.body};
     const requiredTaskFields = ['taskName', 'totalTime'];
 
@@ -75,21 +73,20 @@ projectRouter.route('/:projectId')
       .exec()
       .then(project => {
         const taskIndex = project.tasks.findIndex(task => task.taskName === req.body.taskName);
-        
+
         if (taskIndex > -1) {
           const message = 'That task already exists the select project. Please use a different task name';
           res.status(409).send(message)
         } else {
-
-          Projects
-            .findByIdAndUpdate(req.params.projectId, {'$push': toUpdate})
-         		.then(project => {res.status(201).json(project);console.log(project)})
-         		.catch(err => {
-         				console.error(err);
-         				res.status(404).json({message: 'Project Not Found'});
-         		});
+        return Projects
+                .findByIdAndUpdate(req.params.projectId, {'$push': toUpdate});
         }
       })
+      .then(project => {res.status(201).json(project);console.log(project)})
+      .catch(err => {
+          console.error(err);
+          res.status(404).json({message: 'Project Not Found'});
+      });
    })
    .put((req, res) => {
 
