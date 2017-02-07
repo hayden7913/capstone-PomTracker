@@ -79,22 +79,6 @@ Project.prototype.calculateTotalProjectTime = function () {
     }
 }
 
-const setState = (state, elems, data) => {
-	  state.projects = data.projects.map(project => {
-	    const tasks = project.tasks.map(task => new Task (task.taskName, task.totalTime, task.log, task._id));
-	    return new Project(project.projectName, tasks, project._id);
-	  });
-
-    renderProjectOptions(state, elems);
-  	renderProjectList(state, elems);
-  	renderTaskList(state, elems);
-}
-
-const getProjects = (state, elems, callback) => {
-	$.getJSON("/projects", data => callback(state, elems, data) );
-}
-
-
 
 const pushNewProject = (state, elems, data) => {
 
@@ -104,8 +88,6 @@ const pushNewProject = (state, elems, data) => {
 		renderTaskList(state, elems)
 
 }
-
-
 
 const createProject = (state, elems, name) => {
 	const newProject = {
@@ -118,9 +100,30 @@ const createProject = (state, elems, name) => {
       type: 'POST',
 			data: newProject,
       success: data => pushNewProject(state, elems, data),
-			error: err => $("#duplicateProjectError").text(err.responseText)
+			error: err => elems.projectError.text(err.responseText)
     });
 
+}
+
+const setState = (state, elems, data) => {
+	  state.projects = data.projects.map(project => {
+	    const tasks = project.tasks.map(task => new Task (task.taskName, task.totalTime, task.log, task._id));
+	    return new Project(project.projectName, tasks, project._id);
+	  });
+		//state.projects should always contain a project called "none"
+		const indexOfNone = state.projects.findIndex(project => project.name === "none");
+
+		if (indexOfNone === -1) {
+			createProject(state, elems, "none");
+		}
+
+    renderProjectOptions(state, elems);
+  	renderProjectList(state, elems);
+  	renderTaskList(state, elems);
+}
+
+const getProjects = (state, elems, callback) => {
+	$.getJSON("/projects", data => callback(state, elems, data) );
 }
 
 
@@ -130,7 +133,6 @@ const pushNewTask = (state, elems, parentProjectId, data) => {
 	state.projects[projectIndex].tasks.push(new Task(newTask.taskName, 0 , newTask.log, newTask._id))
 	renderTaskList(state, elems)
 }
-
 
 const getProjectById = (state, elems, projectId, callback) => {
 	$.getJSON(`/projects/${projectId}`, data => callback(data));
@@ -151,7 +153,7 @@ const createTask = (state, elems, name, parentProjectId) => {
       type: 'POST',
 			data: newTask,
       success: () => getProjectById(state, elems, parentProjectId, testFunc),
-			error: err => $("#duplicateTaskError").text(err.responseText)
+			error: err => elems.taskError.text(err.responseText)
     });
 }
 
@@ -222,13 +224,15 @@ const deleteTask = (state, elems, _task, _project) => {
 
 
 const renderTask = (state, elems, task, project) => {
+
+ const projectName = project.name === "none" ? "" : project.name;
  let template = $(
 	`<div id="wrapper">
 		<div class="timeMod well">
 				<div class="topRow">
 					<span class="title">${task.name}</span>
 					<span class="acctotal">${task.totalTime.toFixed(2)}</span>
-					<span class="project">${project.name}<span>
+					<span class="project">${projectName}<span>
 				</div>
 			<div class="btn-group timeButtons">
 				<button type="button" class="js-btn5 btn btn-primary">5</button>
@@ -313,12 +317,17 @@ const renderTaskList = (state, elems) => {
 }
 
 const renderProjectOptions = (state, elems) => {
+	let projectNoneId;
 	resHtml = state.projects
-	//.filter(project => project.name !== "")
-	.map((project) => {
-		return `<option value="${project.id}">${project.name}</option>`;
-	});
+		.map((project) => {
+			if (project.name === "none") {
+				projectNoneId = project.id;
+			} else {
+				return `<option value="${project.id}">${project.name}</option>`;
+			}
+		});
 
+	resHtml.unshift(`<option value="${projectNoneId}">none</option>`)
 	elems.projectSelect.html(resHtml);
 }
 
@@ -343,7 +352,11 @@ const renderProjectList = (state, elems) => {
 
   const resHtml =
     state.projects
-		     .map(project => renderOneProject(state, elems, project));
+				 .map(project => {
+						if (project.name != "none") {
+							return renderOneProject(state, elems, project);
+						}
+				 });
 
 	$("#projects").html(resHtml);
 }
@@ -366,11 +379,8 @@ const initProjectSubmitHandler = (state,elems) => {
 		e.preventDefault();
 
 		const name = elems.projectName.val();
-		const projectNames = state.projects.map(project => project.name);
-		const errorElement = $("#duplicateProjectError");
 
-		errorElement.text("");
-		//alreadyExists(projectNames, name) ? displayError(errorElement, state.errorMessage.duplicateProject) :
+		elems.projectError.text("");
 		createProject(state, elems, name);
 		renderProjectOptions(state, elems);
 		renderProjectList(state, elems);
@@ -386,10 +396,8 @@ const initTaskSubmitHandler = (state, elems) => {
 		const parentProjectId = $("#selectProject").val();
 		const taskProject = parentProjectId === "none" ? undefined : parentProjectId;
 		const parentProject = findElementById(state.projects, parentProjectId);
-		const taskNames = parentProject.tasks.map(task => task.name);
-		const errorElement = $("#duplicateTaskError");
 
-		errorElement.text("");
+		elems.taskError.text("");
 		createTask(state, elems, name, parentProjectId);
 		elems.taskName.val("");
 
@@ -405,7 +413,9 @@ const main = () => {
 		newTask : $("#newTask"),
 		taskList: $("#taskList"),
 		projectName: $("#projectName"),
-		taskName:$("#taskName")
+		taskName:$("#taskName"),
+		projectError: $("#duplicateProjectError"),
+		taskError: $("#duplicateTaskError")
 	};
 
   getProjects(state, elems, setState);

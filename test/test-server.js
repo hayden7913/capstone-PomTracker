@@ -212,6 +212,29 @@ describe('Projects API resource', function() {
           err.should.have.status(400);
         })
     });
+
+    it('should respond with a Conflict error if an atempt is made to create a project that already exists'), function() {
+      let newProject;
+      Projects
+        .findOne()
+        .exec()
+        .then(function(project) {
+          return Projects
+            .create({
+              'projectName': project.projectName,
+              'tasks': []
+            })
+        })
+        .then( function(project) {
+          console.log(project);
+        }
+
+        )
+    }
+    /*.catch(function(err){
+      console.log(err);
+      err.should.have.status(409);
+    })*/
   });
 
   describe('/projects/:projectId GET endpoint', function() {

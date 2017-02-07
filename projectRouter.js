@@ -57,7 +57,7 @@ projectRouter.route('/:projectId')
         });
   })
   .post((req, res) => {
-    console.log('hello');
+
     const toUpdate = {'tasks' : req.body};
     const requiredTaskFields = ['taskName', 'totalTime'];
 
@@ -70,13 +70,26 @@ projectRouter.route('/:projectId')
       }
     }
 
-   	Projects
-      .findByIdAndUpdate(req.params.projectId, {'$push': toUpdate})
-   		.then(project => {res.status(201).json(project);console.log(project)})
-   		.catch(err => {
-   				console.error(err);
-   				res.status(404).json({message: 'Project Not Found'});
-   		});
+    Projects
+      .findById(req.params.projectId)
+      .exec()
+      .then(project => {
+        const taskIndex = project.tasks.findIndex(task => task.taskName === req.body.taskName);
+        
+        if (taskIndex > -1) {
+          const message = 'That task already exists the select project. Please use a different task name';
+          res.status(409).send(message)
+        } else {
+
+          Projects
+            .findByIdAndUpdate(req.params.projectId, {'$push': toUpdate})
+         		.then(project => {res.status(201).json(project);console.log(project)})
+         		.catch(err => {
+         				console.error(err);
+         				res.status(404).json({message: 'Project Not Found'});
+         		});
+        }
+      })
    })
    .put((req, res) => {
 
