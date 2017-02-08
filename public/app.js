@@ -127,7 +127,6 @@ const getProjectById = (state, elems, projectId, callback) => {
 }
 
 const createTask = (state, elems, name, parentProjectId) => {
-
 	const newTask = {
 			'taskName': name,
 			'totalTime': 0,
@@ -340,7 +339,7 @@ const renderProjectList = (state, elems) => {
 						}
 				 });
 
-	$("#projects").html(resHtml);
+	$("#projectList").html(resHtml);
 }
 
 const initProjectSubmitHandler = (state,elems) => {
