@@ -3,15 +3,21 @@
 }
 
 body {
-	font-size: 25px;
+	font-size: 20px;
 }
 
 header {
+	margin-left:-10px;
+	width: 100%;
+	position: relative;
 	background-color: #666666;
 	padding: 5px;
+	height: 50px;
 }
 
 header h1 {
+	position: absolute;
+	left: 35px;
 	margin-left: -25px;
 	font-size: 35px;
 }
@@ -41,7 +47,7 @@ body {
 .topRow {
 	margin-top: -10px;
 	position: relative;
-	font-size: 25px;
+	font-size: 20px;
 	margin-bottom: 5px;
 
 }
@@ -123,44 +129,84 @@ input[type=submit]:hover {
 	margin: 10px 10px;
 	min-width: 325px;
 	min-height: 125px;
+	position: relative;
+}
 
+.glyphicon-remove {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	opacity: .25;
+}
+
+.glyphicon-remove:hover {
+    opacity: 0.5;
 }
 
 .project-name {
 	font-weight: bold;
+	font-size: 25px;
 }
 
 .project-header {
 	margin-bottom: 10px;
 }
 
-#test-button {
-    font-family: "Lato", "Lucida Grande", "Lucida Sans Unicode", Tahoma, Sans-Serif;
-		background: #47CF73;
-    -webkit-appearance: none;
-    font-size: 1rem;
-    text-shadow: none;
-    line-height: 1.2;
-    display: inline-block;
-    border: 0;
-    outline: 0;
-    padding: 10px 16px;
-    margin: 0 10px 0 0;
-    position: relative;
-    border-radius: 3px;
-    border: 3px solid transparent;
-    color: white;
-    cursor: pointer;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    text-decoration: none;
-    cursor: pointer;
-    text-align: center;
-    font-weight: normal;
+.add-new-task {
+	text-decoration: underline;
+	/*color: 	#A0A0A0 ;*/
+	opacity: .45;
+}
+
+.add-new-task:hover {
+	opacity: .8;
+	cursor: pointer;
+}
+
+.button {
+	background-color: #337ab7;
+	-webkit-border-radius: 7;
+	-moz-border-radius: 7;
+	border-radius: 7px;
+	color: white;
+	font-size: 15px;
+	padding: 10px 20px 10px 20px;
+	cursor:pointer;
+}
+
+.button:hover {
+  background: #3cb0fd;
+}
+
+.button-group .button {
+	border-radius: 0;
+	float: left;
+	border: 1px solid #3cb0fd;
+	cursor:pointer;
+
+}
+
+
+.button-group .button:not(:last-child) {
+    border-right: none;
+}
+
+.button.button-left {
+	border-bottom-left-radius: 7px;
+	border-top-left-radius: 7px;
+}
+
+.button.button-right {
+	border-bottom-right-radius: 7px;
+	border-top-right-radius: 7px;
 }
 
 
 
+.button-group .button:hover {
+  background: #3cb0fd;
+}
+/*
 button {
     background-color: #337ab7;
     border: none;
@@ -171,4 +217,4 @@ button {
     border-radius: 3px;
     width: 75px;
     font-size: 20px;
-}
+}*/

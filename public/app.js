@@ -2,6 +2,8 @@
 const state = {
 	projects: ["none", "Sample Project"],
 	tasks: [],
+	taskInputHidden: true,
+	focusedInputId: null,
 	errorMessage: {
 		duplicateProject: 'That project already exists. Please use a different project name',
 		duplicateTask: 'That task already exists. Please use a different task name'
@@ -119,6 +121,8 @@ const pushNewTask = (state, elems, parentProjectId, data) => {
 	const newTask = data.projects.tasks.pop();
 	state.projects[projectIndex].tasks.push(new Task(newTask.taskName, 0 , newTask.log, newTask._id))
 	renderProjectList(state, elems);
+	console.log('hello');
+	$("#project-list").find(state.taskInputId).focus();
 }
 
 const getProjectById = (state, elems, projectId, callback) => {
@@ -218,18 +222,18 @@ const renderTask = (state, elems, task, project) => {
 						<span class="title">${task.name}</span>
 						<span class="acctotal">${minutesToHours(task.totalTime)}</span>
 					</div>
-				<div class="btn-group timeButtons">
-					<button type="button" class="js-btn5 btn btn-primary">+5m</button>
-					<button type="button" class="js-btn15 btn btn-primary">+15m</button>
-					<button type="button" class="js-btn25 btn btn-primary" value="25">+25m</button>
+				<div class="button-group timeButtons">
+					<button type="button" class="js-btn5 button button-group button-left">+5m</button>
+					<button type="button" class="js-btn15 button button-group">+15m</button>
+					<button type="button" class="js-btn25 button button-group button-right" value="25">+25m</button>
 					<input type="text" name="" id="customInput${task.id}" placeholder="+..m" class="customInput form-control">
 					<span id="invalidTimeError"></span>
 
 				</div>
 				<div class="controlButtons">
-					<button type="button" id="js-reset" class="btn btn-primary" >Reset</button>
-					<button type="button" id="js-undo" class="btn btn-primary" >Undo</button>
-					<button type="button" id="js-delete" class="btn btn-primary" >Delete</button>
+					<button type="button" id="js-reset" class="button" >Reset</button>
+					<button type="button" id="js-undo" class="button" >Undo</button>
+					<button type="button" id="js-delete" class="button" >Delete</button>
 				</div>
 			</div>
 		</div>`);
@@ -299,36 +303,45 @@ const renderTaskList = (state, elems, project) => {
 
 
 const renderProject = (state, elems, project) => {
+
 	const taskListHtml = renderTaskList(state, elems, project);
 	const taskListWrapperHtml = $(`<div id="js-task-list-wrapper" class="task-list-wrapper"></div>`)
+	const taskInputId =`js-task-input-${project.id}`
 	const projectContainerTemplate = $(
-		`<div id="js-project-wrapper" class="project-wrapper" class="well">
+		`<div id="js-project-wrapper" class="project-wrapper well" >
 				<div class="project-header">
 					<span class="project-name">${project.name}</span>
 					<span class="total-project-time">${minutesToHours(project.calculateTotalProjectTime())}</span>
+					<span id="js-remove" class="glyphicon glyphicon-remove"></span>
 				</div>
 				<div id="js-add-new-task" class="add-new-task ">Add new task..</div>
-				<form id="js-new-task-form">
-					<input id="js-new-task-input" class="new-task-input hide" type="text"></input>
+				<form id="js-new-task-form" class="js-new-task-form">
+					<input id=${taskInputId} class="new-task-input ${state.taskInputHidden ? "hide" : ""}" type="text"></input>
 				</form>
 				<div id="duplicate-task-error" class="error"></div>
 		</div>`);
 
 		projectContainerTemplate.find("#js-add-new-task").click( (e) => {
 			e.stopPropagation();
-			projectContainerTemplate.find("#js-new-task-input").toggleClass("hide");
+			console.log(taskInputId);
+			projectContainerTemplate.find(`#${taskInputId}`).removeClass("hide");
+			state.taskInputHidden = false;
 		});
 
-		projectContainerTemplate.find("#js-new-task-form").on("submit", (e) => {
+		projectContainerTemplate.find(".js-new-task-form").on("submit", function(e) {
 			e.preventDefault();
 
-			const name = $("#js-new-task-input").val();
-
+			const name = $(this).find("input").val();
 			elems.taskError.text("");
 			createTask(state, elems, name, project.id);
-			$("#js-new-task-input").val("");
+			$(`#${taskInputId}`).val("");
+			state.taskInputId = `#${taskInputId}`;
 
 		});
+
+		projectContainerTemplate.find("#js-remove").click(() =>{
+				deleteProject(state, elems, project);
+		})
 
 		projectContainerTemplate.append(taskListWrapperHtml.html(taskListHtml));
 
@@ -414,6 +427,17 @@ const initTaskSubmitHandler = (state, elems) => {
 	});
 }
 
+const initbodyClickHandler = (state, elems) => {
+	$("body").on("click", (e) => {
+
+
+		if (!$(e.target).hasClass('new-task-input')) {
+
+		}
+
+	})
+}
+
 
 const main = () => {
 
@@ -432,6 +456,7 @@ const main = () => {
   getProjects(state, elems, setState);
 	initProjectSubmitHandler(state, elems);
 	initTaskSubmitHandler(state, elems);
+	initbodyClickHandler(state, elems);
 
 }
 
