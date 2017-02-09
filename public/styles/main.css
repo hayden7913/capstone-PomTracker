@@ -19,6 +19,64 @@ header h1 {
 .module {
 	margin: 40px 0;
 }
+
+body {
+ 	padding: 10px;
+}
+
+.wrapper {
+  display: block;
+  margin-top: 10px;
+}
+
+.error {
+  margin-left: 5px;
+  color: red;
+}
+.timeMod {
+	width: 400px;
+	padding: 10px;
+}
+
+.topRow {
+	margin-top: -10px;
+	position: relative;
+	font-size: 25px;
+	margin-bottom: 5px;
+
+}
+
+.topRow > * {
+	display: inline-block;
+}
+
+#newProj {
+	margin-bottom: 10px;
+}
+
+.sell {
+	position: absolute;
+	width: 75px;
+	height: 25px;
+	right: 0px;
+	top: -30px;
+}
+
+.timeMod > * {
+	margin-top: 15px;
+}
+
+#title {
+	margin-right: 10px;
+
+}
+.customInput {
+	width: 50px;
+}
+
+.controlButtons {
+	margin-top: 10px;
+}
 /*
 input[type=text], select {
     width: 100%;
@@ -47,8 +105,58 @@ input[type=submit]:hover {
 
 .well {
     border-radius: 5px;
-    background-color: #f2f2f2;
+    /*background-color: #f2f2f2;*/
     padding: 20px;
+}
+.timeMod {
+	background-color: white;
+	width: 325px;
+}
+
+.project-wrapper {
+	overflow: hidden;
+	display: inline-block;
+	border-radius: 5px;
+	background-color: #f2f2f2;
+	padding: 20px;
+	vertical-align: top;
+	margin: 10px 10px;
+	min-width: 325px;
+	min-height: 125px;
+
+}
+
+.project-name {
+	font-weight: bold;
+}
+
+.project-header {
+	margin-bottom: 10px;
+}
+
+#test-button {
+    font-family: "Lato", "Lucida Grande", "Lucida Sans Unicode", Tahoma, Sans-Serif;
+		background: #47CF73;
+    -webkit-appearance: none;
+    font-size: 1rem;
+    text-shadow: none;
+    line-height: 1.2;
+    display: inline-block;
+    border: 0;
+    outline: 0;
+    padding: 10px 16px;
+    margin: 0 10px 0 0;
+    position: relative;
+    border-radius: 3px;
+    border: 3px solid transparent;
+    color: white;
+    cursor: pointer;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-decoration: none;
+    cursor: pointer;
+    text-align: center;
+    font-weight: normal;
 }
 
 

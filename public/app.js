@@ -9,7 +9,10 @@ const state = {
 }
 
 const minutesToHours = (min) => {
-	return Number((Number(min)/60).toFixed(2));
+  const hours = Math.floor(min/60);
+  const minutes = Math.round(min % 60)
+
+  return `${hours}hr ${minutes}m`
 }
 
 function Task(name, totalTime, log , id) {
@@ -25,13 +28,12 @@ Task.prototype.addTime = function(state, elems, t) {
 	if (this.totalTime + t < 0)  {
 		this.totalTime = 0;
 	} else {
-		this.totalTime += minutesToHours(t);
+		this.totalTime += t;
 
 		if (this.history) {
 			 this.history.push(this.totalTime);
 		}
 
-		renderTaskList(state,elems);
 		renderProjectList(state, elems);
 	}
 
@@ -69,7 +71,6 @@ const pushNewProject = (state, elems, data) => {
 		state.projects.push(new Project(data.projectName, data.tasks, data._id))
 		renderProjectOptions(state, elems);
 		renderProjectList(state, elems);
-		renderTaskList(state, elems);
 }
 
 const createProject = (state, elems, name) => {
@@ -103,7 +104,6 @@ const setState = (state, elems, data) => {
 
     renderProjectOptions(state, elems);
   	renderProjectList(state, elems);
-  	renderTaskList(state, elems);
 }
 
 const getProjects = (state, elems, callback) => {
@@ -118,8 +118,7 @@ const pushNewTask = (state, elems, parentProjectId, data) => {
 	const projectIndex = findIndexById(state.projects, parentProjectId);
 	const newTask = data.projects.tasks.pop();
 	state.projects[projectIndex].tasks.push(new Task(newTask.taskName, 0 , newTask.log, newTask._id))
-
-	renderTaskList(state, elems)
+	renderProjectList(state, elems);
 }
 
 const getProjectById = (state, elems, projectId, callback) => {
@@ -138,7 +137,7 @@ const createTask = (state, elems, name, parentProjectId) => {
       type: 'POST',
 			data: newTask,
       success: () => getProjectById(state, elems, parentProjectId, pushNewTask.bind(null, state, elems, parentProjectId)),
-			error: err => elems.taskError.text(err.responseText)
+			error: err => $("#project-list").find(elems.taskError).text(err.responseText)
     });
 }
 
@@ -175,7 +174,6 @@ const deleteProject = (state, elems, _project) => {
 
       renderProjectList(state, elems);
       renderProjectOptions(state, elems);
-      renderTaskList(state, elems);
     }
   }
 
@@ -201,7 +199,6 @@ const deleteTask = (state, elems, _task, _project) => {
 
 			renderProjectOptions(state, elems);
       renderProjectList(state, elems);
-      renderTaskList(state, elems);
     }
   }
 
@@ -211,21 +208,21 @@ const deleteTask = (state, elems, _task, _project) => {
 
 const renderTask = (state, elems, task, project) => {
 
+	//console.log(task, project);
 
-	const projectName = project.name === "none" ? "" : project.name;
+	const projectName = project.name /*=== "none" ? "" : project.name;*/
 	const template = $(
 		`<div id="wrapper">
 			<div class="timeMod well">
 					<div class="topRow">
 						<span class="title">${task.name}</span>
-						<span class="acctotal">${task.totalTime.toFixed(2)}</span>
-						<span class="project">${projectName}<span>
+						<span class="acctotal">${minutesToHours(task.totalTime)}</span>
 					</div>
 				<div class="btn-group timeButtons">
-					<button type="button" class="js-btn5 btn btn-primary">5</button>
-					<button type="button" class="js-btn15 btn btn-primary">15</button>
-					<button type="button" class="js-btn25 btn btn-primary" value="25">25</button>
-					<input type="text" name="" id="customInput${task.id}" class="customInput form-control">
+					<button type="button" class="js-btn5 btn btn-primary">+5m</button>
+					<button type="button" class="js-btn15 btn btn-primary">+15m</button>
+					<button type="button" class="js-btn25 btn btn-primary" value="25">+25m</button>
+					<input type="text" name="" id="customInput${task.id}" placeholder="+..m" class="customInput form-control">
 					<span id="invalidTimeError"></span>
 
 				</div>
@@ -239,8 +236,8 @@ const renderTask = (state, elems, task, project) => {
 
 
  	template.find(".js-btn5").click( () => {
+		console.log("hello");
  		task.addTime(state, elems, 5);
-
  	});
 
  	template.find(".js-btn15").click( () => {
@@ -267,7 +264,6 @@ const renderTask = (state, elems, task, project) => {
 	template.find(".btn").click(() => {
 		updateTask(state, elems, task, project.id);
 		renderProjectList(state, elems);
-		renderTaskList(state, elems);
 	});
 
  	template.find(`#customInput${task.id}`).on("keyup", (e) => {
@@ -279,24 +275,69 @@ const renderTask = (state, elems, task, project) => {
 			this.reset;
 			updateTask(state, elems, task, project.id);
 			renderProjectList(state, elems);
- 			renderTaskList(state, elems);
  		}
  	});
+	elems.projectList.html(template);
 
  	return template;
 }
 
-Array.prototype.flatten = function() {
-  return this.reduce((cv, pv) => cv.concat(pv), []);
+const renderTaskList = (state, elems, project) => {
+/*	let test
+	console.log(project);
+	if(project)
+	test = renderTask(state, elems, project.tasks[0], project);
+	elems.projectList.html(test);*/
+	let taskListHtml;
+	/*if (project.tasks.length >1) {
+	 console.log(project.name);*/
+		taskListHtml = project.tasks.map(task => renderTask(state, elems, task, project));
+	return taskListHtml.reverse();
+/*}*/
 }
 
-const renderTaskList = (state, elems) => {
-	let resHtml =
-    state.projects.map(project =>
-			project.tasks.map(task =>
-				renderTask(state, elems, task, project)));
 
-	elems.taskList.html(resHtml.flatten().reverse());
+
+const renderProject = (state, elems, project) => {
+	const taskListHtml = renderTaskList(state, elems, project);
+	const taskListWrapperHtml = $(`<div id="js-task-list-wrapper" class="task-list-wrapper"></div>`)
+	const projectContainerTemplate = $(
+		`<div id="js-project-wrapper" class="project-wrapper" class="well">
+				<div class="project-header">
+					<span class="project-name">${project.name}</span>
+					<span class="total-project-time">${minutesToHours(project.calculateTotalProjectTime())}</span>
+				</div>
+				<div id="js-add-new-task" class="add-new-task ">Add new task..</div>
+				<form id="js-new-task-form">
+					<input id="js-new-task-input" class="new-task-input hide" type="text"></input>
+				</form>
+				<div id="duplicate-task-error" class="error"></div>
+		</div>`);
+
+		projectContainerTemplate.find("#js-add-new-task").click( (e) => {
+			e.stopPropagation();
+			projectContainerTemplate.find("#js-new-task-input").toggleClass("hide");
+		});
+
+		projectContainerTemplate.find("#js-new-task-form").on("submit", (e) => {
+			e.preventDefault();
+
+			const name = $("#js-new-task-input").val();
+
+			elems.taskError.text("");
+			createTask(state, elems, name, project.id);
+			$("#js-new-task-input").val("");
+
+		});
+
+		projectContainerTemplate.append(taskListWrapperHtml.html(taskListHtml));
+
+		return projectContainerTemplate;
+}
+
+const renderProjectList = (state, elems) => {
+	const projectListHtml = state.projects.map(project => renderProject(state, elems, project));
+	elems.projectList.html(projectListHtml);
 }
 
 const renderProjectOptions = (state, elems) => {
@@ -314,10 +355,10 @@ const renderProjectOptions = (state, elems) => {
 	elems.projectSelect.html(resHtml);
 }
 
-const renderOneProject = (state, elems, project) => {
+/*const renderOneProject = (state, elems, project) => {
 	const resHtml = $(
 		`<div>
-			<div id="projectWrapper">
+			<div id="js-project-wrapper" class="well">
 				<span class="project">${project.name}</span>
 				<span class="projectValue">${project.calculateTotalProjectTime().toFixed(2)}</span>
 				<button id="deleteProject" class="btn btn-outline-secondary">X</button>
@@ -330,7 +371,8 @@ const renderOneProject = (state, elems, project) => {
 	});
 	return resHtml;
 }
-
+*/
+/*
 const renderProjectList = (state, elems) => {
   const resHtml =
     state.projects.map(project => {
@@ -340,19 +382,18 @@ const renderProjectList = (state, elems) => {
 				 });
 
 	$("#projectList").html(resHtml);
-}
+}*/
 
 const initProjectSubmitHandler = (state,elems) => {
 	$(elems.newProject).on("submit", (e) => {
 		e.preventDefault();
 
-		const name = elems.projectName.val();
+		const name = elems.projectInput.val();
 
 		elems.projectError.text("");
 		createProject(state, elems, name);
-		renderProjectOptions(state, elems);
 		renderProjectList(state, elems);
-		elems.projectName.val("");
+		elems.projectInput.val("");
 	});
 }
 
@@ -379,12 +420,13 @@ const main = () => {
 	const elems = {
 		newProject: $("#newProject"),
 		projectSelect: $("#selectProject"),
-		newTask : $("#newTask"),
+		newTask : $("#new-task-form"),
 		taskList: $("#taskList"),
-		projectName: $("#projectName"),
-		taskName:$("#taskName"),
+		projectList: $("#project-list"),
+		projectInput: $("#project-input"),
+		taskInput:$("#js-new-task-input"),
 		projectError: $("#duplicateProjectError"),
-		taskError: $("#duplicateTaskError")
+		taskError: $("#duplicate-task-error")
 	};
 
   getProjects(state, elems, setState);

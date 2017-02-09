@@ -5,7 +5,6 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="icon" href="images/favicon.ico">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<link rel="stylesheet" href="main.css">
 	<link rel="stylesheet" href="styles/reset.css">
 	<link rel="stylesheet" href="styles/float-grid.css">
 	<link rel="stylesheet" href="styles/main.css">
@@ -14,8 +13,9 @@
 <body>
 
 	<header>
-		<div class="row">
 
+
+		<div class="row">
 			<div class="col12">
 				<div class="container">
 				<h1>PomTracker</h1>
@@ -27,6 +27,7 @@
 
 	<div class="row">
 
+
 	<!--	<div class="col3">
 				<div id="projects"></div>
 				 <div class="module">
@@ -34,7 +35,7 @@
 						<h1>Create New project</h1>
 					  <form id="newProject" action="Create New Project">
 					    <label for="project-name">Project Name</label>
-					    <input type="text" id="projectName" name="project-name">
+					    <input type="text" id="project-name" name="project-name">
 					    <input type="submit" value="Submit">
 					  </form>
 					</div>
@@ -55,6 +56,8 @@
 
 		</div>
 -->
+		<div id="test-button"></div>
+
 		<div class="col12">
 				<div class="module">
 
@@ -62,16 +65,17 @@
 						<div class="wrapper">
 							<div class="form-group">
 								<label for="Project">Create New Project:</label>
-								<input type="text" class="form-control" id="projectName" placeholder="Enter Project">
+								<input type="text" class="form-control" id="project-input" placeholder="Enter Project">
 							</div>
 							<button type="submit" class="btn btn-default">Submit</button>
 							<span id="duplicateProjectError" class="error"></span>
 						</div>
 					</form>
 
-					<div id="projectList"></div>
+					<span id="duplicate-task-error" class="error"></span>
 
-					<form class="form-inline " id="newTask">
+
+					<!--<form class="form-inline " id="newTask">
 						<div class="wrapper">
 							<div class="form-group">
 								<label for="Task">Create New Task:</label>
@@ -85,11 +89,11 @@
 							</div>
 
 						<button type="submit" class="btn btn-default">Submit</button>
-						<span id="duplicateTaskError" class="error"></span>
-					</form>
+						<span id="duplicate-task-error" class="error"></span>
+					</form>-->
 						</div>
 
-						<div id="taskList"></div>
+						<div id="project-list"></div>
 				</div>
 		</div>
 	</div>
