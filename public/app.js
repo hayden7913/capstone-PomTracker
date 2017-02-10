@@ -3,7 +3,7 @@ const state = {
 	projects: ["none", "Sample Project"],
 	tasks: [],
 	taskInputHidden: true,
-	focusedFromId: null,
+	focusedFormId: null,
 	errorMessage: {
 		duplicateProject: 'That project already exists. Please use a different project name',
 		duplicateTask: 'That task already exists. Please use a different task name'
@@ -126,7 +126,7 @@ const pushNewTask = (state, elems, parentProjectId, data) => {
 	state.projects[projectIndex].tasks.push(new Task(newTask.taskName, 0 , newTask.log, newTask._id))
 	renderProjectList(state, elems);
 
-	$("#project-list").find(state.focusedFormId).find("input").focus();
+	$("#project-list").find(`#${state.focusedFormId}`).find("input").focus();
 }
 
 const getProjectById = (state, elems, projectId, callback) => {
@@ -316,7 +316,7 @@ const renderProject = (state, elems, project) => {
 					<span id="js-remove" class="glyphicon glyphicon-remove"></span>
 				</div>
 				<div id="js-add-new-task" class="add-new-task ">Add new task..</div>
-				<form id=${taskFormId} class="new-task-form hide  ${state.taskInputHidden ? "" : ""}">
+				<form id=${taskFormId} class="new-task-form ${taskFormId === state.focusedFormId ? "" : "hide"}">
 					<input  class="new-task-input" type="text"></input>
 						<button class="plus">
 							<span class="glyphicon glyphicon-plus task-submit-button"></span>
@@ -327,24 +327,24 @@ const renderProject = (state, elems, project) => {
 				<div id=${taskErrorId} class="error"></div>
 		</div>`);
 
-		console.log(state.focusedFormId, state.taskInputHidden);
+		console.log(state.focusedFormId, taskFormId);
 
-		if (!state.taskInputHidden) {
+		/*if (!state.taskInputHidden) {
 
 			projectContainerTemplate.find(`${state.focusedFormId}`).removeClass("hide");
-		}
+		}*/
 
 		projectContainerTemplate.find("#js-add-new-task").click( (e) => {
 			e.stopPropagation();
-
-
+console.log("hello");
+			//Hide all task forms then show selected task form
 			$("#project-list").find('.new-task-form').addClass("hide");
 			//projectContainerTemplate.find(`#${taskFormId}`).removeClass("hide");
-			projectContainerTemplate.find(`#${taskFormId}`).removeClass("hide");
-
-			state.focusedFormId = `#${taskFormId}`;
+			$("#project-list").find(`#${taskFormId}`).removeClass("hide") .find("input").focus();
+			$("#project-list").find(`#${taskFormId}`)
+			state.focusedFormId = `${taskFormId}`;
 			state.taskInputHidden = false;
-			console.log(taskFormId);
+			console.log(state.taskFormId,taskFormId);
 
 
 		});
@@ -442,14 +442,15 @@ const initTaskSubmitHandler = (state, elems) => {
 
 const initbodyClickHandler = (state, elems) => {
 	$("body").on("click", (e) => {
+		/*e.stopPropagation();*/
 
 		$("#project-list").find(".error").text("");
 		elems.projectError.text("");
 
-		if (!$(e.target).hasClass('new-task-input') && !$(e.target).hasClass('task-submit-button')) {
-console.log("this");
+		if (!$(e.target).hasClass('new-task-input') && !$(e.target).hasClass('task-submit-button') && !$(e.target).hasClass('plus') ) {
+console.log("this", e.target);
 				$("#project-list").find('.new-task-form').addClass("hide");
-				state.taskInputHidden = true;
+				state.focusedFormId = null;
 		}
 
 
