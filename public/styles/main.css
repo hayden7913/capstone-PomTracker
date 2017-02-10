@@ -4,13 +4,14 @@
 
 body {
 	font-size: 20px;
+	font-family: 'Open Sans', sans-serif;
 }
 
 header {
 	margin-left:-10px;
 	width: 100%;
 	position: relative;
-	background-color: #666666;
+	background-color: #0074D9;
 	padding: 5px;
 	height: 50px;
 }
@@ -20,6 +21,7 @@ header h1 {
 	left: 35px;
 	margin-left: -25px;
 	font-size: 35px;
+
 }
 
 .module {
@@ -163,6 +165,17 @@ input[type=submit]:hover {
 	cursor: pointer;
 }
 
+.plus {
+	background-color: #4CAF50;
+  -webkit-border-radius: 100;
+  -moz-border-radius: 100;
+  border-radius: 100px;
+  color: white;
+  font-size: 15px;
+  padding: 10px 20px;
+  cursor:pointer;
+}
+
 .button {
 	background-color: #337ab7;
 	-webkit-border-radius: 7;
@@ -170,7 +183,7 @@ input[type=submit]:hover {
 	border-radius: 7px;
 	color: white;
 	font-size: 15px;
-	padding: 10px 20px 10px 20px;
+	padding: 10px 20px;
 	cursor:pointer;
 }
 
@@ -183,6 +196,7 @@ input[type=submit]:hover {
 	float: left;
 	border: 1px solid #3cb0fd;
 	cursor:pointer;
+	padding: 10px 15px;
 
 }
 
