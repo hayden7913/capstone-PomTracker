@@ -1,8 +1,7 @@
 
 const state = {
-	projects: ["none", "Sample Project"],
+	projects: [],
 	tasks: [],
-	taskInputHidden: true,
 	focusedFormId: null,
 	errorMessage: {
 		duplicateProject: 'That project already exists. Please use a different project name',
@@ -31,20 +30,15 @@ Task.prototype.addTime = function(state, elems, t) {
 		this.totalTime = 0;
 	} else {
 		this.totalTime += t;
-
-		if (this.history) {
-			 this.history.push(this.totalTime);
-		}
+		this.history.push(this.totalTime);
 
 		renderProjectList(state, elems);
 	}
-
 }
 
 Task.prototype.reset = function(state, elems) {
 	this.totalTime = 0;
-
-		this.history.push(0)
+	this.history.push(0)
 
 	renderProjectList(state, elems);
 }
@@ -70,8 +64,8 @@ Project.prototype.calculateTotalProjectTime = function () {
 }
 
 const pushNewProject = (state, elems, data) => {
-		state.projects.push(new Project(data.projectName, data.tasks, data._id))
-		renderProjectOptions(state, elems);
+		state.projects.push(new Project(data.projectName, data.tasks, data._id));
+
 		renderProjectList(state, elems);
 }
 
@@ -97,18 +91,11 @@ const createProject = (state, elems, name) => {
 }
 
 const setState = (state, elems, data) => {
-	  state.projects = data.projects.map(project => {
-	    const tasks = project.tasks.map(task => new Task (task.taskName, task.totalTime, task.log, task._id));
-	    return new Project(project.projectName, tasks, project._id);
-	  });
-		//state.projects should always contain a project called "none"
-		const indexOfNone = state.projects.findIndex(project => project.name === "none");
+  state.projects = data.projects.map(project => {
+    const tasks = project.tasks.map(task => new Task (task.taskName, task.totalTime, task.log, task._id));
+    return new Project(project.projectName, tasks, project._id);
+  });
 
-		if (indexOfNone === -1) {
-			createProject(state, elems, "none");
-		}
-
-    renderProjectOptions(state, elems);
   	renderProjectList(state, elems);
 }
 
@@ -124,9 +111,9 @@ const pushNewTask = (state, elems, parentProjectId, data) => {
 	const projectIndex = findIndexById(state.projects, parentProjectId);
 	const newTask = data.projects.tasks.pop();
 	state.projects[projectIndex].tasks.push(new Task(newTask.taskName, 0 , newTask.log, newTask._id))
-	renderProjectList(state, elems);
 
-	$("#project-list").find(`#${state.focusedFormId}`).find("input").focus();
+	renderProjectList(state, elems);
+	elems.projectList.find(`#${state.focusedFormId}`).find("input").focus();
 }
 
 const getProjectById = (state, elems, projectId, callback) => {
@@ -160,7 +147,7 @@ const updateTask = (state, elems, task, projectId) => {
     'totalTime': task.totalTime,
     'log': task.log,
 		'_id': task.id
-  }
+  };
 
     $.ajax({
       url: `/projects/${projectId}/tasks/${task.id}`,
@@ -220,9 +207,7 @@ const deleteTask = (state, elems, _task, _project) => {
 
 const renderTask = (state, elems, task, project) => {
 
-	//console.log(task, project);
-
-	const projectName = project.name /*=== "none" ? "" : project.name;*/
+	const projectName = project.name;
 	const template = $(
 		`<div id="wrapper">
 			<div class="timeMod well">
@@ -289,6 +274,7 @@ const renderTask = (state, elems, task, project) => {
 			renderProjectList(state, elems);
  		}
  	});
+
 	elems.projectList.html(template);
 
  	return template;
@@ -321,48 +307,32 @@ const renderProject = (state, elems, project) => {
 						<button class="plus">
 							<span class="glyphicon glyphicon-plus task-submit-button"></span>
 						</button>
-
-
 				</form>
 				<div id=${taskErrorId} class="error"></div>
 		</div>`);
 
-		console.log(state.focusedFormId, taskFormId);
-
-		/*if (!state.taskInputHidden) {
-
-			projectContainerTemplate.find(`${state.focusedFormId}`).removeClass("hide");
-		}*/
-
 		projectContainerTemplate.find("#js-add-new-task").click( (e) => {
 			e.stopPropagation();
-console.log("hello");
-			//Hide all task forms then show selected task form
-			$("#project-list").find('.new-task-form').addClass("hide");
-			//projectContainerTemplate.find(`#${taskFormId}`).removeClass("hide");
-			$("#project-list").find(`#${taskFormId}`).removeClass("hide") .find("input").focus();
-			$("#project-list").find(`#${taskFormId}`)
+			//Hide all task forms
+			elems.projectList.find('.new-task-form').addClass("hide");
+			//Then show clicked task form
+			elems.projectList.find(`#${taskFormId}`).removeClass("hide") .find("input").focus();
 			state.focusedFormId = `${taskFormId}`;
-			state.taskInputHidden = false;
-			console.log(state.taskFormId,taskFormId);
-
-
 		});
 
 		projectContainerTemplate.find(`#${taskFormId}`).on("submit", function(e) {
 			e.preventDefault();
 
 			const name = $(this).find("input").val();
+
 			elems.taskError.text("");
 			createTask(state, elems, name, project.id);
 			$(`#${taskFormId}`).val("");
-
-
 		});
 
-		projectContainerTemplate.find("#js-remove").click(() =>{
+		projectContainerTemplate.find("#js-remove").click(() => {
 				deleteProject(state, elems, project);
-		})
+		});
 
 		projectContainerTemplate.append(taskListWrapperHtml.html(taskListHtml));
 
@@ -372,43 +342,7 @@ console.log("hello");
 const renderProjectList = (state, elems) => {
 	const projectListHtml = state.projects.map(project => renderProject(state, elems, project));
 	elems.projectList.html(projectListHtml);
-
 }
-
-const renderProjectOptions = (state, elems) => {
-	let projectNoneId;
-	resHtml = state.projects
-		.map((project) => {
-			if (project.name === "none") {
-				projectNoneId = project.id;
-			} else {
-				return `<option value="${project.id}">${project.name}</option>`;
-			}
-		});
-
-	resHtml.unshift(`<option value="${projectNoneId}">none</option>`)
-	elems.projectSelect.html(resHtml);
-}
-
-/*const renderOneProject = (state, elems, project) => {
-	const resHtml = $(
-		`<div>
-			<div id="js-project-wrapper" class="well">
-				<span class="project">${project.name}</span>
-				<span class="projectValue">${project.calculateTotalProjectTime().toFixed(2)}</span>
-				<button id="deleteProject" class="btn btn-outline-secondary">X</button>
-			</div>
-		</div>`
-	);
-
-	resHtml.find("#deleteProject").click(() => {
-		deleteProject(state, elems, project);
-	});
-	return resHtml;
-}
-*/
-
-
 
 const initProjectSubmitHandler = (state,elems) => {
 	$(elems.newProject).on("submit", (e) => {
@@ -423,23 +357,6 @@ const initProjectSubmitHandler = (state,elems) => {
 	});
 }
 
-
-
-/*
-const initTaskSubmitHandler = (state, elems) => {
-	$(elems.newTask).on("submit", (e) => {
-		e.preventDefault();
-
-		const name = elems.taskName.val();
-		const parentProjectId = $("#selectProject").val();
-
-		elems.taskError.text("");
-		createTask(state, elems, name, parentProjectId);
-		elems.taskName.val("");
-
-	});
-}*/
-
 const initbodyClickHandler = (state, elems) => {
 	$("body").on("click", (e) => {
 		/*e.stopPropagation();*/
@@ -448,15 +365,11 @@ const initbodyClickHandler = (state, elems) => {
 		elems.projectError.text("");
 
 		if (!$(e.target).hasClass('new-task-input') && !$(e.target).hasClass('task-submit-button') && !$(e.target).hasClass('plus') ) {
-console.log("this", e.target);
 				$("#project-list").find('.new-task-form').addClass("hide");
 				state.focusedFormId = null;
 		}
-
-
-	})
+	});
 }
-
 
 const main = () => {
 
@@ -474,9 +387,7 @@ const main = () => {
 
   getProjects(state, elems, setState);
 	initProjectSubmitHandler(state, elems);
-	//initTaskSubmitHandler(state, elems);
 	initbodyClickHandler(state, elems);
-
 }
 
 $(main);
