@@ -3,7 +3,7 @@ const state = {
 	projects: ["none", "Sample Project"],
 	tasks: [],
 	taskInputHidden: true,
-	focusedInputId: null,
+	focusedFromId: null,
 	errorMessage: {
 		duplicateProject: 'That project already exists. Please use a different project name',
 		duplicateTask: 'That task already exists. Please use a different task name'
@@ -125,8 +125,8 @@ const pushNewTask = (state, elems, parentProjectId, data) => {
 	const newTask = data.projects.tasks.pop();
 	state.projects[projectIndex].tasks.push(new Task(newTask.taskName, 0 , newTask.log, newTask._id))
 	renderProjectList(state, elems);
-	console.log('hello');
-	$("#project-list").find(state.taskInputId).focus();
+
+	$("#project-list").find(state.focusedFormId).find("input").focus();
 }
 
 const getProjectById = (state, elems, projectId, callback) => {
@@ -295,17 +295,9 @@ const renderTask = (state, elems, task, project) => {
 }
 
 const renderTaskList = (state, elems, project) => {
-/*	let test
-	console.log(project);
-	if(project)
-	test = renderTask(state, elems, project.tasks[0], project);
-	elems.projectList.html(test);*/
-	let taskListHtml;
-	/*if (project.tasks.length >1) {
-	 console.log(project.name);*/
-		taskListHtml = project.tasks.map(task => renderTask(state, elems, task, project));
+	const taskListHtml = project.tasks.map(task => renderTask(state, elems, task, project));
+
 	return taskListHtml.reverse();
-/*}*/
 }
 
 
@@ -314,7 +306,7 @@ const renderProject = (state, elems, project) => {
 
 	const taskListHtml = renderTaskList(state, elems, project);
 	const taskListWrapperHtml = $(`<div id="js-task-list-wrapper" class="task-list-wrapper"></div>`)
-	const taskInputId =`js-task-input-${project.id}`
+	const taskFormId =`js-task-form-${project.id}`
 	const taskErrorId = `duplicate-task-error-${project.id}`
 	const projectContainerTemplate = $(
 		`<div id="js-project-wrapper" class="project-wrapper well" >
@@ -324,10 +316,10 @@ const renderProject = (state, elems, project) => {
 					<span id="js-remove" class="glyphicon glyphicon-remove"></span>
 				</div>
 				<div id="js-add-new-task" class="add-new-task ">Add new task..</div>
-				<form id="js-new-task-form" class="new-task-form">
-					<input id=${taskInputId} class="new-task-input ${state.taskInputHidden ? "hide" : "hide"}" type="text"></input>
+				<form id=${taskFormId} class="new-task-form hide  ${state.taskInputHidden ? "" : ""}">
+					<input  class="new-task-input" type="text"></input>
 						<button class="plus">
-							<span class="glyphicon glyphicon-plus"></span>
+							<span class="glyphicon glyphicon-plus task-submit-button"></span>
 						</button>
 
 
@@ -335,25 +327,35 @@ const renderProject = (state, elems, project) => {
 				<div id=${taskErrorId} class="error"></div>
 		</div>`);
 
+		console.log(state.focusedFormId, state.taskInputHidden);
+
 		if (!state.taskInputHidden) {
-			projectContainerTemplate.find(`${state.taskInputId}`).removeClass("hide");
+
+			projectContainerTemplate.find(`${state.focusedFormId}`).removeClass("hide");
 		}
 
 		projectContainerTemplate.find("#js-add-new-task").click( (e) => {
 			e.stopPropagation();
-			$("project-list").find('.new-task-input').addClass("hide");
-			projectContainerTemplate.find(`#${taskInputId}`).removeClass("hide");
+
+
+			$("#project-list").find('.new-task-form').addClass("hide");
+			//projectContainerTemplate.find(`#${taskFormId}`).removeClass("hide");
+			projectContainerTemplate.find(`#${taskFormId}`).removeClass("hide");
+
+			state.focusedFormId = `#${taskFormId}`;
 			state.taskInputHidden = false;
-			state.taskInputId = `#${taskInputId}`;
+			console.log(taskFormId);
+
+
 		});
 
-		projectContainerTemplate.find(".js-new-task-form").on("submit", function(e) {
+		projectContainerTemplate.find(`#${taskFormId}`).on("submit", function(e) {
 			e.preventDefault();
 
 			const name = $(this).find("input").val();
 			elems.taskError.text("");
 			createTask(state, elems, name, project.id);
-			$(`#${taskInputId}`).val("");
+			$(`#${taskFormId}`).val("");
 
 
 		});
@@ -370,7 +372,7 @@ const renderProject = (state, elems, project) => {
 const renderProjectList = (state, elems) => {
 	const projectListHtml = state.projects.map(project => renderProject(state, elems, project));
 	elems.projectList.html(projectListHtml);
-console.log(state.projects[0].id);
+
 }
 
 const renderProjectOptions = (state, elems) => {
@@ -444,8 +446,9 @@ const initbodyClickHandler = (state, elems) => {
 		$("#project-list").find(".error").text("");
 		elems.projectError.text("");
 
-		if (!$(e.target).hasClass('new-task-input')) {
-				$("#project-list").find('.new-task-input').addClass("hide");
+		if (!$(e.target).hasClass('new-task-input') && !$(e.target).hasClass('task-submit-button')) {
+console.log("this");
+				$("#project-list").find('.new-task-form').addClass("hide");
 				state.taskInputHidden = true;
 		}
 
