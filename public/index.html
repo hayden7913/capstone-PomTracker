@@ -16,90 +16,29 @@
 	<header>
 	<h1>PomTracker</h1>
 
-	<!--	<div class="row">
-			<div class="col12">
-				<div class="container">
-				<h1>PomTracker</h1>
-			</div>
-			</div>
-		</div>
--->
+
 	</header>
 
 
 	<div class="row">
-
-
-	<!--	<div class="col3">
-				<div id="projects"></div>
-				 <div class="module">
-					<div class="well">
-						<h1>Create New project</h1>
-					  <form id="newProject" action="Create New Project">
-					    <label for="project-name">Project Name</label>
-					    <input type="text" id="project-name" name="project-name">
-					    <input type="submit" value="Submit">
-					  </form>
-					</div>
-
-					<div class="well">
-						<h1>Create New Task</h1>
-						<form id="newTask" action="Create New Task">
-							<label for="task-name">Task Name</label>
-							<input type="text" id="taskName" name="task-name">
-							<label for="project">Project</label>
-							<select id="selectProject" name="project">
-							</select>
-							<input type="submit" value="Submit">
-						</form>
-					</div>
-1
-				</div>
-
-		</div>
--->
-
-
 		<div class="col12">
 				<div class="module">
-
 					<form class="form-inline " id="newProject">
 						<div class="wrapper">
 							<div class="form-group">
 								<label for="Project">Create New Project:</label>
 								<input type="text" class="form-control" id="project-input" placeholder="Enter Project">
-							</div>
+						</div>
 							<button type="submit" class="btn btn-default">Submit</button>
 							<span id="duplicateProjectError" class="error"></span>
 						</div>
 					</form>
-
-					<span id="duplicate-task-error" class="error"></span>
-
-
-					<!--<form class="form-inline " id="newTask">
-						<div class="wrapper">
-							<div class="form-group">
-								<label for="Task">Create New Task:</label>
-								<input type="text" class="form-control" id="taskName" placeholder="Enter Task">
-							</div>
-
-							<div class="form-group">
-								<label for="project">Project:</label>
-								<select class="form-control" id="selectProject">
-								</select>
-							</div>
-
-						<button type="submit" class="btn btn-default">Submit</button>
-						<span id="duplicate-task-error" class="error"></span>
-					</form>-->
-						</div>
-
-						<div id="project-list"></div>
-				</div>
+				<span id="duplicate-task-error" class="error"></span>
+			</div>
+			<div id="project-list"></div>
 		</div>
-	</div>
 </div>
+
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>

@@ -361,11 +361,11 @@ const initbodyClickHandler = (state, elems) => {
 	$("body").on("click", (e) => {
 		/*e.stopPropagation();*/
 
-		$("#project-list").find(".error").text("");
+		elems.projectList.find(".error").text("");
 		elems.projectError.text("");
 
 		if (!$(e.target).hasClass('new-task-input') && !$(e.target).hasClass('task-submit-button') && !$(e.target).hasClass('plus') ) {
-				$("#project-list").find('.new-task-form').addClass("hide");
+				elems.projectList.find('.new-task-form').addClass("hide");
 				state.focusedFormId = null;
 		}
 	});
