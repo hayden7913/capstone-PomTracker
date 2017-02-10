@@ -172,7 +172,6 @@ const deleteProject = (state, elems, _project) => {
 			});
 
       renderProjectList(state, elems);
-      renderProjectOptions(state, elems);
     }
   }
 
@@ -196,7 +195,6 @@ const deleteTask = (state, elems, _task, _project) => {
 					success: ( ) => console.log('Deleted')
 			});
 
-			renderProjectOptions(state, elems);
       renderProjectList(state, elems);
     }
   }
@@ -206,24 +204,24 @@ const deleteTask = (state, elems, _task, _project) => {
 
 
 const renderTask = (state, elems, task, project) => {
-
+console.log(task);
 	const projectName = project.name;
 	const template = $(
-		`<div id="wrapper">
-			<div class="timeMod well">
-					<div class="topRow">
-						<span class="title">${task.name}</span>
-						<span class="acctotal">${minutesToHours(task.totalTime)}</span>
+		`<div class="time-mod-wrapper">
+			<div class="time-mod well">
+					<div class="top-row">
+						<span class="task-title">${task.name}</span>
+						<span class="total-task-time">${minutesToHours(task.totalTime)}</span>
 					</div>
-				<div class="button-group timeButtons">
+				<div class="button-group time-buttons">
 					<button type="button" class="js-btn5 button button-group button-left">+5m</button>
 					<button type="button" class="js-btn15 button button-group">+15m</button>
 					<button type="button" class="js-btn25 button button-group button-right" value="25">+25m</button>
-					<input type="text" name="" id="customInput${task.id}" placeholder="+..m" class="customInput form-control">
+					<input type="text" name="" id="custom-input-${task.id}" placeholder="+m" class="custom-input form-control">
 					<span id="invalidTimeError"></span>
 
 				</div>
-				<div class="controlButtons">
+				<div class="control-buttons">
 					<button type="button" id="js-reset" class="button" >Reset</button>
 					<button type="button" id="js-undo" class="button" >Undo</button>
 					<button type="button" id="js-delete" class="button" >Delete</button>
@@ -233,7 +231,6 @@ const renderTask = (state, elems, task, project) => {
 
 
  	template.find(".js-btn5").click( () => {
-		console.log("hello");
  		task.addTime(state, elems, 5);
  	});
 
@@ -263,11 +260,11 @@ const renderTask = (state, elems, task, project) => {
 		renderProjectList(state, elems);
 	});
 
- 	template.find(`#customInput${task.id}`).on("keyup", (e) => {
+ 	template.find(`#custom-input-${task.id}`).on("keyup", (e) => {
  		const code = e.which;
  		if (code == 13) {
  			e.preventDefault();
-			const input = Number($(`#customInput${task.id}`).val());
+			const input = Number($(`#custom-input-${task.id}`).val());
  			task.addTime(state, elems, input);
 			this.reset;
 			updateTask(state, elems, task, project.id);
@@ -296,10 +293,10 @@ const renderProject = (state, elems, project) => {
 	const taskErrorId = `duplicate-task-error-${project.id}`
 	const projectContainerTemplate = $(
 		`<div id="js-project-wrapper" class="project-wrapper well" >
+				<span id="js-remove" class="glyphicon glyphicon-remove"></span>
 				<div class="project-header">
-					<span class="project-name">${project.name}</span>
+					<h2 class="project-name">${project.name}</h2>
 					<span class="total-project-time">${minutesToHours(project.calculateTotalProjectTime())}</span>
-					<span id="js-remove" class="glyphicon glyphicon-remove"></span>
 				</div>
 				<div id="js-add-new-task" class="add-new-task ">Add new task..</div>
 				<form id=${taskFormId} class="new-task-form ${taskFormId === state.focusedFormId ? "" : "hide"}">
@@ -325,9 +322,13 @@ const renderProject = (state, elems, project) => {
 
 			const name = $(this).find("input").val();
 
-			elems.taskError.text("");
-			createTask(state, elems, name, project.id);
-			$(`#${taskFormId}`).val("");
+			if (!(name == null || name.trim() === '')){
+				elems.taskError.text("");
+				createTask(state, elems, name, project.id);
+				$(`#${taskFormId}`).val("");
+			} else {
+				elems.projectList.find(`#${taskFormId}`).find("input").focus();
+			}
 		});
 
 		projectContainerTemplate.find("#js-remove").click(() => {
@@ -357,9 +358,9 @@ const initProjectSubmitHandler = (state,elems) => {
 	});
 }
 
-const initbodyClickHandler = (state, elems) => {
+/*const initbodyClickHandler = (state, elems) => {
 	$("body").on("click", (e) => {
-		/*e.stopPropagation();*/
+		e.stopPropagation();
 
 		elems.projectList.find(".error").text("");
 		elems.projectError.text("");
@@ -369,7 +370,7 @@ const initbodyClickHandler = (state, elems) => {
 				state.focusedFormId = null;
 		}
 	});
-}
+}*/
 
 const main = () => {
 

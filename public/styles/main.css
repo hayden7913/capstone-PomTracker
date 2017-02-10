@@ -8,21 +8,40 @@ body {
 }
 
 header {
+	position: relative;
 	margin-left:-10px;
 	width: 100%;
-	position: relative;
 	background-color: #0074D9;
 	padding: 5px;
 	height: 50px;
 }
 
-header h1 {
+#header-contents-container {
 	position: absolute;
 	left: 35px;
+	bottom: 0px;
 	margin-left: -25px;
 	font-size: 35px;
-
+	display: inline-block;
 }
+
+.header-contents {
+	position: absolute;
+	display: inline-block;
+}
+
+#title {
+	line-height: 10px;
+	left: 50px;
+  top: -30px;
+}
+
+#logo {
+	position: absolute;
+	top: -50px;
+}
+
+
 
 .module {
 	margin: 40px 0;
@@ -32,31 +51,43 @@ body {
  	padding: 10px;
 }
 
-.wrapper {
-  display: block;
-  margin-top: 10px;
-}
 
 .error {
   margin-left: 5px;
   color: red;
 }
-.timeMod {
-	width: 400px;
-	padding: 10px;
+
+.time-mod-wrapper {
+	margin-top: 10px;
+
 }
 
-.topRow {
-	margin-top: -10px;
+.time-mod {
 	position: relative;
+	background-color: #ffffff;
+	padding-top: 5px !important;
+	width: 300px;
+
+}
+
+.top-row {
+	top: 10px;
 	font-size: 20px;
 	margin-bottom: 5px;
-
-}
-
-.topRow > * {
 	display: inline-block;
+
 }
+
+.task-title {
+	position: absolute;
+
+}
+
+.total-task-time {
+	position: absolute;
+	right: 45px;
+}
+
 
 #newProj {
 	margin-bottom: 10px;
@@ -78,11 +109,19 @@ body {
 	margin-right: 10px;
 
 }
-.customInput {
+.custom-input {
 	width: 50px;
+	height: 35px;
+	border-radius: 0px 7px 7px 0px;
+	-moz-border-radius: 0px 7px 7px 0px;
+	-webkit-border-radius: 0px 7px 7px 0px;
 }
 
-.controlButtons {
+.time-buttons {
+	margin-top: 25px;
+}
+
+.control-buttons {
 	margin-top: 10px;
 }
 /*
@@ -114,24 +153,31 @@ input[type=submit]:hover {
 .well {
     border-radius: 5px;
     /*background-color: #f2f2f2;*/
-    padding: 20px;
-}
-.timeMod {
-	background-color: white;
-	width: 325px;
+    padding: 10px;
 }
 
 .project-wrapper {
+	position: relative;
 	overflow: hidden;
 	display: inline-block;
 	border-radius: 5px;
 	background-color: #f2f2f2;
-	padding: 20px;
+	padding: 5px 20px;
 	vertical-align: top;
 	margin: 10px 10px;
-	min-width: 325px;
+	min-width: 350px;
 	min-height: 125px;
 	position: relative;
+}
+
+.project-header {
+	position: relative;
+	margin-top: 12px;
+}
+
+.total-project-time {
+	position: absolute;
+	right: 30px;
 }
 
 .glyphicon-remove {
@@ -146,6 +192,7 @@ input[type=submit]:hover {
 }
 
 .project-name {
+	display: inline;
 	font-weight: bold;
 	font-size: 25px;
 }
@@ -156,7 +203,7 @@ input[type=submit]:hover {
 
 .add-new-task {
 	text-decoration: underline;
-	/*color: 	#A0A0A0 ;*/
+	margin-bottom: 10px;
 	opacity: .45;
 }
 
@@ -164,6 +211,8 @@ input[type=submit]:hover {
 	opacity: .8;
 	cursor: pointer;
 }
+
+
 
 .plus {
 	background-color: #4CAF50;
@@ -178,6 +227,7 @@ input[type=submit]:hover {
 
 .button {
 	background-color: #337ab7;
+	border-color: #0495F3
 	-webkit-border-radius: 7;
 	-moz-border-radius: 7;
 	border-radius: 7px;
@@ -185,6 +235,8 @@ input[type=submit]:hover {
 	font-size: 15px;
 	padding: 10px 20px;
 	cursor:pointer;
+	height: 35px;
+	border: 1px solid #316282;
 }
 
 .button:hover {
@@ -194,7 +246,6 @@ input[type=submit]:hover {
 .button-group .button {
 	border-radius: 0;
 	float: left;
-	border: 1px solid #3cb0fd;
 	cursor:pointer;
 	padding: 10px 15px;
 
@@ -210,10 +261,10 @@ input[type=submit]:hover {
 	border-top-left-radius: 7px;
 }
 
-.button.button-right {
+/*.button.button-right {
 	border-bottom-right-radius: 7px;
 	border-top-right-radius: 7px;
-}
+}*/
 
 
 
