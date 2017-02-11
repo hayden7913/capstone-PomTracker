@@ -229,7 +229,6 @@ console.log(task);
 			</div>
 		</div>`);
 
-
  	template.find(".js-btn5").click( () => {
  		task.addTime(state, elems, 5);
  	});
@@ -272,14 +271,12 @@ console.log(task);
  		}
  	});
 
-	elems.projectList.html(template);
-
  	return template;
 }
 
 const renderTaskList = (state, elems, project) => {
 	const taskListHtml = project.tasks.map(task => renderTask(state, elems, task, project));
-
+	console.log(taskListHtml)
 	return taskListHtml.reverse();
 }
 
@@ -337,6 +334,9 @@ const renderProject = (state, elems, project) => {
 
 		projectContainerTemplate.append(taskListWrapperHtml.html(taskListHtml));
 
+
+
+
 		return projectContainerTemplate;
 }
 
@@ -358,7 +358,7 @@ const initProjectSubmitHandler = (state,elems) => {
 	});
 }
 
-/*const initbodyClickHandler = (state, elems) => {
+const initbodyClickHandler = (state, elems) => {
 	$("body").on("click", (e) => {
 		e.stopPropagation();
 
@@ -370,7 +370,7 @@ const initProjectSubmitHandler = (state,elems) => {
 				state.focusedFormId = null;
 		}
 	});
-}*/
+}
 
 const main = () => {
 

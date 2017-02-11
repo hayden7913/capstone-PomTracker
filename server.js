@@ -91,7 +91,7 @@ function tearDownDb() {
   });
 }
 
-tearDownDb();
+// tearDownDb();
 let server;
 
 function runServer(databaseUrl=DATABASE_URL, port=PORT) {
