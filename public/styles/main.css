@@ -63,7 +63,6 @@ body {
 }
 
 .time-mod {
-	position: relative;
 	background-color: #ffffff;
 	padding-top: 5px !important;
 	width: 300px;
@@ -71,21 +70,24 @@ body {
 }
 
 .top-row {
+	position: relative;
 	top: 10px;
 	font-size: 20px;
 	margin-bottom: 5px;
 	display: inline-block;
+	width: 100%;
 
 }
 
-.task-title {
-	position: absolute;
-
+.task-name {
+	width: 160px;
+	/* position: absolute; */
 }
 
 .total-task-time {
 	position: absolute;
-	right: 45px;
+	top: 0px;
+	right: 10px;
 }
 
 
@@ -177,7 +179,7 @@ input[type=submit]:hover {
 
 .total-project-time {
 	position: absolute;
-	right: 30px;
+	right: 28px;
 }
 
 .glyphicon-remove {
@@ -191,10 +193,17 @@ input[type=submit]:hover {
     opacity: 0.5;
 }
 
+.project-name-wrapper {
+	display: inline;
+	width: 77px;
+}
+
 .project-name {
 	display: inline;
 	font-weight: bold;
 	font-size: 25px;
+	width: 24px;
+	/* border: 1px solid #000; */
 }
 
 .project-header {

@@ -8,7 +8,7 @@ mongoose.Promise = global.Promise;
 
 const {PORT, DATABASE_URL} = require('./config');
 const {Projects} = require('./models');
-
+const {sampleData} = require('./sampleData')
 
 const projectRouter = require('./projectRouter');
 const taskRouter = require('./taskRouter');
@@ -68,19 +68,18 @@ const generateProject = () => {
     tasks: generateDataArray(generateTask, 1),
   }
 }
-/*
-const seedProjectData = () => {
-  const seedData = generateDataArray(generateProject, 1);
-  return Projects.insertMany(seedData);
-}*/
 
-/*Projects
+const seedProjectData = () => {
+  console.log(sampleData.projects);
+  const seedData = sampleData.projects; //generateDataArray(generateProject, 1);
+  return Projects.insertMany(seedData);
+}
+
+Projects
   .findOne()
   .exec()
   .then(project => {if (!project) seedProjectData()})
-*/
-
-//seedProjectData()
+  .catch(err => console.error(err))
 
 function tearDownDb() {
   return new Promise((resolve, reject) => {
@@ -91,7 +90,7 @@ function tearDownDb() {
   });
 }
 
-// tearDownDb();
+
 let server;
 
 function runServer(databaseUrl=DATABASE_URL, port=PORT) {

@@ -202,7 +202,7 @@ const deleteTask = (state, elems, _task, _project) => {
   bootbox.confirm(confirmMessage, onConfirm);
 }
 
-
+	// <span class="task-name"></span>
 const renderTask = (state, elems, task, project) => {
 console.log(task);
 	const projectName = project.name;
@@ -210,7 +210,7 @@ console.log(task);
 		`<div class="time-mod-wrapper">
 			<div class="time-mod well">
 					<div class="top-row">
-						<span class="task-title">${task.name}</span>
+						<div class="task-name name">${task.name}</div>
 						<span class="total-task-time">${minutesToHours(task.totalTime)}</span>
 					</div>
 				<div class="button-group time-buttons">
@@ -292,7 +292,7 @@ const renderProject = (state, elems, project) => {
 		`<div id="js-project-wrapper" class="project-wrapper well" >
 				<span id="js-remove" class="glyphicon glyphicon-remove"></span>
 				<div class="project-header">
-					<h2 class="project-name">${project.name}</h2>
+					<div class="project-name">${project.name}</div>
 					<span class="total-project-time">${minutesToHours(project.calculateTotalProjectTime())}</span>
 				</div>
 				<div id="js-add-new-task" class="add-new-task ">Add new task..</div>
