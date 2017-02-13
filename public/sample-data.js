@@ -3,6 +3,7 @@ const sampleData = {
     {
       "_id": "589fa040358e8c0be63b9622",
       "projectName": "Node Capstone",
+      "position": 0,
       "__v": 0,
       "tasks": [
         {
@@ -40,6 +41,7 @@ const sampleData = {
     {
       "_id": "589fa353358e8c0be63b962c",
       "projectName": "Eng 312 Essay",
+      "position": 1, 
       "__v": 0,
       "tasks": [
         {

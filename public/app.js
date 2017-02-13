@@ -53,8 +53,9 @@ Task.prototype.undo = function(state, elems) {
 	renderProjectList(state, elems);
 }
 
-function Project(name , tasks, id) {
+function Project(name, position, tasks, id) {
   this.name = name;
+	this.position = position;
   this.tasks = tasks;
   this.id = id;
 }
@@ -64,7 +65,7 @@ Project.prototype.calculateTotalProjectTime = function () {
 }
 
 const pushNewProject = (state, elems, data) => {
-		state.projects.push(new Project(data.projectName, data.tasks, data._id));
+		state.projects.push(new Project(data.projectName, data.position, data.tasks, data._id));
 
 		renderProjectList(state, elems);
 }
@@ -73,6 +74,7 @@ const createProject = (state, elems, name) => {
 
 	const newProject = {
 			'projectName': name,
+			'position': state.projects.length,
 			'tasks': []
 		};
 
@@ -93,7 +95,7 @@ const createProject = (state, elems, name) => {
 const setState = (state, elems, data) => {
   state.projects = data.projects.map(project => {
     const tasks = project.tasks.map(task => new Task (task.taskName, task.totalTime, task.log, task._id));
-    return new Project(project.projectName, tasks, project._id);
+    return new Project(project.projectName, project.position, tasks, project._id);
   });
 
   	renderProjectList(state, elems);
@@ -202,9 +204,7 @@ const deleteTask = (state, elems, _task, _project) => {
   bootbox.confirm(confirmMessage, onConfirm);
 }
 
-	// <span class="task-name"></span>
 const renderTask = (state, elems, task, project) => {
-console.log(task);
 	const projectName = project.name;
 	const template = $(
 		`<div class="time-mod-wrapper">
@@ -276,14 +276,13 @@ console.log(task);
 
 const renderTaskList = (state, elems, project) => {
 	const taskListHtml = project.tasks.map(task => renderTask(state, elems, task, project));
-	console.log(taskListHtml)
 	return taskListHtml.reverse();
 }
 
 
 
 const renderProject = (state, elems, project) => {
-
+ console.log(project);
 	const taskListHtml = renderTaskList(state, elems, project);
 	const taskListWrapperHtml = $(`<div id="js-task-list-wrapper" class="task-list-wrapper"></div>`)
 	const taskFormId =`js-task-form-${project.id}`
@@ -341,7 +340,11 @@ const renderProject = (state, elems, project) => {
 }
 
 const renderProjectList = (state, elems) => {
-	const projectListHtml = state.projects.map(project => renderProject(state, elems, project));
+	const projectListHtml = state.projects
+															 .map(project => renderProject(state, elems, project))
+															 .sort((a,b) => a.position - b.position)
+															 .reverse();
+
 	elems.projectList.html(projectListHtml);
 }
 

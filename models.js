@@ -11,6 +11,7 @@ const taskSchema = mongoose.Schema({
 
 const projectSchema = mongoose.Schema({
     projectName: {type: String, required: true},
+    position: Number, 
     tasks: [taskSchema]
 });
 

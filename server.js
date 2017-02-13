@@ -70,7 +70,6 @@ const generateProject = () => {
 }
 
 const seedProjectData = () => {
-  console.log(sampleData.projects);
   const seedData = sampleData.projects; //generateDataArray(generateProject, 1);
   return Projects.insertMany(seedData);
 }

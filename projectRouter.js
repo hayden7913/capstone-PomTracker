@@ -22,6 +22,7 @@ projectRouter.route('/')
       return res.status(400).send(message);
     }
 
+
   Projects
     .findOne({'projectName': req.body.projectName})
     .exec()
@@ -33,8 +34,9 @@ projectRouter.route('/')
         return Projects
           .create({
             'projectName': req.body.projectName,
+            'position': req.body.position,
             'tasks': req.body.tasks
-          })
+          });
         }
       })
       .then(project => res.status(201).json(project))
@@ -82,7 +84,7 @@ projectRouter.route('/:projectId')
                 .findByIdAndUpdate(req.params.projectId, {'$push': toUpdate});
         }
       })
-      .then(project => {res.status(201).json(project);console.log(project)})
+      .then(project => res.status(201).json(project))
       .catch(err => {
           console.error(err);
           res.status(404).json({message: 'Project Not Found'});
@@ -91,6 +93,7 @@ projectRouter.route('/:projectId')
    .put((req, res) => {
 
      if (!((req.params.projectId && req.body._id) && (req.params.projectId === req.body._id))) {
+
        const message = (
          `Request path id (${req.params.projectId}) and request body id ` +
          `(${req.body._id}) must match`);
@@ -103,7 +106,8 @@ projectRouter.route('/:projectId')
      }
 
      const toUpdate = {
-       'projectName': req.body.projectName
+       'projectName': req.body.projectName,
+       'position:': req.body.position
      }
 
      Projects
