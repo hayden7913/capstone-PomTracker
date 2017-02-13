@@ -81,6 +81,7 @@ body {
 
 .task-name {
 	width: 160px;
+	word-break:break-all;
 	/* position: absolute; */
 }
 
@@ -180,6 +181,7 @@ input[type=submit]:hover {
 .total-project-time {
 	position: absolute;
 	right: 28px;
+	top: 0px;
 }
 
 .glyphicon-remove {
@@ -194,20 +196,21 @@ input[type=submit]:hover {
 }
 
 .project-name-wrapper {
-	display: inline;
-	width: 77px;
+
 }
 
 .project-name {
-	display: inline;
+	display: inline-block;
 	font-weight: bold;
 	font-size: 25px;
-	width: 24px;
+	width: 200px;
 	/* border: 1px solid #000; */
+	word-break:break-all;
 }
 
 .project-header {
 	margin-bottom: 10px;
+	position: relative;
 }
 
 .add-new-task {

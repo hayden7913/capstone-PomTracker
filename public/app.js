@@ -293,7 +293,7 @@ const renderProject = (state, elems, project) => {
 				<span id="js-remove" class="glyphicon glyphicon-remove"></span>
 				<div class="project-header">
 					<div class="project-name">${project.name}</div>
-					<span class="total-project-time">${minutesToHours(project.calculateTotalProjectTime())}</span>
+					<div class="total-project-time">${minutesToHours(project.calculateTotalProjectTime())}</div>
 				</div>
 				<div id="js-add-new-task" class="add-new-task ">Add new task..</div>
 				<form id=${taskFormId} class="new-task-form ${taskFormId === state.focusedFormId ? "" : "hide"}">
