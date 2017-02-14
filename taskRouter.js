@@ -23,7 +23,6 @@ taskRouter.route('/')
 taskRouter.route('/:taskId')
   .put((req, res) => {
 
-
     const requiredTaskFields = ['taskName', 'totalTime'];
 
     for (let i=0; i<requiredTaskFields.length; i++) {
@@ -36,7 +35,7 @@ taskRouter.route('/:taskId')
     }
 
     const totalTime = req.body.totalTime < 0 ? 0 : req.body.totalTime;
-    
+
     const toUpdate = {
       'tasks.$.taskName': req.body.taskName,
       'tasks.$.totalTime': totalTime,

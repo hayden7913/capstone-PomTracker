@@ -9,7 +9,6 @@ body {
 
 header {
 	position: relative;
-	margin-left:-10px;
 	width: 100%;
 	background-color: #0074D9;
 	padding: 5px;
@@ -47,15 +46,14 @@ header {
 	margin: 40px 0;
 }
 
-body {
- 	padding: 10px;
-}
-
 
 .error {
   margin-left: 5px;
   color: red;
+  font-size: 15px;
 }
+
+/*Task Module*/
 
 .time-mod-wrapper {
 	margin-top: 10px;
@@ -67,6 +65,11 @@ body {
 	padding-top: 5px !important;
 	width: 300px;
 
+}
+
+.task-error {
+ width: 350px;
+ 
 }
 
 .top-row {
@@ -90,6 +93,8 @@ body {
 	top: 0px;
 	right: 10px;
 }
+
+
 
 
 #newProj {
@@ -217,6 +222,8 @@ input[type=submit]:hover {
 	text-decoration: underline;
 	margin-bottom: 10px;
 	opacity: .45;
+	font-size: 18px;
+	padding: 7px 0px;
 }
 
 .add-new-task:hover {
@@ -235,6 +242,12 @@ input[type=submit]:hover {
   font-size: 15px;
   padding: 10px 20px;
   cursor:pointer;
+}
+
+.plus:hover,
+.plus:active,
+.plus:focus {
+	outline: 0;
 }
 
 .button {

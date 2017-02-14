@@ -81,10 +81,10 @@ projectRouter.route('/:projectId')
           res.status(409).send(message)
         } else {
         return Projects
-                .findByIdAndUpdate(req.params.projectId, {'$push': toUpdate});
+                .findByIdAndUpdate(req.params.projectId, {'$push': toUpdate}, {new: true});
         }
       })
-      .then(project => res.status(201).json(project))
+      .then(project => res.status(201).json(project.tasks[project.tasks.length-1]))
       .catch(err => {
           console.error(err);
           res.status(404).json({message: 'Project Not Found'});

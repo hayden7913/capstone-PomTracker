@@ -5,7 +5,10 @@ const state = {
 	focusedFormId: null,
 	errorMessage: {
 		duplicateProject: 'That project already exists. Please use a different project name',
-		duplicateTask: 'That task already exists. Please use a different task name'
+		emptyProject: 'Please enter a valid project name',
+		duplicateTask: 'That task already exists. Please use a different task name',
+		emptyTask: 'Please enter a valid task name',
+		customInputNan: 'Please enter a valid number in minutes'
 	}
 }
 
@@ -109,17 +112,14 @@ const findIndexById = (array, id) => {
 	return array.findIndex(element => element.id === id);
 }
 
-const pushNewTask = (state, elems, parentProjectId, data) => {
+const pushNewTask = (state, elems, parentProjectId, task) => {
+
 	const projectIndex = findIndexById(state.projects, parentProjectId);
-	const newTask = data.projects.tasks.pop();
-	state.projects[projectIndex].tasks.push(new Task(newTask.taskName, 0 , newTask.log, newTask._id))
+
+	state.projects[projectIndex].tasks.push(new Task(task.taskName, 0 , task.log, task._id))
 
 	renderProjectList(state, elems);
 	elems.projectList.find(`#${state.focusedFormId}`).find("input").focus();
-}
-
-const getProjectById = (state, elems, projectId, callback) => {
-	$.getJSON(`/projects/${projectId}`, data => callback(data));
 }
 
 const createTask = (state, elems, name, parentProjectId) => {
@@ -133,10 +133,10 @@ const createTask = (state, elems, name, parentProjectId) => {
       url: `/projects/${parentProjectId}`,
       type: 'POST',
 			data: newTask,
-      success: () => getProjectById(state, elems, parentProjectId, pushNewTask.bind(null, state, elems, parentProjectId)),
+      success: data => pushNewTask(state, elems, parentProjectId, data), //() => getProjectById(state, elems, parentProjectId, pushNewTask.bind(null, state, elems, parentProjectId)),
 			error: err => {
 				if (err.status === 409){
-					$("#project-list").find(`#duplicate-task-error-${parentProjectId}`).text(err.responseText)
+					elems.projectList.find(`#task-error-${parentProjectId}`).text(err.responseText)
 				}
 			}
     });
@@ -282,11 +282,10 @@ const renderTaskList = (state, elems, project) => {
 
 
 const renderProject = (state, elems, project) => {
- console.log(project);
 	const taskListHtml = renderTaskList(state, elems, project);
 	const taskListWrapperHtml = $(`<div id="js-task-list-wrapper" class="task-list-wrapper"></div>`)
 	const taskFormId =`js-task-form-${project.id}`
-	const taskErrorId = `duplicate-task-error-${project.id}`
+	const taskErrorId = `task-error-${project.id}`
 	const projectContainerTemplate = $(
 		`<div id="js-project-wrapper" class="project-wrapper well" >
 				<span id="js-remove" class="glyphicon glyphicon-remove"></span>
@@ -301,7 +300,7 @@ const renderProject = (state, elems, project) => {
 							<span class="glyphicon glyphicon-plus task-submit-button"></span>
 						</button>
 				</form>
-				<div id=${taskErrorId} class="error"></div>
+				<div id=${taskErrorId} class="error task-error"></div>
 		</div>`);
 
 		projectContainerTemplate.find("#js-add-new-task").click( (e) => {
@@ -323,7 +322,9 @@ const renderProject = (state, elems, project) => {
 				createTask(state, elems, name, project.id);
 				$(`#${taskFormId}`).val("");
 			} else {
+				console.log('hello');
 				elems.projectList.find(`#${taskFormId}`).find("input").focus();
+				elems.projectList.find(`#task-error-${project.id}`).text(state.errorMessage.emptyTask);
 			}
 		});
 
@@ -385,8 +386,8 @@ const main = () => {
 		projectList: $("#project-list"),
 		projectInput: $("#project-input"),
 		taskInput:$("#js-new-task-input"),
-		projectError: $("#duplicateProjectError"),
-		taskError: $("#duplicate-task-error")
+		projectError: $("#project-error"),
+		taskError: $("#task-error")
 	};
 
   getProjects(state, elems, setState);
