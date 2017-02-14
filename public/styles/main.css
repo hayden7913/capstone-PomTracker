@@ -40,12 +40,9 @@ header {
 	top: -50px;
 }
 
-
-
 .module {
 	margin: 40px 0;
 }
-
 
 .error {
   margin-left: 5px;
@@ -57,7 +54,9 @@ header {
 
 .time-mod-wrapper {
 	margin-top: 10px;
-
+	width: 300px;
+	/* padding-right: 29px; */
+	margin-right: -21px;
 }
 
 .time-mod {
@@ -67,23 +66,21 @@ header {
 
 }
 
+.new-task-input:focus {
+	outline: none;
+
+}
+
 .task-error {
  width: 300px;
 }
 
-.top-row {
-	position: relative;
-	top: 10px;
-	font-size: 20px;
-	margin-bottom: 5px;
-	display: inline-block;
-	width: 100%;
 
-}
 
 .task-name {
 	width: 160px;
 	word-break:break-all;
+	margin-bottom: 17px;
 	/* position: absolute; */
 }
 
@@ -93,11 +90,33 @@ header {
 	right: 10px;
 }
 
+.top-row {
+	position: relative;
+	top: 10px;
+	font-size: 20px;
+	margin-bottom: 5px;
+	display: inline-block;
+	width: 100%;
+}
 
 
 
-#newProj {
+
+#new-project {
 	margin-bottom: 10px;
+	display: inline-block;
+}
+
+#new-project-input:focus {
+	outline: none;
+}
+
+
+
+
+.project-form-wrapper {
+	display: inline-block;
+	margin-bottom: 20px;
 }
 
 .sell {
@@ -116,25 +135,28 @@ header {
 	margin-right: 10px;
 
 }
-.custom-input {
-	width: 50px;
-	height: 35px;
-	border-radius: 0px 7px 7px 0px;
-	-moz-border-radius: 0px 7px 7px 0px;
-	-webkit-border-radius: 0px 7px 7px 0px;
-}
+
 
 .time-buttons {
 	margin-top: 25px;
+	display: inline-block;
 }
 
 .control-buttons {
+	display: inline-block;
 	margin-top: 10px;
+	clear: both;
 }
-/*
-input[type=text], select {
-    width: 100%;
-    padding: 12px 20px;
+
+/*.control-buttons > button {
+	padding: 10px 15px;
+}*/
+
+
+
+.name-input {
+    width: 245px;
+    padding: 5px 20px;
     margin: 8px 0;
     display: inline-block;
     border: 1px solid #ccc;
@@ -142,20 +164,18 @@ input[type=text], select {
     box-sizing: border-box;
 }
 
-input[type=submit] {
-    width: 100%;
-    background-color: #4CAF50;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
+/*.name-input,
+.name-input::-webkit-input-placeholder
+/*.custom-input::-moz-placeholder,
+.custom-input:-moz-placeholder,*/
+/*.custom-input:--ms-input-placeholder*/ {
+  /*  font-size: 15px;
+    line-height: 3;
+		padding-left: 3px;*/
 
-input[type=submit]:hover {
-    background-color: #45a049;
 }*/
+
+
 
 .well {
     border-radius: 5px;
@@ -165,15 +185,17 @@ input[type=submit]:hover {
 
 .project-wrapper {
 	position: relative;
-	overflow: hidden;
+	/* overflow: hidden; */
+	/* overflow: scroll; */
 	display: inline-block;
 	border-radius: 5px;
 	background-color: #f2f2f2;
 	padding: 5px 20px;
 	vertical-align: top;
 	margin: 10px 10px;
-	min-width: 350px;
+	min-width: 345px;
 	min-height: 125px;
+	/* max-height: 600px; */
 	position: relative;
 }
 
@@ -184,14 +206,14 @@ input[type=submit]:hover {
 
 .total-project-time {
 	position: absolute;
-	right: 28px;
+	right: 25px;
 	top: 0px;
 }
 
 .glyphicon-remove {
 	position: absolute;
-	right: 10px;
-	top: 10px;
+	right: 7px;
+	top: 5px;
 	opacity: .25;
 }
 
@@ -241,6 +263,11 @@ input[type=submit]:hover {
 	font-size: 15px;
 	padding: 10px 12px;
 	cursor:pointer;
+	display: inline-block;
+}
+
+.plus:hover {
+	background-color: #43A047;
 }
 
 .plus:hover,
@@ -257,23 +284,18 @@ input[type=submit]:hover {
 	border-radius: 7px;
 	color: white;
 	font-size: 15px;
-	padding: 10px 20px;
+	padding: 10px 14px;
 	cursor:pointer;
 	height: 35px;
 	border: 1px solid #316282;
 }
 
+
 .button:hover {
   background: #3cb0fd;
 }
 
-.button-group .button {
-	border-radius: 0;
-	float: left;
-	cursor:pointer;
-	padding: 10px 15px;
-
-}
+.button-group .button {border-radius: 0; float: left; cursor:pointer;padding: 10px;}
 
 
 .button-group .button:not(:last-child) {
@@ -290,11 +312,67 @@ input[type=submit]:hover {
 	border-top-right-radius: 7px;
 }*/
 
+.time-row {
+	border: 1px solid #000;
+	width: 306px;
+	height: 59px;
+	display: inline-block;
+	position: relative;
+}
 
+.
+-time-controls {
+
+}
 
 .button-group .button:hover {
   background: #3cb0fd;
 }
+
+.custom-input-form {
+	display: inline-block;
+}
+.custom-input {
+	width: 50px;
+	height: 35px;
+	border-radius: 0px 7px 7px 0px;
+	-moz-border-radius: 0px 7px 7px 0px;
+	-webkit-border-radius: 0px 7px 7px 0px;
+	/* display: inline-block; */
+	float: left;
+}
+
+.custom-input:focus {
+	outline:none;
+}
+.custom-input,
+.custom-input::-webkit-input-placeholder
+/*.custom-input::-moz-placeholder,
+.custom-input:-moz-placeholder,*/
+/*.custom-input:--ms-input-placeholder*/ {
+    font-size: 15px;
+    line-height: 3;
+		padding-left: 3px;
+
+}
+
+.custom-input-submit-button {
+	/* top: 29px; */
+	/* right: 7px; */
+	/*position: absolute;*/
+	/* display: inline-block; */
+	float: left;
+	margin-top: 5px;
+	background: none;
+	opacity: 1;
+	border: none;
+}
+
+.custom-input-submit-icon {
+	font-size: 13px;
+	color: rgb(49, 98, 130);
+}
+
 /*
 button {
     background-color: #337ab7;

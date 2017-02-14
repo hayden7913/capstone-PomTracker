@@ -213,14 +213,20 @@ const renderTask = (state, elems, task, project) => {
 						<div class="task-name name">${task.name}</div>
 						<span class="total-task-time">${minutesToHours(task.totalTime)}</span>
 					</div>
-				<div class="button-group time-buttons">
-					<button type="button" class="js-btn5 button button-group button-left">+5m</button>
-					<button type="button" class="js-btn15 button button-group">+15m</button>
-					<button type="button" class="js-btn25 button button-group button-right" value="25">+25m</button>
-					<input type="text" name="" id="custom-input-${task.id}" placeholder="+m" class="custom-input form-control">
-					<span id="invalidTimeError"></span>
-
-				</div>
+				<div class="time-controls">
+					<div class="button-group">
+						<button type="button" class="js-btn5 button button-group button-left">+5m</button>
+						<button type="button" class="js-btn15 button button-group">+15m</button>
+						<button type="button" class="js-btn25 button button-group button-right" value="25">+25m</button>
+					</div>
+					<form id="custom-input-form-${task.id}" class="custom-input-form">
+						<input id="custom-input-${task.id}" type="text" class="custom-input" placeholder="+m" >
+						<button class="custom-input-submit-button" type="submit">
+							<span class="glyphicon glyphicon-plus custom-input-submit-icon"></span>
+						</button>
+					</form>
+			</div>
+					<span id="invalid-time-error-${task.id}" class="error"></span>
 				<div class="control-buttons">
 					<button type="button" id="js-reset" class="button" >Reset</button>
 					<button type="button" id="js-undo" class="button" >Undo</button>
@@ -259,16 +265,18 @@ const renderTask = (state, elems, task, project) => {
 		renderProjectList(state, elems);
 	});
 
- 	template.find(`#custom-input-${task.id}`).on("keyup", (e) => {
- 		const code = e.which;
- 		if (code == 13) {
+ 	template.find(`#custom-input-form-${task.id}`).on("submit", (e) => {
  			e.preventDefault();
+
 			const input = Number($(`#custom-input-${task.id}`).val());
- 			task.addTime(state, elems, input);
-			this.reset;
-			updateTask(state, elems, task, project.id);
-			renderProjectList(state, elems);
- 		}
+			if (isNaN(input)) {
+				$(`#invalid-time-error-${task.id}`).text(state.errorMessage.customInputNan);
+			} else {
+				task.addTime(state, elems, input);
+				this.reset;
+				updateTask(state, elems, task, project.id);
+				renderProjectList(state, elems);
+			}
  	});
 
  	return template;
@@ -295,7 +303,7 @@ const renderProject = (state, elems, project) => {
 				</div>
 				<div id="js-add-new-task" class="add-new-task ">Add new task..</div>
 				<form id=${taskFormId} class="new-task-form ${taskFormId === state.focusedFormId ? "" : "hide"}">
-					<input  class="new-task-input" type="text"></input>
+					<input  class="new-task-input name-input" placeholder="Enter Task Name" type="text"></input>
 						<button class="plus">
 							<span class="glyphicon glyphicon-plus task-submit-button"></span>
 						</button>
@@ -354,7 +362,7 @@ const initProjectSubmitHandler = (state,elems) => {
 		e.preventDefault();
 
 		const name = elems.projectInput.val();
-
+		console.log(name);
 		if (!(name == null || name.trim() === '')){
 			elems.projectError.text("");
 			createProject(state, elems, name);
@@ -385,15 +393,16 @@ const initbodyClickHandler = (state, elems) => {
 const main = () => {
 
 	const elems = {
-		newProject: $("#newProject"),
+		newProject: $("#new-project-form"),
 		projectSelect: $("#selectProject"),
 		newTask : $("#new-task-form"),
 		taskList: $("#taskList"),
 		projectList: $("#project-list"),
-		projectInput: $("#project-input"),
+		projectInput: $("#new-project-input"),
 		taskInput:$("#js-new-task-input"),
 		projectError: $("#project-error"),
-		taskError: $("#task-error")
+		taskError: $("#task-error"),
+		timeInputError: $("#invalid-time-error")
 	};
 
   getProjects(state, elems, setState);

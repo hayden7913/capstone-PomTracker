@@ -23,16 +23,26 @@
 	<div class="row">
 		<div class="col12">
 				<div class="module">
-					<form class="form-inline " id="newProject">
-						<div class="wrapper">
-							<div class="form-group">
-								<label for="Project">Create New Project:</label>
-								<input type="text" class="form-control" id="project-input" placeholder="Enter Project">
-						</div>
-							<button type="submit" class="btn btn-default">Submit</button>
-							<span id="project-error" class="error"></span>
-						</div>
+					<form id="new-project-form" action="">
+					  <label for="new-project">Create New Project: </label>
+					  <input type="text" id="new-project-input" class="name-input" placeholder="Enter Project Name" />
+					  	<button type="submit" class="plus">
+								<span class="glyphicon glyphicon-plus task-submit-button"></span>
+							</button>
+					  <span id="project-error" class="error"></span>
 					</form>
+				<!--	<form  id="new-project">
+						 <div class="project-form-wrapper">
+							<div>
+								<label for="Project">Create New Project:</label>
+								<input type="text"  id="project-input" placeholder="Enter Project">
+							</div>
+							<button type="submit" class="plus">
+								<span class="glyphicon glyphicon-plus task-submit-button"></span>
+							</button>
+							<span id="project-error" class="error"></span>
+						 </div>
+					</form>-->
 				<!-- <span id="task-error" class="error"></span> -->
 				<div id="project-list"></div>
 			</div>
