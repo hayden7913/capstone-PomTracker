@@ -355,10 +355,16 @@ const initProjectSubmitHandler = (state,elems) => {
 
 		const name = elems.projectInput.val();
 
-		elems.projectError.text("");
-		createProject(state, elems, name);
-		renderProjectList(state, elems);
-		elems.projectInput.val("");
+		if (!(name == null || name.trim() === '')){
+			elems.projectError.text("");
+			createProject(state, elems, name);
+			elems.projectInput.val("");
+		} else {
+			elems.projectInput.focus();
+			elems.projectError.text(state.errorMessage.emptyProject);
+		}
+
+
 	});
 }
 
