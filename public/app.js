@@ -207,33 +207,35 @@ const deleteTask = (state, elems, _task, _project) => {
 const renderTask = (state, elems, task, project) => {
 	const projectName = project.name;
 	const template = $(
-		`<div class="time-mod-wrapper">
-			<div class="time-mod well">
-					<div class="top-row">
-						<div class="task-name name">${task.name}</div>
-						<span class="total-task-time">${minutesToHours(task.totalTime)}</span>
-					</div>
-				<div class="time-controls">
-					<div class="button-group">
-						<button type="button" class="js-btn5 button button-group button-left">+5m</button>
-						<button type="button" class="js-btn15 button button-group">+15m</button>
-						<button type="button" class="js-btn25 button button-group button-right" value="25">+25m</button>
-					</div>
-					<form id="custom-input-form-${task.id}" class="custom-input-form">
-						<input id="custom-input-${task.id}" type="text" class="custom-input" placeholder="+m" >
-						<button class="custom-input-submit-button" type="submit">
-							<span class="glyphicon glyphicon-plus custom-input-submit-icon"></span>
-						</button>
-					</form>
-			</div>
-					<span id="invalid-time-error-${task.id}" class="error"></span>
-				<div class="control-buttons">
-					<button type="button" id="js-reset" class="button" >Reset</button>
-					<button type="button" id="js-undo" class="button" >Undo</button>
-					<button type="button" id="js-delete" class="button" >Delete</button>
-				</div>
-			</div>
-		</div>`);
+
+		`
+						<div class="time-mod-wrapper">
+							<div class="time-mod well">
+									<div class="top-row">
+										<div class="task-name name">${task.name}</div>
+										<span class="total-task-time">${minutesToHours(task.totalTime)}</span>
+									</div>
+								<div class="time-controls">
+									<div class="button-group">
+										<button type="button" class="js-btn5 button button-group button-left">+5m</button>
+										<button type="button" class="js-btn15 button button-group">+15m</button>
+										<button type="button" class="js-btn25 button button-group button-right" value="25">+25m</button>
+									</div>
+									<form id="custom-input-form-${task.id}" class="custom-input-form">
+										<input id="custom-input-${task.id}" type="text" class="custom-input" placeholder="+m" >
+										<button class="custom-input-submit-button" type="submit">
+											<span class="glyphicon glyphicon-plus custom-input-submit-icon"></span>
+										</button>
+									</form>
+							</div>
+									<span id="invalid-time-error-${task.id}" class="error"></span>
+								<div class="control-buttons">
+									<button type="button" id="js-reset" class="button" >Reset</button>
+									<button type="button" id="js-undo" class="button" >Undo</button>
+									<button type="button" id="js-delete" class="button" >Delete</button>
+								</div>
+							</div>
+						</div>`);
 
  	template.find(".js-btn5").click( () => {
  		task.addTime(state, elems, 5);
@@ -295,7 +297,9 @@ const renderProject = (state, elems, project) => {
 	const taskFormId =`js-task-form-${project.id}`
 	const taskErrorId = `task-error-${project.id}`
 	const projectContainerTemplate = $(
-		`<div id="js-project-wrapper" class="project-wrapper well" >
+
+	`
+		<div id="js-project-wrapper" class="project-wrapper well" >
 				<span id="js-remove" class="glyphicon glyphicon-remove"></span>
 				<div class="project-header">
 					<div class="project-name">${project.name}</div>
@@ -309,7 +313,9 @@ const renderProject = (state, elems, project) => {
 						</button>
 				</form>
 				<div id=${taskErrorId} class="error task-error"></div>
-		</div>`);
+		</div>
+
+	`);
 
 		projectContainerTemplate.find("#js-add-new-task").click( (e) => {
 			e.stopPropagation();
@@ -340,12 +346,10 @@ const renderProject = (state, elems, project) => {
 				deleteProject(state, elems, project);
 		});
 
-		projectContainerTemplate.append(taskListWrapperHtml.html(taskListHtml));
+		const inner = projectContainerTemplate.append(taskListWrapperHtml.html(taskListHtml));
+  	const result = $(`<div class="col3"><div>`).append(inner);
 
-
-
-
-		return projectContainerTemplate;
+		return result;
 }
 
 const renderProjectList = (state, elems) => {

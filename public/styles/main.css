@@ -2,6 +2,10 @@
 	box-sizing: border-box;
 }
 
+.col3 {
+
+}
+
 body {
 	font-size: 20px;
 	font-family: 'Open Sans', sans-serif;
@@ -40,16 +44,16 @@ header {
 	top: -50px;
 }
 
-.module {
-	margin: 40px 0;
-}
 
 .error {
-  margin-left: 5px;
+  /* margin-left: 5px; */
   color: red;
   font-size: 15px;
 }
 
+#new-project-form {
+	margin-bottom: 15px;
+}
 /*Task Module*/
 
 .time-mod-wrapper {
@@ -185,18 +189,20 @@ header {
 
 .project-wrapper {
 	position: relative;
-	/* overflow: hidden; */
+	overflow: hidden;
 	/* overflow: scroll; */
 	display: inline-block;
 	border-radius: 5px;
 	background-color: #f2f2f2;
-	padding: 5px 20px;
+	padding: 5px 18px;
 	vertical-align: top;
-	margin: 10px 10px;
-	min-width: 345px;
+	/* margin: 10px 10px; */
+	/* min-width: 345px; */
+	width: 340px;
 	min-height: 125px;
-	/* max-height: 600px; */
+	max-height: 600px;
 	position: relative;
+	text-align: left;
 }
 
 .project-header {
