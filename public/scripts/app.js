@@ -177,7 +177,7 @@ const deleteProject = (state, elems, _project) => {
     }
   }
 
-  bootbox.confirm(confirmMessage, onConfirm);
+  myConfirm(confirmMessage, "button", onConfirm);
 }
 
 const deleteTask = (state, elems, _task, _project) => {
@@ -201,7 +201,7 @@ const deleteTask = (state, elems, _task, _project) => {
     }
   }
 
-  bootbox.confirm(confirmMessage, onConfirm);
+	myConfirm(confirmMessage, "button", onConfirm);
 }
 
 const renderTask = (state, elems, task, project) => {
@@ -412,6 +412,29 @@ const main = () => {
   getProjects(state, elems, setState);
 	initProjectSubmitHandler(state, elems);
 	initbodyClickHandler(state, elems);
+
+const hello = $(`	<div class="modal-content">
+		 <span id="modal-close">&times;</span>
+			<div id="modal-message">${"test"}</div>
+			<div id="button-wrapper">
+				<button id="btn-cancel" class="modal-btn">Cancel</button>
+				<button id="btn-ok" class="${"button"} modal-btn">Okay</button>
+			</div>
+	</div>`)
+
+	const template3 = `
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+         <span id="modal-close">&times;</span>
+          <div id="modal-message">${"hello"}</div>
+          <div id="button-wrapper">
+            <button id="btn-cancel" class="modal-btn">Cancel</button>
+            <button id="btn-ok" class="${"button"} modal-btn">Okay</button>
+          </div>
+      </div>
+    </div>`
+
+		//$("body").append(template3);
 }
 
 $(main);

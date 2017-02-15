@@ -75,6 +75,25 @@
   }
 }
 
+@media only screen and (max-width: 425px) {
+
+  .row {
+    padding: 0px 0px;
+  }
+
+  .col2 {
+    width: 16.66%;
+  }
+  .col3 {
+    width: 100%;
+  }
+
+  .col12 {
+    width: 100%;
+    text-align: left;
+  }
+}
+
 
 /*Smartphones (portrait and landscape) ----------- / @media only screen and (min-device-width : 320px) and (max-device-width : 480px) { / Styles / }*/
 

@@ -53,12 +53,14 @@ header {
 
 #new-project-form {
 	margin-bottom: 15px;
+	padding: 5px 10px;
 }
 /*Task Module*/
 
 .time-mod-wrapper {
 	margin-top: 10px;
 	width: 300px;
+	padding: -4px 21px;
 	/* padding-right: 29px; */
 	margin-right: -21px;
 }
@@ -67,7 +69,6 @@ header {
 	background-color: #ffffff;
 	padding-top: 5px !important;
 	width: 300px;
-
 }
 
 .new-task-input:focus {
@@ -198,7 +199,7 @@ header {
 	vertical-align: top;
 	/* margin: 10px 10px; */
 	/* min-width: 345px; */
-	width: 340px;
+	width: 337px;
 	min-height: 125px;
 	max-width: 600px;
 	position: relative;
@@ -377,6 +378,32 @@ header {
 .custom-input-submit-icon {
 	font-size: 13px;
 	color: rgb(49, 98, 130);
+}
+
+
+@media only screen and (max-width: 425px) {
+
+  .project-wrapper {
+    width: 300px;
+    padding: 5px 9px;
+  }
+
+  .time-mod {
+    width: 282px;
+    padding: 20px 10px;
+  }
+
+  .col2 {
+    width: 16.66%;
+  }
+  .col3 {
+    width: 100%;
+  }
+
+  .col12 {
+    width: 100%;
+    text-align: left;
+  }
 }
 
 /*
