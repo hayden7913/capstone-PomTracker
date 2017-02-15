@@ -356,7 +356,7 @@ const renderProjectList = (state, elems) => {
 	const projectListHtml = state.projects
 															 .map(project => renderProject(state, elems, project))
 															 .sort((a,b) => a.position - b.position)
-															 .reverse();
+															// .reverse();
 
 	elems.projectList.html(projectListHtml);
 }

@@ -7,6 +7,7 @@ const app = express();
 mongoose.Promise = global.Promise;
 
 const {PORT, DATABASE_URL} = require('./config');
+console.log(DATABASE_URL);
 const {Projects} = require('./models');
 const {sampleData} = require('./sampleData')
 
