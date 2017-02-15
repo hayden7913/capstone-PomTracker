@@ -200,7 +200,7 @@ header {
 	/* min-width: 345px; */
 	width: 340px;
 	min-height: 125px;
-	max-height: 600px;
+	max-width: 600px;
 	position: relative;
 	text-align: left;
 }
