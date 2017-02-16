@@ -292,6 +292,7 @@ const renderProject = (state, elems, project) => {
 	const taskListWrapperHtml = $(`<div id="js-task-list-wrapper" class="task-list-wrapper"></div>`)
 	const taskFormId =`js-task-form-${project.id}`
 	const taskErrorId = `task-error-${project.id}`
+	console.log(taskFormId, state.focusedFormId);
 	let projectTemplate = $(
 
 	`<div id="js-project-wrapper" class="project-wrapper well" >
@@ -318,6 +319,7 @@ const renderProject = (state, elems, project) => {
 		elems.projectList.find(elems.newTaskForm).addClass("hide");
 		elems.projectList.find(`#${taskFormId}`).removeClass("hide") .find("input").focus();
 		state.focusedFormId = `${taskFormId}`;
+		console.log(state.focusedFormId);
 	});
 
 
