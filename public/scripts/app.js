@@ -177,12 +177,12 @@ const deleteProject = (state, elems, _project) => {
     }
   }
 
-  bootbox.confirm(confirmMessage, onConfirm);
+  myConfirm(confirmMessage, "button", onConfirm);
 }
 
 const deleteTask = (state, elems, _task, _project) => {
 
-  const confirmMessage = `Are you sure you want to delete \"${_task.name}\"`;
+  const confirmMessage = `Are you sure you want to delete \"${_task.name}\"?`;
   const onConfirm = (result) => {
 
     if (result) {
@@ -201,7 +201,6 @@ const deleteTask = (state, elems, _task, _project) => {
     }
   }
 	myConfirm(confirmMessage, "button", onConfirm);
-  // bootbox.confirm(confirmMessage, onConfirm);
 }
 
 const renderTask = (state, elems, task, project) => {
@@ -342,7 +341,7 @@ const renderProject = (state, elems, project) => {
 		}
 	});
 
-	projectTemplate.find("#js-remove").click(() => {
+	projectTemplate.find(".delete-project-button").click(() => {
 			deleteProject(state, elems, project);
 	});
 

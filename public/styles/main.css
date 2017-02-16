@@ -233,6 +233,7 @@ header {
 	max-width: 600px;
 	position: relative;
 	text-align: left;
+	margin-bottom: 15px;
 }
 
 .project-header {
@@ -350,7 +351,7 @@ header {
 
 }
 
-.button-group .button {border-radius: 0;float: left;cursor:pointer;padding: 10px;}
+.button-group .button {border-radius: 0;float: left;cursor:pointer;padding: 8px 7px;}
 
 
 .button-group .button:not(:last-child) {
@@ -413,20 +414,19 @@ header {
 }
 
 .custom-input-submit-button {
-	/* top: 29px; */
-	/* right: 7px; */
-	/*position: absolute;*/
-	/* display: inline-block; */
 	float: left;
 	margin-top: 5px;
 	background: none;
 	opacity: 1;
 	border: none;
-}
-
-.custom-input-submit-icon {
 	font-size: 13px;
 	color: rgb(49, 98, 130);
+	padding-top: 5px;
+}
+
+.custom-input-submit-icon:hover {
+	color: #3cb0fd;
+	cursor: pointer;
 }
 
 @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
