@@ -346,8 +346,6 @@ const renderProject = (state, elems, project) => {
 			deleteProject(state, elems, project);
 	});
 
-
-
 	return projectTemplate;
 }
 
