@@ -416,6 +416,7 @@ header {
 .custom-input-submit-icon {
 	font-size: 13px;
 	color: rgb(49, 98, 130);
+	padding-top: 5px;
 }
 
 @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {

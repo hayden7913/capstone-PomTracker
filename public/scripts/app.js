@@ -176,13 +176,12 @@ const deleteProject = (state, elems, _project) => {
       renderProjectList(state, elems);
     }
   }
-
-  bootbox.confirm(confirmMessage, onConfirm);
+  myConfirm(confirmMessage, "button", onConfirm)
 }
 
 const deleteTask = (state, elems, _task, _project) => {
 
-  const confirmMessage = `Are you sure you want to delete \"${_task.name}\"`;
+  const confirmMessage = `Are you sure you want to delete \"${_task.name}\?"`;
   const onConfirm = (result) => {
 
     if (result) {
@@ -201,15 +200,12 @@ const deleteTask = (state, elems, _task, _project) => {
     }
   }
 	myConfirm(confirmMessage, "button", onConfirm);
-  // bootbox.confirm(confirmMessage, onConfirm);
 }
 
 const renderTask = (state, elems, task, project) => {
 	const projectName = project.name;
 	const template = $(
-
-		`
-						<div class="time-mod-wrapper">
+						`<div class="time-mod-wrapper">
 							<div class="time-mod well">
 									<div class="top-row">
 										<div class="task-name name">${task.name}</div>
@@ -308,7 +304,7 @@ const renderProject = (state, elems, project) => {
 				<form id=${taskFormId} class="new-task-form ${taskFormId === state.focusedFormId ? "" : "hide"}">
 					<input  class="new-task-input name-input" placeholder="Enter Task Name" type="text"></input>
 						<button class="plus">
-							<i class="fa fa-plus " aria-hidden="true"></i>
+							<i class="fa fa-plus" aria-hidden="true"></i>
 						</button>
 				</form>
 				<div id=${taskErrorId} class="error task-error"></div>
@@ -319,7 +315,7 @@ const renderProject = (state, elems, project) => {
 
 	projectTemplate.find("#js-add-new-task").click( (e) => {
 		e.stopPropagation();
-		elems.projectList.find('.new-task-form').addClass("hide");
+		elems.projectList.find(elems.newTaskForm).addClass("hide");
 		elems.projectList.find(`#${taskFormId}`).removeClass("hide") .find("input").focus();
 		state.focusedFormId = `${taskFormId}`;
 	});
@@ -361,17 +357,17 @@ const renderProjectList = (state, elems) => {
 }
 
 const initProjectSubmitHandler = (state,elems) => {
-	$(elems.newProject).on("submit", (e) => {
+	$(elems.newProjectForm).on("submit", (e) => {
 		e.preventDefault();
 
-		const name = elems.projectInput.val();
-		console.log(name);
+		const name = elems.newProjectInput.val();
+
 		if (!(name == null || name.trim() === '')){
 			elems.projectError.text("");
 			createProject(state, elems, name);
-			elems.projectInput.val("");
+			elems.newProjectInput.val("");
 		} else {
-			elems.projectInput.focus();
+			elems.newProjectInput.focus();
 			elems.projectError.text(state.errorMessage.emptyProject);
 		}
 
@@ -386,8 +382,8 @@ const initbodyClickHandler = (state, elems) => {
 		elems.projectList.find(".error").text("");
 		elems.projectError.text("");
 
-		if (!$(e.target).hasClass("new-task-input") && !$(e.target).hasClass('task-submit-button') && !$(e.target).hasClass('plus') ) {
-				elems.projectList.find(".new-task-form").addClass("hide");
+		if (!$(e.target).hasClass("new-task-input") && !$(e.target).hasClass('task-submit-button') && !$(e.target).hasClass('fa-plus') ) {
+				elems.projectList.find(elems.newTaskForm).addClass("hide");
 				state.focusedFormId = null;
 		}
 	});
@@ -396,16 +392,13 @@ const initbodyClickHandler = (state, elems) => {
 const main = () => {
 
 	const elems = {
-		newProject: $("#new-project-form"),
-		projectSelect: $("#selectProject"),
-		newTask : $("#new-task-form"),
-		taskList: $("#taskList"),
 		projectList: $("#project-list"),
-		projectInput: $("#new-project-input"),
-		taskInput:$("#js-new-task-input"),
+		newProjectForm: $("#new-project-form"),
+		newProjectInput: $("#new-project-input"),
+		newTaskForm : ".new-task-form",
+		newTaskInput:$(".new-task-input"),
 		projectError: $("#project-error"),
-		taskError: $("#task-error"),
-		timeInputError: $("#invalid-time-error")
+		taskError: $("#task-error")
 	};
 
   getProjects(state, elems, setState);
