@@ -382,9 +382,7 @@ header {
 	color: rgb(49, 98, 130);
 }
 
-
 @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
-
 
   .project-wrapper {
     width: 300px;
@@ -397,17 +395,6 @@ header {
     padding: 20px 10px;
   }
 
-  .col2 {
-    width: 16.66%;
-  }
-  .col3 {
-    width: 100%;
-  }
-
-  .col12 {
-    width: 100%;
-    text-align: left;
-  }
 }
 
 /*
