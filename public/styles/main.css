@@ -84,7 +84,7 @@ header {
 
 .task-name {
 	width: 160px;
-	word-break:break-all;
+	/* word-break:break-all; */
 	margin-bottom: 17px;
 	/* position: absolute; */
 }
@@ -189,6 +189,7 @@ header {
 }
 
 .project-wrapper {
+	/* font-size: 20px; */
 	position: relative;
 	overflow: hidden;
 	/* overflow: scroll; */
@@ -201,6 +202,7 @@ header {
 	/* min-width: 345px; */
 	width: 337px;
 	min-height: 125px;
+	/* height: 600px; */
 	max-width: 600px;
 	position: relative;
 	text-align: left;
@@ -381,11 +383,13 @@ header {
 }
 
 
-@media only screen and (max-width: 425px) {
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+
 
   .project-wrapper {
     width: 300px;
     padding: 5px 9px;
+    font-size: 17px;
   }
 
   .time-mod {
