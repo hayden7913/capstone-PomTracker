@@ -177,7 +177,7 @@ const deleteProject = (state, elems, _project) => {
     }
   }
 
-  myConfirm(confirmMessage, "button", onConfirm);
+  bootbox.confirm(confirmMessage, onConfirm);
 }
 
 const deleteTask = (state, elems, _task, _project) => {
@@ -200,8 +200,8 @@ const deleteTask = (state, elems, _task, _project) => {
       renderProjectList(state, elems);
     }
   }
-
 	myConfirm(confirmMessage, "button", onConfirm);
+  // bootbox.confirm(confirmMessage, onConfirm);
 }
 
 const renderTask = (state, elems, task, project) => {
@@ -356,7 +356,7 @@ const renderProjectList = (state, elems) => {
 	const projectListHtml = state.projects
 															 .map(project => renderProject(state, elems, project))
 															 .sort((a,b) => a.position - b.position)
-															// .reverse();
+															 .reverse();
 
 	elems.projectList.html(projectListHtml);
 }
@@ -413,7 +413,7 @@ const main = () => {
 	initProjectSubmitHandler(state, elems);
 	initbodyClickHandler(state, elems);
 
-const hello = $(`	<div class="modal-content">
+const hello= $(`	<div class="modal-content">
 		 <span id="modal-close">&times;</span>
 			<div id="modal-message">${"test"}</div>
 			<div id="button-wrapper">
@@ -434,7 +434,7 @@ const hello = $(`	<div class="modal-content">
       </div>
     </div>`
 
-		//$("body").append(template3);
+		$("body").html(hello);
 }
 
 $(main);
