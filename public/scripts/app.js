@@ -193,8 +193,7 @@ const deleteTask = (state, elems, _task, _project) => {
 
 			$.ajax({
 					url: `/projects/${_project.id}/tasks/${_task.id}`,
-					type: 'DELETE',
-					success: ( ) => console.log('Deleted')
+					type: 'DELETE'
 			});
 
       renderProjectList(state, elems);
@@ -261,7 +260,7 @@ const renderTask = (state, elems, task, project) => {
 		deleteTask(state, elems, task, project)
 	});
 
-	template.find(".btn").click(() => {
+	template.find(".button").click(() => {
 		updateTask(state, elems, task, project.id);
 		renderProjectList(state, elems);
 	});
@@ -330,6 +329,7 @@ const renderProject = (state, elems, project) => {
 
 		const name = $(this).find("input").val();
 
+
 		if (!(name == null || name.trim() === '')){
 			elems.taskError.text("");
 			createTask(state, elems, name, project.id);
@@ -383,7 +383,7 @@ const initbodyClickHandler = (state, elems) => {
 		elems.projectList.find(".error").text("");
 		elems.projectError.text("");
 
-		if (!$(e.target).hasClass("new-task-input") && !$(e.target).hasClass('task-submit-button') && !$(e.target).hasClass('plus') ) {
+		if (!$(e.target).hasClass("new-task-input") && !$(e.target).hasClass('task-submit-button') && !$(e.target).hasClass('plus') && !$(e.target).hasClass('fa-plus') ) {
 				elems.projectList.find(".new-task-form").addClass("hide");
 				state.focusedFormId = null;
 		}

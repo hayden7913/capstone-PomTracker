@@ -58,6 +58,7 @@ projectRouter.route('/:projectId')
         });
   })
   .post((req, res) => {
+    console.log(req.body);
     const toUpdate = {'tasks' : req.body};
     const requiredTaskFields = ['taskName', 'totalTime'];
 
@@ -77,8 +78,9 @@ projectRouter.route('/:projectId')
         const taskIndex = project.tasks.findIndex(task => task.taskName === req.body.taskName);
 
         if (taskIndex > -1) {
-          const message = 'That task already exists the select project. Please use a different task name';
-          res.status(409).send(message)
+          const message = 'That task already exists. Please use a different task name.';
+          console.error(message);
+          res.status(409).send(message);
         } else {
         return Projects
                 .findByIdAndUpdate(req.params.projectId, {'$push': toUpdate}, {new: true});
