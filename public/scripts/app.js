@@ -299,7 +299,7 @@ const renderProject = (state, elems, project) => {
 	let projectTemplate = $(
 
 	`<div id="js-project-wrapper" class="project-wrapper well" >
-				<span id="js-remove" class="glyphicon glyphicon-remove"></span>
+				<span id="js-remove" class="delete-project-button">&times</span>
 				<div class="project-header">
 					<div class="project-name">${project.name}</div>
 					<div class="total-project-time">${minutesToHours(project.calculateTotalProjectTime())}</div>
@@ -363,7 +363,7 @@ const initProjectSubmitHandler = (state,elems) => {
 		e.preventDefault();
 
 		const name = elems.projectInput.val();
-		console.log(name);
+
 		if (!(name == null || name.trim() === '')){
 			elems.projectError.text("");
 			createProject(state, elems, name);

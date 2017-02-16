@@ -69,9 +69,11 @@ const generateProject = () => {
   }
 }
 
+// tearDownDb();
+
 const seedProjectData = () => {
   console.log("hello");
-  const seedData = sampleData.projects; //generateDataArray(generateProject, 1);
+  const seedData = sampleData.projects;
   return Projects.insertMany(seedData);
 }
 

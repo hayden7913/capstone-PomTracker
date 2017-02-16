@@ -176,8 +176,7 @@ describe('Projects API resource', function() {
           res.should.have.status(201);
           res.should.be.json;
           res.body.should.be.a('object');
-          res.body.should.include.keys(
-            '_id', 'projectName', 'tasks');
+          res.body.should.include.keys('_id', 'projectName', 'tasks');
           res.body._id.should.not.be.null;
           res.body.projectName.should.equal(newProject.projectName);
           res.body.tasks.should.have.length.of(newProject.tasks.length);
@@ -214,7 +213,7 @@ describe('Projects API resource', function() {
     });
 
     it('should respond with a Conflict error if an atempt is made to create a project that already exists', function() {
-      
+
       let newProject;
        return Projects
         .findOne()
@@ -253,13 +252,10 @@ describe('Projects API resource', function() {
               res.should.have.status(200);
               res.should.be.json;
               res.body.projects.should.be.a('object');
-              res.body.projects.should.include.keys(
-                '_id', 'projectName', 'tasks');
+              res.body.projects.should.include.keys('_id', 'projectName', 'tasks');
 
               res.body.projects.tasks.forEach(function(task) {
-                task.should.include.keys(
-                  '_id', 'taskName', 'totalTime', 'log'
-                );
+                task.should.include.keys('_id', 'taskName', 'totalTime', 'log');
               });
             });
         });
@@ -389,9 +385,7 @@ describe('Projects API resource', function() {
               res.should.be.json;
               res.body.tasks.should.be.a('array');
               res.body.tasks.forEach(function(task) {
-                task.should.include.keys(
-                  '_id', 'taskName', 'totalTime', 'log'
-                );
+                task.should.include.keys('_id', 'taskName', 'totalTime', 'log');
               });
             });
         });

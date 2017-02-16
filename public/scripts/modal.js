@@ -18,8 +18,15 @@ const myConfirm = (message, okButtonClass, callback) => {
   });
 
   template.find("#btn-ok").click(() => {
-    callback(true)
+    callback(true);
     $("#myModal").remove();
+  });
+
+  $("body").keyup(function(event){
+    if(event.keyCode == 13){
+      callback(true);
+      $("#myModal").remove();
+    }
   });
 
   template.find("#modal-close").click(() => {
