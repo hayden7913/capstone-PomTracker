@@ -1,6 +1,6 @@
 const myConfirm = (message, okButtonClass, callback) => {
   const template = $(`
-    <div id="my-modal" class="modal-body">
+    <div id="myModal" class="modal-body">
       <div class="modal-content">
          <span id="modal-close">&times;</span>
           <div id="modal-message">${message}</div>
@@ -14,17 +14,17 @@ const myConfirm = (message, okButtonClass, callback) => {
 
   template.find("#btn-cancel").click(() => {
     callback(false);
-    $("#my-modal").remove();
+    $("#myModal").remove();
   });
 
   template.find("#btn-ok").click(() => {
     callback(true)
-    $("#my-modal").remove();
+    $("#myModal").remove();
   });
 
   template.find("#modal-close").click(() => {
-    $("#my-modal").remove();
-  })
+    $("#myModal").remove();
+  });
 
-  $("body").append(template)
+  $("body").append(template);
 }
