@@ -296,10 +296,9 @@ const renderProject = (state, elems, project) => {
 	const taskListWrapperHtml = $(`<div id="js-task-list-wrapper" class="task-list-wrapper"></div>`)
 	const taskFormId =`js-task-form-${project.id}`
 	const taskErrorId = `task-error-${project.id}`
-	const projectContainerTemplate = $(
+	let projectTemplate = $(
 
-	`
-		<div id="js-project-wrapper" class="project-wrapper well" >
+	`<div id="js-project-wrapper" class="project-wrapper well" >
 				<span id="js-remove" class="glyphicon glyphicon-remove"></span>
 				<div class="project-header">
 					<div class="project-name">${project.name}</div>
@@ -313,43 +312,43 @@ const renderProject = (state, elems, project) => {
 						</button>
 				</form>
 				<div id=${taskErrorId} class="error task-error"></div>
-		</div>
+		</div>`);
 
-	`);
+	projectTemplate = projectTemplate.append(taskListWrapperHtml.html(taskListHtml));
+	projectTemplate = $(`<div class="col3"><div>`).append(projectTemplate);
 
-		projectContainerTemplate.find("#js-add-new-task").click( (e) => {
-			e.stopPropagation();
-			//Hide all task forms
-			elems.projectList.find('.new-task-form').addClass("hide");
-			//Then show clicked task form
-			elems.projectList.find(`#${taskFormId}`).removeClass("hide") .find("input").focus();
-			state.focusedFormId = `${taskFormId}`;
-		});
+	projectTemplate.find("#js-add-new-task").click( (e) => {
+		e.stopPropagation();
+		elems.projectList.find('.new-task-form').addClass("hide");
+		elems.projectList.find(`#${taskFormId}`).removeClass("hide") .find("input").focus();
+		state.focusedFormId = `${taskFormId}`;
+	});
 
-		projectContainerTemplate.find(`#${taskFormId}`).on("submit", function(e) {
-			e.preventDefault();
 
-			const name = $(this).find("input").val();
 
-			if (!(name == null || name.trim() === '')){
-				elems.taskError.text("");
-				createTask(state, elems, name, project.id);
-				$(`#${taskFormId}`).val("");
-			} else {
-				console.log('hello');
-				elems.projectList.find(`#${taskFormId}`).find("input").focus();
-				elems.projectList.find(`#task-error-${project.id}`).text(state.errorMessage.emptyTask);
-			}
-		});
+	projectTemplate.find(`#${taskFormId}`).on("submit", function(e) {
+		e.preventDefault();
 
-		projectContainerTemplate.find("#js-remove").click(() => {
-				deleteProject(state, elems, project);
-		});
+		const name = $(this).find("input").val();
 
-		const inner = projectContainerTemplate.append(taskListWrapperHtml.html(taskListHtml));
-  	const result = $(`<div class="col3"><div>`).append(inner);
+		if (!(name == null || name.trim() === '')){
+			elems.taskError.text("");
+			createTask(state, elems, name, project.id);
+			$(`#${taskFormId}`).val("");
+		} else {
+			console.log('hello');
+			elems.projectList.find(`#${taskFormId}`).find("input").focus();
+			elems.projectList.find(`#task-error-${project.id}`).text(state.errorMessage.emptyTask);
+		}
+	});
 
-		return result;
+	projectTemplate.find("#js-remove").click(() => {
+			deleteProject(state, elems, project);
+	});
+
+
+
+	return projectTemplate;
 }
 
 const renderProjectList = (state, elems) => {
@@ -386,8 +385,6 @@ const initbodyClickHandler = (state, elems) => {
 
 		elems.projectList.find(".error").text("");
 		elems.projectError.text("");
-
-console.log('hello');
 
 		if (!$(e.target).hasClass("new-task-input") && !$(e.target).hasClass('task-submit-button') && !$(e.target).hasClass('plus') ) {
 				elems.projectList.find(".new-task-form").addClass("hide");

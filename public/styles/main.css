@@ -266,7 +266,7 @@ header {
 	font-weight: bold;
 	font-size: 25px;
 	width: 200px;
-	border: 1px solid #000;
+	/* border: 1px solid #000; */
 	/* word-break:break-all; */
 }
 
@@ -328,9 +328,15 @@ header {
 	border: 1px solid #316282;
 }
 
+.button:hover,
+.button:active,
+.button:focus {
+	outline: 0;
+	background: #3cb0fd;
+}
 
 .button:hover {
-  background: #3cb0fd;
+
 }
 
 .button-group .button {border-radius: 0;float: left;cursor:pointer;padding: 10px;}
@@ -424,7 +430,7 @@ header {
   }
 
 	.project-name {
-		wdith: 180px; 
+		wdith: 180px;
 	}
 
   .time-mod {
