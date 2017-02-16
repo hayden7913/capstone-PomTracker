@@ -2,9 +2,13 @@
 	box-sizing: border-box;
 }
 
-.col3 {
 
+.hide {
+ position: absolute;
+ top: -9999px;
+ left: -9999px;
 }
+
 
 body {
 	font-size: 20px;
@@ -52,13 +56,14 @@ header {
 }
 
 #new-project-form {
-	margin-bottom: 20px;
-	padding: 5px 0px;
+	padding: 30px 0px;
 }
+
+
 /*Task Module*/
 
 .time-mod-wrapper {
-	margin-top: 10px;
+	margin-top: 0px;
 	width: 300px;
 	padding: -4px 21px;
 	/* padding-right: 29px; */
@@ -67,8 +72,19 @@ header {
 
 .time-mod {
 	background-color: #ffffff;
-	padding-top: 5px !important;
+	border: 1px solid #e3e3e3;
+	-webkit-border-radius: 7px;
+	-moz-border-radius: 7px;
+	border-radius: 7px;
+	padding: 0 10px;
+	/* padding-top: 0px; */
+	padding-bottom: 15px;
+	margin-bottom: 10px;
 	width: 300px;
+}
+
+.new-task-form {
+
 }
 
 .new-task-input {
@@ -89,6 +105,7 @@ header {
 
 .task-name {
 	width: 160px;
+	/* border: solid; */
 	/* word-break:break-all; */
 	margin-bottom: 17px;
 	/* position: absolute; */
@@ -117,7 +134,7 @@ header {
 	display: inline-block;
 }
 #new-project-input {
-	 width: 260px !important;
+	 width: 225px !important;
 }
 #new-project-input:focus {
 	outline: none;
@@ -168,12 +185,14 @@ header {
 
 .name-input {
     /* width: 245px; */
-    padding: 5px 20px;
-    margin: 8px 0;
+    padding: 0px 20px;
+    /* margin: -10px 0; */
+    margin-bottom: 13px;
     display: inline-block;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+    height: 33px;
 }
 
 /*.name-input,
@@ -190,7 +209,7 @@ header {
 
 
 .well {
-    border-radius: 5px;
+    border-radius: 7px;
     /*background-color: #f2f2f2;*/
     padding: 10px;
 }
@@ -203,6 +222,7 @@ header {
 	display: inline-block;
 	border-radius: 5px;
 	background-color: #f2f2f2;
+	border: 1px solid #e3e3e3;
 	padding: 5px 18px;
 	vertical-align: top;
 	/* margin: 10px 10px; */
@@ -222,8 +242,8 @@ header {
 
 .total-project-time {
 	position: absolute;
-	right: 25px;
-	top: 0px;
+	right: 10px;
+	top: 5px;
 }
 
 .glyphicon-remove {
@@ -246,8 +266,8 @@ header {
 	font-weight: bold;
 	font-size: 25px;
 	width: 200px;
-	/* border: 1px solid #000; */
-	word-break:break-all;
+	border: 1px solid #000;
+	/* word-break:break-all; */
 }
 
 .project-header {
@@ -257,10 +277,12 @@ header {
 
 .add-new-task {
 	text-decoration: underline;
-	margin-bottom: 10px;
+	margin-bottom: 14px;
 	opacity: .45;
 	font-size: 18px;
-	padding: 7px 0px;
+	/* padding: 7px 0px; */
+	padding-top: 2px;
+	padding-left: 2px;
 }
 
 .add-new-task:hover {
@@ -277,7 +299,7 @@ header {
 	border-radius: 100px;
 	color: white;
 	font-size: 15px;
-	padding: 10px 12px;
+	padding: 7px 15px;
 	cursor:pointer;
 	display: inline-block;
 }
@@ -300,7 +322,7 @@ header {
 	border-radius: 7px;
 	color: white;
 	font-size: 15px;
-	padding: 10px 14px;
+	padding: 0 14px;
 	cursor:pointer;
 	height: 35px;
 	border: 1px solid #316282;
@@ -311,7 +333,7 @@ header {
   background: #3cb0fd;
 }
 
-.button-group .button {border-radius: 0; float: left; cursor:pointer;padding: 10px;}
+.button-group .button {border-radius: 0;float: left;cursor:pointer;padding: 10px;}
 
 
 .button-group .button:not(:last-child) {
@@ -321,6 +343,7 @@ header {
 .button.button-left {
 	border-bottom-left-radius: 7px;
 	border-top-left-radius: 7px;
+	/* padding: 5px; */
 }
 
 /*.button.button-right {
@@ -399,6 +422,10 @@ header {
     padding: 5px 9px;
     font-size: 17px;
   }
+
+	.project-name {
+		wdith: 180px; 
+	}
 
   .time-mod {
     width: 282px;

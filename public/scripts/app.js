@@ -177,7 +177,7 @@ const deleteProject = (state, elems, _project) => {
     }
   }
 
-  myConfirm(confirmMessage, "button", onConfirm);
+  bootbox.confirm(confirmMessage, onConfirm);
 }
 
 const deleteTask = (state, elems, _task, _project) => {
@@ -200,8 +200,8 @@ const deleteTask = (state, elems, _task, _project) => {
       renderProjectList(state, elems);
     }
   }
-
 	myConfirm(confirmMessage, "button", onConfirm);
+  // bootbox.confirm(confirmMessage, onConfirm);
 }
 
 const renderTask = (state, elems, task, project) => {
@@ -224,7 +224,7 @@ const renderTask = (state, elems, task, project) => {
 									<form id="custom-input-form-${task.id}" class="custom-input-form">
 										<input id="custom-input-${task.id}" type="text" class="custom-input" placeholder="+m" >
 										<button class="custom-input-submit-button" type="submit">
-											<span class="glyphicon glyphicon-plus custom-input-submit-icon"></span>
+											<i class="fa fa-plus custom-input-submit-icon" aria-hidden="true"></i>
 										</button>
 									</form>
 							</div>
@@ -309,7 +309,7 @@ const renderProject = (state, elems, project) => {
 				<form id=${taskFormId} class="new-task-form ${taskFormId === state.focusedFormId ? "" : "hide"}">
 					<input  class="new-task-input name-input" placeholder="Enter Task Name" type="text"></input>
 						<button class="plus">
-							<span class="glyphicon glyphicon-plus task-submit-button"></span>
+							<i class="fa fa-plus " aria-hidden="true"></i>
 						</button>
 				</form>
 				<div id=${taskErrorId} class="error task-error"></div>
@@ -356,7 +356,7 @@ const renderProjectList = (state, elems) => {
 	const projectListHtml = state.projects
 															 .map(project => renderProject(state, elems, project))
 															 .sort((a,b) => a.position - b.position)
-															// .reverse();
+															 .reverse();
 
 	elems.projectList.html(projectListHtml);
 }
@@ -387,8 +387,10 @@ const initbodyClickHandler = (state, elems) => {
 		elems.projectList.find(".error").text("");
 		elems.projectError.text("");
 
-		if (!$(e.target).hasClass('new-task-input') && !$(e.target).hasClass('task-submit-button') && !$(e.target).hasClass('plus') ) {
-				elems.projectList.find('.new-task-form').addClass("hide");
+console.log('hello');
+
+		if (!$(e.target).hasClass("new-task-input") && !$(e.target).hasClass('task-submit-button') && !$(e.target).hasClass('plus') ) {
+				elems.projectList.find(".new-task-form").addClass("hide");
 				state.focusedFormId = null;
 		}
 	});
@@ -413,28 +415,6 @@ const main = () => {
 	initProjectSubmitHandler(state, elems);
 	initbodyClickHandler(state, elems);
 
-const hello = $(`	<div class="modal-content">
-		 <span id="modal-close">&times;</span>
-			<div id="modal-message">${"test"}</div>
-			<div id="button-wrapper">
-				<button id="btn-cancel" class="modal-btn">Cancel</button>
-				<button id="btn-ok" class="${"button"} modal-btn">Okay</button>
-			</div>
-	</div>`)
-
-	const template3 = `
-    <div id="myModal" class="modal">
-      <div class="modal-content">
-         <span id="modal-close">&times;</span>
-          <div id="modal-message">${"hello"}</div>
-          <div id="button-wrapper">
-            <button id="btn-cancel" class="modal-btn">Cancel</button>
-            <button id="btn-ok" class="${"button"} modal-btn">Okay</button>
-          </div>
-      </div>
-    </div>`
-
-		//$("body").append(template3);
 }
 
 $(main);

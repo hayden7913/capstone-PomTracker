@@ -4,7 +4,8 @@
 	<title>PomTracker</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="icon" href="images/favicon.ico">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 	<link rel="stylesheet" href="styles/reset.css">
 	<link rel="stylesheet" href="styles/float-grid.css">
@@ -21,17 +22,13 @@
 		</div>
 	</header>
 
-<div id="test"></div>
-
-
-
 	<div class="row">
 		<div class="col12">
 					<form id="new-project-form" action="">
 						<label for="new-project">Create New Project: </label>
 						  <input type="text" id="new-project-input" class="name-input" placeholder="Enter Project Name" />
 						  	<button type="submit" class="plus">
-									<span class="glyphicon glyphicon-plus task-submit-button"></span>
+									<i class="fa fa-plus" aria-hidden="true"></i>
 								</button>
 					  <span id="project-error" class="error"></span>
 					</form>
