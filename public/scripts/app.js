@@ -93,7 +93,7 @@ const createProject = (state, elems, name) => {
 
 const setState = (state, elems, data) => {
   state.projects = data.projects.map(project => {
-    const tasks = project.tasks.map(task => new Task (task.taskName, task.totalTime, task.log, task._id));
+    const tasks = project.tasks.map(task => new Task (task.taskName, task.totalTime, task.log, task._id))f;
     return new Project(project.projectName, project.position, tasks, project._id);
   });
 
