@@ -1,50 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>PomTracker</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="icon" href="images/favicon.ico">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
-	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-	<link rel="stylesheet" href="styles/reset.css">
-	<link rel="stylesheet" href="styles/float-grid.css">
-	<link rel="stylesheet" href="styles/modal.css">
-	<link rel="stylesheet" href="styles/main.css">
-
+  <title>PomTracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/favicon.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <link rel="stylesheet" href="styles/reset.css">
+  <link rel="stylesheet" href="styles/float-grid.css">
+  <link rel="stylesheet" href="styles/modal.css">
+  <link rel="stylesheet" href="styles/main.css">
 </head>
+
 <body>
+  <header>
+    <div id="header-contents-container">
+      <img id="logo" class="header-contents" src="images/android-icon-48x48.png" alt="">
+      <h1 id="title" class= "header-contents" >PomTracker</h1>
+    </div>
+  </header>
 
-	<header>
-		<div id="header-contents-container">
-			<img id="logo" class="header-contents" src="images/android-icon-48x48.png" alt="">
-			<h1 id="title" class= "header-contents" >PomTracker</h1>
-		</div>
-	</header>
+  <div class="row">
+    <div class="col12">
+      <form id="new-project-form" class="new-project-form-style" action="">
+        <label for="new-project-input">Create New Project:</label>
+          <input type="text" id="new-project-input" class="name-input" placeholder="Enter Project Name" />
+            <button type="submit" class="submit-button">
+              <i class="fa fa-plus" aria-hidden="true"></i>
+            </button>
+        <div id="project-error" class="error"></div>
+      </form>
+    </div>
+  </div>
 
-	<div class="row">
-		<div class="col12">
-					<form id="new-project-form" action="">
-						<label for="new-project-input">Create New Project: </label>
-						  <input type="text" id="new-project-input" class="name-input" placeholder="Enter Project Name" />
-						  	<button type="submit" class="submit-button">
-									<i class="fa fa-plus" aria-hidden="true"></i>
-								</button>
-					  <div id="project-error" class="error"></div>
-					</form>
+  <div id="project-list" class="row"></div>
 
-		</div>
-</div>
-
-
-
-
-	<div id="project-list" class="row"></div>
-
-
-
-
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-	<script src="scripts/modal.js"></script>
-	<script src="scripts/app.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="scripts/modal.js"></script>
+  <script src="scripts/app.js"></script>
 </body>
 </html>

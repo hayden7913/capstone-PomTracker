@@ -15,13 +15,11 @@ projectRouter.route('/')
         });
   })
   .post((req,res) => {
-
     if (!('projectName' in req.body)) {
       const message = `Missing projectName in request body`
       console.error(message);
       return res.status(400).send(message);
     }
-
 
   Projects
     .findOne({'projectName': req.body.projectName})
@@ -82,7 +80,7 @@ projectRouter.route('/:projectId')
           res.status(409).send(message);
         } else {
         return Projects
-                .findByIdAndUpdate(req.params.projectId, {'$push': toUpdate}, {new: true});
+          .findByIdAndUpdate(req.params.projectId, {'$push': toUpdate}, {new: true});
         }
       })
       .then(project => res.status(201).json(project.tasks[project.tasks.length-1]))
@@ -92,12 +90,8 @@ projectRouter.route('/:projectId')
       });
    })
    .put((req, res) => {
-
      if (!((req.params.projectId && req.body._id) && (req.params.projectId === req.body._id))) {
-
-       const message = (
-         `Request path id (${req.params.projectId}) and request body id ` +
-         `(${req.body._id}) must match`);
+       const message = (`Request path id (${req.params.projectId}) and request body id (${req.body._id}) must match`);
        console.error(message);
        res.status(400).json({message: message});
      }
@@ -124,6 +118,5 @@ projectRouter.route('/:projectId')
        .then(project => res.status(204).end())
        .catch(err => res.status(404).json({message: 'Not Found'}));
    });
-
 
 module.exports = projectRouter;

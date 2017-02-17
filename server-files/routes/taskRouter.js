@@ -9,9 +9,7 @@ taskRouter.route('/')
       .exec()
       .then(projects => {
         const tasks = projects.tasks;
-        res.json({
-          tasks
-        });
+        res.json({tasks});
       })
       .catch(
         err => {
@@ -22,7 +20,6 @@ taskRouter.route('/')
 
 taskRouter.route('/:taskId')
   .put((req, res) => {
-
     const requiredTaskFields = ['taskName', 'totalTime'];
 
     for (let i=0; i<requiredTaskFields.length; i++) {
@@ -35,12 +32,11 @@ taskRouter.route('/:taskId')
     }
 
     const totalTime = req.body.totalTime < 0 ? 0 : req.body.totalTime;
-
     const toUpdate = {
       'tasks.$.taskName': req.body.taskName,
       'tasks.$.totalTime': totalTime,
       'tasks.$.log': req.body.log
-    }
+    };
 
     Projects
       .update(

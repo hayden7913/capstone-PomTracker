@@ -3,8 +3,6 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const app = express();
 
-mongoose.Promise = global.Promise;
-
 const {PORT, DATABASE_URL} = require('./server-files/config');
 const {Projects} = require('./server-files/models');
 const {sampleData} = require('./server-files/sampleData')
@@ -12,19 +10,21 @@ const {sampleData} = require('./server-files/sampleData')
 const projectRouter = require('./server-files/routes/projectRouter');
 const taskRouter = require('./server-files/routes/taskRouter');
 
+mongoose.Promise = global.Promise;
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + '/public'));
 
 projectRouter.use('/:id/tasks', taskRouter);
 app.use('/projects', projectRouter);
-
 app.use('*', function(req, res) {
   res.status(404).json({message: 'Not Found'});
 });
 
 const seedSampleData = () => {
   const seedData = sampleData.projects;
+  
   return Projects.insertMany(seedData);
 }
 
@@ -32,7 +32,10 @@ const seedSampleData = () => {
   return new Promise((resolve, reject) => {
     console.warn('Resetting database');
     mongoose.connection.dropDatabase()
-      .then(result => { seedSampleData(); resolve(result)})
+      .then(result => { 
+        seedSampleData(); 
+        resolve(result)
+      })
       .catch(err => reject(err));
   });
 })();
