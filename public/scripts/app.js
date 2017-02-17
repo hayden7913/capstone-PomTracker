@@ -93,7 +93,7 @@ const createProject = (state, elems, name) => {
 
 const setState = (state, elems, data) => {
   state.projects = data.projects.map(project => {
-    const tasks = project.tasks.map(task => new Task (task.taskName, task.totalTime, task.log, task._id))f;
+    const tasks = project.tasks.map(task => new Task (task.taskName, task.totalTime, task.log, task._id));
     return new Project(project.projectName, project.position, tasks, project._id);
   });
 
@@ -289,10 +289,12 @@ const renderProject = (state, elems, project) => {
     </div>
     <div class="js-add-new-task add-new-task ">Add new task..</div>
     <form id=${taskFormId} class="new-task-form ${taskFormId === state.focusedFormId ? "" : "hide"}">
-      <input  class="new-task-input name-input" placeholder="Enter Task Name" type="text"></input>
-        <button class="task-submit-button submit-button">
-          <i class="fa fa-plus " aria-hidden="true"></i>
-        </button>
+      <div class="no-wrap-input-submit">
+        <input  class="new-task-input name-input" placeholder="Enter Task Name" type="text"></input>
+          <button class="task-submit-button submit-button">
+            <i class="fa fa-plus " aria-hidden="true"></i>
+          </button>
+      </div>
     </form>
     <div id=${taskErrorId} class="error task-error"></div>
   </div>`)

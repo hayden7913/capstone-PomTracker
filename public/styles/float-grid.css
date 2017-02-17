@@ -79,42 +79,13 @@
   }
 }
 
-@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+@media only screen and (min-width : 320px) and (max-width : 480px) {
 
   .row {
-    padding: 0px 0px;
+    padding: 0px 5px;
   }
 
   .col3 {
     width: 100%;
   }
 }
-
-
-/*Smartphones (portrait and landscape) ----------- / @media only screen and (min-device-width : 320px) and (max-device-width : 480px) { / Styles / }*/
-
-
-/*@media only screen and (max-width: 1700px) {
-  .col2 {
-    width: 16.66%;
-  }
-  .col3 {
-    width: 33%;
-  }
-
-  .col4 {
-    width: 33.33%;
-  }
-
-  .col6 {
-    width: 50%;
-  }
-
-  .col9 {
-    width: 75%;
-  }
-  .col12 {
-    width: 100%;
-    text-align: left;
-  }
-}*/
