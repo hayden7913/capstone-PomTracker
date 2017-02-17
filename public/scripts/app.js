@@ -373,12 +373,8 @@ const initbodyClickHandler = (state, elems) => {
 const main = () => {
   const elems = {
     newProject: $("#new-project-form"),
-    projectSelect: $("#selectProject"),
-    newTask : $("#new-task-form"),
-    taskList: $("#taskList"),
     projectList: $("#project-list"),
     projectInput: $("#new-project-input"),
-    taskInput:$("#js-new-task-input"),
     projectError: $("#project-error"),
     taskError: $("#task-error"),
     timeInputError: $("#invalid-time-error")
