@@ -278,9 +278,9 @@ const renderTaskList = (state, elems, project) => {
 
 const renderProject = (state, elems, project) => {
   const taskListHtml = renderTaskList(state, elems, project);
-  const taskListWrapperHtml = $(`<div id="js-task-list-wrapper" class="task-list-wrapper"></div>`);
   const taskFormId =`js-task-form-${project.id}`;
   const taskErrorId = `task-error-${project.id}`;
+  let taskListWrapperHtml = $(`<div id="js-task-list-wrapper" class="task-list-wrapper"></div>`);
   let projectTemplate = $(
   `<div id="js-project-wrapper" class="project-wrapper well" >
     <span id="js-remove" class="delete-project-button">&times</span>
@@ -296,10 +296,12 @@ const renderProject = (state, elems, project) => {
         </button>
     </form>
     <div id=${taskErrorId} class="error task-error"></div>
-  </div>`);
-
-  projectTemplate = projectTemplate.append(taskListWrapperHtml.html(taskListHtml));
+  </div>`)
+  
+  taskListWrapperHtml.html(renderTaskList(state, elems, project));
+  projectTemplate.append(taskListWrapperHtml);
   projectTemplate = $(`<div class="col3"><div>`).append(projectTemplate);
+    
   projectTemplate.find("#js-add-new-task").click( (e) => {
     e.stopPropagation();
     elems.projectList.find('.new-task-form').addClass("hide");

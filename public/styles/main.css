@@ -15,7 +15,7 @@ header {
   height: 50px;
 }
 
-#header-contents-container {
+.header-contents-container {
   position: absolute;
   left: 35px;
   bottom: 0px;
@@ -29,34 +29,28 @@ header {
   display: inline-block;
 }
 
-#title {
+.page-title {
   line-height: 10px;
   left: 50px;
   bottom: 20px;
 }
 
-#logo {
+.logo {
   position: absolute;
   bottom: 2px;
 }
 
 /*Create New Project Form*/
 
-
-#new-project-form-style {
+.new-project-form-style {
   padding: 30px;
 }
 
-#new-project {
-  margin-bottom: 10px;
-  display: inline-block;
-}
-
-#new-project-input {
+.new-project-input-style {
    width: 225px;
 }
 
-#new-project-input:focus {
+.new-project-input-style:focus {
   outline: none;
 }
 
@@ -321,7 +315,7 @@ header {
 }
 
 @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
-  #new-project-form {
+  .new-project-form-style {
     padding: 15px 10px;
     margin-bottom: 0px;
   }
