@@ -305,7 +305,7 @@ const renderProject = (state, elems, project) => {
 				<div id="js-add-new-task" class="add-new-task ">Add new task..</div>
 				<form id=${taskFormId} class="new-task-form ${taskFormId === state.focusedFormId ? "" : "hide"}">
 					<input  class="new-task-input name-input" placeholder="Enter Task Name" type="text"></input>
-						<button class="plus">
+						<button class="task-submit-button submit-button">
 							<i class="fa fa-plus " aria-hidden="true"></i>
 						</button>
 				</form>
@@ -383,7 +383,7 @@ const initbodyClickHandler = (state, elems) => {
 		elems.projectList.find(".error").text("");
 		elems.projectError.text("");
 
-		if (!$(e.target).hasClass("new-task-input") && !$(e.target).hasClass('task-submit-button') && !$(e.target).hasClass('plus') && !$(e.target).hasClass('fa-plus') ) {
+		if (!$(e.target).hasClass("new-task-input") && !$(e.target).hasClass('task-submit-button') && !$(e.target).hasClass('fa-plus') ) {
 				elems.projectList.find(".new-task-form").addClass("hide");
 				state.focusedFormId = null;
 		}

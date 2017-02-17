@@ -2,14 +2,6 @@
 	box-sizing: border-box;
 }
 
-
-.hide {
- position: absolute;
- top: -9999px;
- left: -9999px;
-}
-
-
 body {
 	font-size: 20px;
 	font-family: 'Open Sans', sans-serif;
@@ -40,196 +32,79 @@ header {
 #title {
 	line-height: 10px;
 	left: 50px;
-  top: -30px;
+	bottom: 20px;
 }
 
 #logo {
 	position: absolute;
-	top: -50px;
+	bottom: 2px;
 }
 
+/*Create New Project Form*/
 
-.error {
-  /* margin-left: 5px; */
-  color: red;
-  font-size: 15px;
-}
 
 #new-project-form {
-	padding: 30px 0px;
+	padding: 30px;
 }
-
-
-/*Task Module*/
-
-.time-mod-wrapper {
-	margin-top: 0px;
-	width: 300px;
-	padding: -4px 21px;
-	/* padding-right: 29px; */
-	margin-right: -21px;
-}
-
-.time-mod {
-	background-color: #ffffff;
-	border: 1px solid #e3e3e3;
-	-webkit-border-radius: 7px;
-	-moz-border-radius: 7px;
-	border-radius: 7px;
-	padding: 0 10px;
-	/* padding-top: 0px; */
-	padding-bottom: 15px;
-	margin-bottom: 10px;
-	width: 300px;
-}
-
-.new-task-form {
-
-}
-
-.new-task-input {
-	width: 225px;
-}
-
-.new-task-input:focus {
-	outline: none;
-
-
-}
-
-.task-error {
- width: 300px;
-}
-
-
-
-.task-name {
-	width: 160px;
-	/* border: solid; */
-	/* word-break:break-all; */
-	margin-bottom: 17px;
-	/* position: absolute; */
-}
-
-.total-task-time {
-	position: absolute;
-	top: 0px;
-	right: 10px;
-}
-
-.top-row {
-	position: relative;
-	top: 10px;
-	font-size: 20px;
-	margin-bottom: 5px;
-	display: inline-block;
-	width: 100%;
-}
-
-
-
 
 #new-project {
 	margin-bottom: 10px;
 	display: inline-block;
 }
+
 #new-project-input {
-	 width: 225px !important;
+	 width: 225px;
 }
+
 #new-project-input:focus {
 	outline: none;
 }
 
-
-
-
-.project-form-wrapper {
-	display: inline-block;
-	margin-bottom: 20px;
-}
-
-.sell {
-	position: absolute;
-	width: 75px;
-	height: 25px;
-	right: 0px;
-	top: -30px;
-}
-
-.timeMod > * {
-	margin-top: 15px;
-}
-
-#title {
-	margin-right: 10px;
-
-}
-
-
-.time-buttons {
-	margin-top: 25px;
+.submit-button {
+	background-color: #4CAF50;
+	-webkit-border-radius: 100;
+	-moz-border-radius: 100;
+	border-radius: 100px;
+	color: white;
+	font-size: 15px;
+	padding: 7px 15px;
+	cursor:pointer;
 	display: inline-block;
 }
 
-.control-buttons {
-	display: inline-block;
-	margin-top: 10px;
-	clear: both;
+.submit-button:hover {
+	background-color: #43A047;
 }
 
-/*.control-buttons > button {
-	padding: 10px 15px;
-}*/
-
-
-
-.name-input {
-    /* width: 245px; */
-    padding: 0px 20px;
-    /* margin: -10px 0; */
-    margin-bottom: 13px;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    height: 33px;
+.submit-button:hover,
+.submit-button:active,
+.submit-button:focus {
+	outline: 0;
 }
 
-/*.name-input,
-.name-input::-webkit-input-placeholder
-/*.custom-input::-moz-placeholder,
-.custom-input:-moz-placeholder,*/
-/*.custom-input:--ms-input-placeholder*/ {
-  /*  font-size: 15px;
-    line-height: 3;
-		padding-left: 3px;*/
+.error {
+  color: red;
+  font-size: 15px;
+}
 
-}*/
-
+/*Project Module*/
 
 
 .well {
     border-radius: 7px;
-    /*background-color: #f2f2f2;*/
     padding: 10px;
 }
 
 .project-wrapper {
-	/* font-size: 20px; */
 	position: relative;
-	overflow: hidden;
-	/* overflow: scroll; */
 	display: inline-block;
 	border-radius: 5px;
 	background-color: #f2f2f2;
 	border: 1px solid #e3e3e3;
 	padding: 5px 18px;
 	vertical-align: top;
-	/* margin: 10px 10px; */
-	/* min-width: 345px; */
 	width: 337px;
 	min-height: 125px;
-	/* height: 600px; */
 	max-width: 600px;
 	position: relative;
 	text-align: left;
@@ -239,6 +114,14 @@ header {
 .project-header {
 	position: relative;
 	margin-top: 12px;
+	margin-bottom: 10px;
+}
+
+.project-name {
+	display: inline-block;
+	font-weight: bold;
+	font-size: 25px;
+	width: 200px;
 }
 
 .total-project-time {
@@ -246,7 +129,6 @@ header {
 	right: 10px;
 	top: 5px;
 }
-
 
 .delete-project-button {
    position: absolute;
@@ -265,34 +147,11 @@ header {
     cursor: pointer;
 }
 
-.glyphicon-remove:hover {
-    opacity: 0.5;
-}
-
-.project-name-wrapper {
-
-}
-
-.project-name {
-	display: inline-block;
-	font-weight: bold;
-	font-size: 25px;
-	width: 200px;
-	/* border: 1px solid #000; */
-	/* word-break:break-all; */
-}
-
-.project-header {
-	margin-bottom: 10px;
-	position: relative;
-}
-
 .add-new-task {
 	text-decoration: underline;
 	margin-bottom: 14px;
 	opacity: .45;
 	font-size: 18px;
-	/* padding: 7px 0px; */
 	padding-top: 2px;
 	padding-left: 2px;
 }
@@ -302,28 +161,74 @@ header {
 	cursor: pointer;
 }
 
+/*Task Module*/
 
+.time-mod-wrapper {
+	margin-top: 0px;
+	width: 300px;
+	padding: -4px 21px;
+	margin-right: -21px;
+}
 
-.plus {
-	background-color: #4CAF50;
-	-webkit-border-radius: 100;
-	-moz-border-radius: 100;
-	border-radius: 100px;
-	color: white;
-	font-size: 15px;
-	padding: 7px 15px;
-	cursor:pointer;
+.time-mod {
+	background-color: #ffffff;
+	border: 1px solid #e3e3e3;
+	-webkit-border-radius: 7px;
+	-moz-border-radius: 7px;
+	border-radius: 7px;
+	padding: 0 10px;
+	padding-bottom: 15px;
+	margin-bottom: 10px;
+	width: 300px;
+}
+
+.hide {
+	position: absolute;
+	top: -9999px;
+	left: -9999px;
+}
+
+.name-input {
+  padding: 0px 20px;
+  margin-bottom: 13px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  height: 33px;
+}
+
+.new-task-input {
+	width: 225px;
+}
+
+.new-task-input:focus,
+.new-task-input:active {
+	outline: none;
+}
+
+.task-error {
+	width: 300px;
+}
+
+.top-row {
+	position: relative;
+	top: 10px;
+	font-size: 20px;
+	margin-bottom: 5px;
 	display: inline-block;
+	width: 100%;
 }
 
-.plus:hover {
-	background-color: #43A047;
+.task-name {
+	width: 160px;
+	margin-bottom: 17px;
 }
 
-.plus:hover,
-.plus:active,
-.plus:focus {
-	outline: 0;
+.total-task-time {
+	position: absolute;
+	top: 0px;
+	right: 10px;
 }
 
 .button {
@@ -347,12 +252,12 @@ header {
 	background: #3cb0fd;
 }
 
-.button:hover {
-
+.button-group .button {
+	border-radius: 0;
+	float: left;
+	cursor:pointer;
+	padding: 8px 7px;
 }
-
-.button-group .button {border-radius: 0;float: left;cursor:pointer;padding: 8px 7px;}
-
 
 .button-group .button:not(:last-child) {
     border-right: none;
@@ -361,26 +266,8 @@ header {
 .button.button-left {
 	border-bottom-left-radius: 7px;
 	border-top-left-radius: 7px;
-	/* padding: 5px; */
 }
 
-/*.button.button-right {
-	border-bottom-right-radius: 7px;
-	border-top-right-radius: 7px;
-}*/
-
-.time-row {
-	border: 1px solid #000;
-	width: 306px;
-	height: 59px;
-	display: inline-block;
-	position: relative;
-}
-
-.
--time-controls {
-
-}
 
 .button-group .button:hover {
   background: #3cb0fd;
@@ -389,24 +276,22 @@ header {
 .custom-input-form {
 	display: inline-block;
 }
+
 .custom-input {
 	width: 50px;
 	height: 35px;
 	border-radius: 0px 7px 7px 0px;
 	-moz-border-radius: 0px 7px 7px 0px;
 	-webkit-border-radius: 0px 7px 7px 0px;
-	/* display: inline-block; */
 	float: left;
 }
 
 .custom-input:focus {
 	outline:none;
 }
+
 .custom-input,
-.custom-input::-webkit-input-placeholder
-/*.custom-input::-moz-placeholder,
-.custom-input:-moz-placeholder,*/
-/*.custom-input:--ms-input-placeholder*/ {
+.custom-input::-webkit-input-placeholder {
     font-size: 15px;
     line-height: 3;
 		padding-left: 3px;
@@ -429,11 +314,18 @@ header {
 	cursor: pointer;
 }
 
+.control-buttons {
+	display: inline-block;
+	margin-top: 10px;
+	clear: both;
+}
+
 @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
 	#new-project-form {
 		padding: 15px 10px;
 		margin-bottom: 0px;
 	}
+
   .project-wrapper {
     width: 300px;
     padding: 5px 9px;
@@ -448,18 +340,4 @@ header {
     width: 282px;
     padding: 20px 10px;
   }
-
 }
-
-/*
-button {
-    background-color: #337ab7;
-    border: none;
-    color: white;
-    padding: 10px 32px;
-    text-align: center;
-    display: inline-block;
-    border-radius: 3px;
-    width: 75px;
-    font-size: 20px;
-}*/

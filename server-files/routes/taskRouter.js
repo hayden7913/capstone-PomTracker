@@ -1,6 +1,6 @@
 const express = require('express');
 const taskRouter = express.Router({mergeParams: true});
-const {Projects} = require('./models');
+const {Projects} = require('../models');
 
 taskRouter.route('/')
   .get((req, res) => {

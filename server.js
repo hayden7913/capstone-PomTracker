@@ -1,17 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-/*const faker = require('faker');*/
 const app = express();
 
 mongoose.Promise = global.Promise;
 
-const {PORT, DATABASE_URL} = require('./config');
-const {Projects} = require('./models');
-const {sampleData} = require('./sampleData')
+const {PORT, DATABASE_URL} = require('./server-files/config');
+const {Projects} = require('./server-files/models');
+const {sampleData} = require('./server-files/sampleData')
 
-const projectRouter = require('./projectRouter');
-const taskRouter = require('./taskRouter');
+const projectRouter = require('./server-files/routes/projectRouter');
+const taskRouter = require('./server-files/routes/taskRouter');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -24,69 +23,19 @@ app.use('*', function(req, res) {
   res.status(404).json({message: 'Not Found'});
 });
 
-const generateProjectName = () => {
-  const parents = ["Node Capstone", "React Tutorial", "Remodel Kitchen"];
-  return parents[Math.floor(Math.random() * parents.length)];
-}
-
-const generateTime = () => {
-  const hours = Math.floor(Math.random() * 24);
-  let minutes = Math.floor(Math.random() * 60);
-  if (minutes.toString().length === 1) {
-    minutes = `0${minutes}`
-  }
-  return `${hours}:${minutes}`
-}
-
-const generateTaskLogEntry = () => {
-  return {
-    startTime: generateTime(),
-    endTime: generateTime()
-  }
-}
-
-const generateDataArray = (callback, maxLength) => {
-  let arr = [];
-  for (let i = 0; i < Math.random() * maxLength + 1; i++) {
-    arr.push(callback())
-  }
-  return arr
-}
-
-const generateTask = () => {
-  return {
-    taskName: faker.lorem.word(),
-    totalTime: Math.floor(Math.random()*20),
-    log: generateDataArray(generateTaskLogEntry, 0)
-
-  }
-}
-
-const generateProject = () => {
-  return {
-    projectName: faker.lorem.word(),
-    tasks: generateDataArray(generateTask, 1),
-  }
-}
-
-
-
-const seedProjectData = () => {
+const seedSampleData = () => {
   const seedData = sampleData.projects;
   return Projects.insertMany(seedData);
 }
 
-
-function resetDb() {
+(function resetDb() {
   return new Promise((resolve, reject) => {
     console.warn('Resetting database');
     mongoose.connection.dropDatabase()
-      .then(result => { seedProjectData(); resolve(result)})
+      .then(result => { seedSampleData(); resolve(result)})
       .catch(err => reject(err));
   });
-}
-
-resetDb();
+})();
 
 function tearDownDb() {
   return new Promise((resolve, reject) => {
@@ -96,7 +45,6 @@ function tearDownDb() {
       .catch(err => reject(err));
   });
 }
-
 
 let server;
 

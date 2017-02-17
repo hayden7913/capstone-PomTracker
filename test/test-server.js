@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 const should = chai.should();
 
-const {Projects} = require('../models');
+const {Projects} = require('../server-files/models');
 const {app, runServer, closeServer} = require('../server');
 
 chai.use(chaiHttp);
