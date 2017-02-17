@@ -216,9 +216,9 @@ const renderTask = (state, elems, task, project) => {
     </div>
         <span id="invalid-time-error-${task.id}" class="error"></span>
       <div class="control-buttons">
-        <button type="button" id="js-reset" class="button" >Reset</button>
-        <button type="button" id="js-undo" class="button" >Undo</button>
-        <button type="button" id="js-delete" class="button" >Delete</button>
+        <button type="button" class="js-reset button" >Reset</button>
+        <button type="button" class="js-undo button" >Undo</button>
+        <button type="button" class="js-delete button" >Delete</button>
       </div>
     </div>
   </div>`);
@@ -236,15 +236,15 @@ const renderTask = (state, elems, task, project) => {
      task.addTime(state, elems, 25);
    });
 
-   template.find("#js-reset").click( () => {
+   template.find(".js-reset").click( () => {
      task.reset(state, elems);
    });
 
-  template.find("#js-undo").click( () => {
+  template.find(".js-undo").click( () => {
     task.undo(state, elems);
   });
 
-  template.find("#js-delete").click( () => {
+  template.find(".js-delete").click( () => {
     deleteTask(state, elems, task, project)
   });
 
@@ -283,12 +283,12 @@ const renderProject = (state, elems, project) => {
   let taskListWrapperHtml = $(`<div id="js-task-list-wrapper" class="task-list-wrapper"></div>`);
   let projectTemplate = $(
   `<div id="js-project-wrapper" class="project-wrapper well" >
-    <span id="js-remove" class="delete-project-button">&times</span>
+    <span class="js-delete-project-button delete-project-button">&times</span>
     <div class="project-header">
       <div class="project-name">${project.name}</div>
       <div class="total-project-time">${minutesToHours(project.calculateTotalProjectTime())}</div>
     </div>
-    <div id="js-add-new-task" class="add-new-task ">Add new task..</div>
+    <div class="js-add-new-task add-new-task ">Add new task..</div>
     <form id=${taskFormId} class="new-task-form ${taskFormId === state.focusedFormId ? "" : "hide"}">
       <input  class="new-task-input name-input" placeholder="Enter Task Name" type="text"></input>
         <button class="task-submit-button submit-button">
@@ -302,7 +302,7 @@ const renderProject = (state, elems, project) => {
   projectTemplate.append(taskListWrapperHtml);
   projectTemplate = $(`<div class="col3"><div>`).append(projectTemplate);
     
-  projectTemplate.find("#js-add-new-task").click( (e) => {
+  projectTemplate.find(".js-add-new-task").click( (e) => {
     e.stopPropagation();
     elems.projectList.find('.new-task-form').addClass("hide");
     elems.projectList.find(`#${taskFormId}`).removeClass("hide") .find("input").focus();
@@ -323,7 +323,7 @@ const renderProject = (state, elems, project) => {
     }
   });
 
-  projectTemplate.find(".delete-project-button").click(() => {
+  projectTemplate.find(".js-delete-project-button").click(() => {
     deleteProject(state, elems, project);
   });
 
