@@ -13,17 +13,17 @@ const state = {
 }
 
 const minutesToHours = (min) => {
-  const hours = Math.floor(min/60);
-  const minutes = Math.round(min % 60)
+	const hours = Math.floor(min/60);
+	const minutes = Math.round(min % 60)
 
-  return `${hours}hr ${minutes}m`
+	return `${hours}hr ${minutes}m`
 }
 
 function Task(name, totalTime, log , id) {
 	this.name = name;
 	this.totalTime = Number(totalTime);
-  this.log = log;
-  this.id = id;
+	this.log = log;
+	this.id = id;
 	this.history = [totalTime];
 }
 
@@ -57,10 +57,10 @@ Task.prototype.undo = function(state, elems) {
 }
 
 function Project(name, position, tasks, id) {
-  this.name = name;
+	this.name = name;
 	this.position = position;
-  this.tasks = tasks;
-  this.id = id;
+	this.tasks = tasks;
+	this.id = id;
 }
 
 Project.prototype.calculateTotalProjectTime = function () {
@@ -68,40 +68,41 @@ Project.prototype.calculateTotalProjectTime = function () {
 }
 
 const pushNewProject = (state, elems, data) => {
-		state.projects.push(new Project(data.projectName, data.position, data.tasks, data._id));
+	state.projects.push(new Project(data.projectName, data.position, data.tasks, data._id));
 
-		renderProjectList(state, elems);
+	renderProjectList(state, elems);
 }
 
 const createProject = (state, elems, name) => {
 
 	const newProject = {
-			'projectName': name,
-			'position': state.projects.length,
-			'tasks': []
-		};
+		'projectName': name,
+		'position': state.projects.length,
+		'tasks': []
+	};
 
-		$.ajax({
-      url: `/projects`,
-      type: 'POST',
-			data: newProject,
-      success: data => pushNewProject(state, elems, data),
-			error: err => {
-				if (err.status === 409) {
-					elems.projectError.text(err.responseText);
-				}
+	$.ajax({
+		url: `/projects`,
+		type: 'POST',
+		data: newProject,
+		success: data => pushNewProject(state, elems, data),
+		error: err => {
+			if (err.status === 409) {
+				elems.projectError.text(err.responseText);
 			}
-		});
+		}
+	});
 
 }
 
-const setState = (state, elems, data) => {
-  state.projects = data.projects.map(project => {
-    const tasks = project.tasks.map(task => new Task (task.taskName, task.totalTime, task.log, task._id));
-    return new Project(project.projectName, project.position, tasks, project._id);
-  });
 
-  	renderProjectList(state, elems);
+const setState = (state, elems, data) => {
+	state.projects = data.projects.map(project => {
+		const tasks = project.tasks.map(task => new Task (task.taskName, task.totalTime, task.log, task._id));
+		return new Project(project.projectName, project.position, tasks, project._id);
+	});
+
+	renderProjectList(state, elems);
 }
 
 const getProjects = (state, elems, callback) => {
@@ -124,116 +125,115 @@ const pushNewTask = (state, elems, parentProjectId, task) => {
 
 const createTask = (state, elems, name, parentProjectId) => {
 	const newTask = {
-			'taskName': name,
-			'totalTime': 0,
-			'log': []
-		};
+		'taskName': name,
+		'totalTime': 0,
+		'log': []
+	};
 
-		$.ajax({
-      url: `/projects/${parentProjectId}`,
-      type: 'POST',
-			data: newTask,
-      success: data => pushNewTask(state, elems, parentProjectId, data), //() => getProjectById(state, elems, parentProjectId, pushNewTask.bind(null, state, elems, parentProjectId)),
-			error: err => {
-				if (err.status === 409){
-					elems.projectList.find(`#task-error-${parentProjectId}`).text(err.responseText)
-				}
+	$.ajax({
+		url: `/projects/${parentProjectId}`,
+		type: 'POST',
+		data: newTask,
+		success: data => pushNewTask(state, elems, parentProjectId, data), 
+		error: err => {
+			if (err.status === 409){
+				elems.projectList.find(`#task-error-${parentProjectId}`).text(err.responseText)
 			}
-    });
+		}
+	});
 }
 
 const updateTask = (state, elems, task, projectId) => {
 
 	const updatedTask = {
-    'taskName': task.name,
-    'totalTime': task.totalTime,
-    'log': task.log,
+		'taskName': task.name,
+		'totalTime': task.totalTime,
+		'log': task.log,
 		'_id': task.id
-  };
+	};
 
-    $.ajax({
-      url: `/projects/${projectId}/tasks/${task.id}`,
-      type: 'PUT',
-      data: updatedTask
-    });
+	$.ajax({
+		url: `/projects/${projectId}/tasks/${task.id}`,
+		type: 'PUT',
+		data: updatedTask
+	});
 }
 
 const deleteProject = (state, elems, _project) => {
 
-  const confirmMessage = `Are you sure you want to delete \"${_project.name}\" and all of it's tasks?`;
-  const onConfirm = (result) => {
+	const confirmMessage = `Are you sure you want to delete \"${_project.name}\" and all of it's tasks?`;
+	const onConfirm = (result) => {
 
-    if (result) {
-      const projectIndex = findIndexById(state.projects, _project.id);
+	if (result) {
+		const projectIndex = findIndexById(state.projects, _project.id);
 
-      state.projects.splice(projectIndex, 1);
+		state.projects.splice(projectIndex, 1);
 
-			$.ajax({
-					url: `/projects/${_project.id}`,
-					type: 'DELETE'
-			});
+		$.ajax({
+			url: `/projects/${_project.id}`,
+			type: 'DELETE'
+		});
 
-      renderProjectList(state, elems);
-    }
-  }
+		renderProjectList(state, elems);
+		}
+	}
 
-  myConfirm(confirmMessage, "button", onConfirm);
+	myConfirm(confirmMessage, "button", onConfirm);
 }
 
 const deleteTask = (state, elems, _task, _project) => {
 
-  const confirmMessage = `Are you sure you want to delete \"${_task.name}\"?`;
-  const onConfirm = (result) => {
+	const confirmMessage = `Are you sure you want to delete \"${_task.name}\"?`;
+	const onConfirm = (result) => {
 
-    if (result) {
-      const projectIndex = findIndexById(state.projects, _project.id);
-      const taskIndex = state.projects[projectIndex].tasks.findIndex(task => task.id === _task.id);
+		if (result) {
+			const projectIndex = findIndexById(state.projects, _project.id);
+			const taskIndex = state.projects[projectIndex].tasks.findIndex(task => task.id === _task.id);
 
-      state.projects[projectIndex].tasks.splice(taskIndex, 1);
+			state.projects[projectIndex].tasks.splice(taskIndex, 1);
 
 			$.ajax({
-					url: `/projects/${_project.id}/tasks/${_task.id}`,
-					type: 'DELETE'
+				url: `/projects/${_project.id}/tasks/${_task.id}`,
+				type: 'DELETE'
 			});
 
-      renderProjectList(state, elems);
-    }
-  }
+			renderProjectList(state, elems);
+		}
+	}
 	myConfirm(confirmMessage, "button", onConfirm);
 }
 
 const renderTask = (state, elems, task, project) => {
+	
 	const projectName = project.name;
 	const template = $(
-
-		`
-						<div class="time-mod-wrapper">
-							<div class="time-mod well">
-									<div class="top-row">
-										<div class="task-name name">${task.name}</div>
-										<span class="total-task-time">${minutesToHours(task.totalTime)}</span>
-									</div>
-								<div class="time-controls">
-									<div class="button-group">
-										<button type="button" class="js-btn5 button button-group button-left">+5m</button>
-										<button type="button" class="js-btn15 button button-group">+15m</button>
-										<button type="button" class="js-btn25 button button-group button-right" value="25">+25m</button>
-									</div>
-									<form id="custom-input-form-${task.id}" class="custom-input-form">
-										<input id="custom-input-${task.id}" type="text" class="custom-input" placeholder="+m" >
-										<button class="custom-input-submit-button" type="submit">
-											<i class="fa fa-plus custom-input-submit-icon" aria-hidden="true"></i>
-										</button>
-									</form>
-							</div>
-									<span id="invalid-time-error-${task.id}" class="error"></span>
-								<div class="control-buttons">
-									<button type="button" id="js-reset" class="button" >Reset</button>
-									<button type="button" id="js-undo" class="button" >Undo</button>
-									<button type="button" id="js-delete" class="button" >Delete</button>
-								</div>
-							</div>
-						</div>`);
+		`<div class="time-mod-wrapper">
+		<div class="time-mod well">
+			<div class="top-row">
+				<div class="task-name name">${task.name}</div>
+				<span class="total-task-time">${minutesToHours(task.totalTime)}</span>
+			</div>
+		<div class="time-controls">
+			<div class="button-group">
+				<button type="button" class="js-btn5 button button-group button-left">+5m</button>
+				<button type="button" class="js-btn15 button button-group">+15m</button>
+				<button type="button" class="js-btn25 button button-group button-right" value="25">+25m</button>
+			</div>
+			<form id="custom-input-form-${task.id}" class="custom-input-form">
+				<input id="custom-input-${task.id}" type="text" class="custom-input" placeholder="+m" >
+				<button class="custom-input-submit-button" type="submit">
+					<i class="fa fa-plus custom-input-submit-icon" aria-hidden="true"></i>
+				</button>
+			</form>
+		</div>
+				<span id="invalid-time-error-${task.id}" class="error"></span>
+			<div class="control-buttons">
+				<button type="button" id="js-reset" class="button" >Reset</button>
+				<button type="button" id="js-undo" class="button" >Undo</button>
+				<button type="button" id="js-delete" class="button" >Delete</button>
+			</div>
+		</div>
+	</div>`);
 
  	template.find(".js-btn5").click( () => {
  		task.addTime(state, elems, 5);
@@ -266,17 +266,17 @@ const renderTask = (state, elems, task, project) => {
 	});
 
  	template.find(`#custom-input-form-${task.id}`).on("submit", (e) => {
- 			e.preventDefault();
+		e.preventDefault();
 
-			const input = Number($(`#custom-input-${task.id}`).val());
-			if (isNaN(input)) {
-				$(`#invalid-time-error-${task.id}`).text(state.errorMessage.customInputNan);
-			} else {
-				task.addTime(state, elems, input);
-				this.reset;
-				updateTask(state, elems, task, project.id);
-				renderProjectList(state, elems);
-			}
+		const input = Number($(`#custom-input-${task.id}`).val());
+		if (isNaN(input)) {
+			$(`#invalid-time-error-${task.id}`).text(state.errorMessage.customInputNan);
+		} else {
+			task.addTime(state, elems, input);
+			this.reset;
+			updateTask(state, elems, task, project.id);
+			renderProjectList(state, elems);
+		}
  	});
 
  	return template;
@@ -284,6 +284,7 @@ const renderTask = (state, elems, task, project) => {
 
 const renderTaskList = (state, elems, project) => {
 	const taskListHtml = project.tasks.map(task => renderTask(state, elems, task, project));
+	
 	return taskListHtml.reverse();
 }
 
@@ -294,23 +295,23 @@ const renderProject = (state, elems, project) => {
 	const taskListWrapperHtml = $(`<div id="js-task-list-wrapper" class="task-list-wrapper"></div>`)
 	const taskFormId =`js-task-form-${project.id}`
 	const taskErrorId = `task-error-${project.id}`
+	
 	let projectTemplate = $(
-
 	`<div id="js-project-wrapper" class="project-wrapper well" >
-				<span id="js-remove" class="delete-project-button">&times</span>
-				<div class="project-header">
-					<div class="project-name">${project.name}</div>
-					<div class="total-project-time">${minutesToHours(project.calculateTotalProjectTime())}</div>
-				</div>
-				<div id="js-add-new-task" class="add-new-task ">Add new task..</div>
-				<form id=${taskFormId} class="new-task-form ${taskFormId === state.focusedFormId ? "" : "hide"}">
-					<input  class="new-task-input name-input" placeholder="Enter Task Name" type="text"></input>
-						<button class="task-submit-button submit-button">
-							<i class="fa fa-plus " aria-hidden="true"></i>
-						</button>
-				</form>
-				<div id=${taskErrorId} class="error task-error"></div>
-		</div>`);
+		<span id="js-remove" class="delete-project-button">&times</span>
+		<div class="project-header">
+			<div class="project-name">${project.name}</div>
+			<div class="total-project-time">${minutesToHours(project.calculateTotalProjectTime())}</div>
+		</div>
+		<div id="js-add-new-task" class="add-new-task ">Add new task..</div>
+		<form id=${taskFormId} class="new-task-form ${taskFormId === state.focusedFormId ? "" : "hide"}">
+			<input  class="new-task-input name-input" placeholder="Enter Task Name" type="text"></input>
+				<button class="task-submit-button submit-button">
+					<i class="fa fa-plus " aria-hidden="true"></i>
+				</button>
+		</form>
+		<div id=${taskErrorId} class="error task-error"></div>
+	</div>`);
 
 	projectTemplate = projectTemplate.append(taskListWrapperHtml.html(taskListHtml));
 	projectTemplate = $(`<div class="col3"><div>`).append(projectTemplate);
@@ -322,13 +323,10 @@ const renderProject = (state, elems, project) => {
 		state.focusedFormId = `${taskFormId}`;
 	});
 
-
-
 	projectTemplate.find(`#${taskFormId}`).on("submit", function(e) {
 		e.preventDefault();
 
 		const name = $(this).find("input").val();
-
 
 		if (!(name == null || name.trim() === '')){
 			elems.taskError.text("");
@@ -342,7 +340,7 @@ const renderProject = (state, elems, project) => {
 	});
 
 	projectTemplate.find(".delete-project-button").click(() => {
-			deleteProject(state, elems, project);
+		deleteProject(state, elems, project);
 	});
 
 	return projectTemplate;
@@ -350,10 +348,10 @@ const renderProject = (state, elems, project) => {
 
 const renderProjectList = (state, elems) => {
 	const projectListHtml = state.projects
-															 .map(project => renderProject(state, elems, project))
-															 .sort((a,b) => a.position - b.position)
-															 .reverse();
-
+		.map(project => renderProject(state, elems, project))
+		.sort((a,b) => a.position - b.position)
+		.reverse();
+		
 	elems.projectList.html(projectListHtml);
 }
 
@@ -384,14 +382,13 @@ const initbodyClickHandler = (state, elems) => {
 		elems.projectError.text("");
 
 		if (!$(e.target).hasClass("new-task-input") && !$(e.target).hasClass('task-submit-button') && !$(e.target).hasClass('fa-plus') ) {
-				elems.projectList.find(".new-task-form").addClass("hide");
-				state.focusedFormId = null;
+			elems.projectList.find(".new-task-form").addClass("hide");
+			state.focusedFormId = null;
 		}
 	});
 }
 
 const main = () => {
-
 	const elems = {
 		newProject: $("#new-project-form"),
 		projectSelect: $("#selectProject"),
