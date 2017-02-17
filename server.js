@@ -69,18 +69,24 @@ const generateProject = () => {
   }
 }
 
-// tearDownDb();
+
 
 const seedProjectData = () => {
   const seedData = sampleData.projects;
   return Projects.insertMany(seedData);
 }
 
-Projects
-  .findOne()
-  .exec()
-  .then(project => {if (!project) seedProjectData()})
-  .catch(err => console.error(err))
+
+function resetDb() {
+  return new Promise((resolve, reject) => {
+    console.warn('Resetting database');
+    mongoose.connection.dropDatabase()
+      .then(result => { seedProjectData(); resolve(result)})
+      .catch(err => reject(err));
+  });
+}
+
+resetDb();
 
 function tearDownDb() {
   return new Promise((resolve, reject) => {

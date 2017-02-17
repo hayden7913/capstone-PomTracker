@@ -58,7 +58,6 @@ projectRouter.route('/:projectId')
         });
   })
   .post((req, res) => {
-    console.log(req.body);
     const toUpdate = {'tasks' : req.body};
     const requiredTaskFields = ['taskName', 'totalTime'];
 
