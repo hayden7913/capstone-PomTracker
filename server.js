@@ -33,7 +33,7 @@ const seedSampleData = () => {
     console.warn('Resetting database');
     mongoose.connection.dropDatabase()
       .then(result => { 
-        seedSampleData(); 
+      /*  seedSampleData(); */
         resolve(result)
       })
       .catch(err => reject(err));

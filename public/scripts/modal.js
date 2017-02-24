@@ -22,10 +22,12 @@ const myConfirm = (message, okButtonClass, callback) => {
     $("#myModal").remove();
   });
 
-  $("body").keyup(function(event){
+  $("body").on('keyup', function(event){
+
     if(event.keyCode == 13){
       callback(true);
       $("#myModal").remove();
+      $("body").off()
     }
   });
 

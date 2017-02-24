@@ -66,7 +66,7 @@ Project.prototype.calculateTotalProjectTime = function () {
 
 const pushNewProject = (state, elems, data) => {
   state.projects.push(new Project(data.projectName, data.position, data.tasks, data._id));
-
+  console.log('new project pushed', state.projects, state.projects[state.projects.length-1]);
   renderProjectList(state, elems);
 }
 
@@ -157,14 +157,16 @@ const deleteProject = (state, elems, _project) => {
     if (result) {
       const projectIndex = findIndexById(state.projects, _project.id);
 
-      state.projects.splice(projectIndex, 1);
-
       $.ajax({
         url: `/projects/${_project.id}`,
-        type: 'DELETE'
+        type: 'DELETE',
+        success: (data) => {
+          state.projects.splice(projectIndex, 1);
+          console.log('project deleted', state.projects); 
+          renderProjectList(state, elems);
+        }
       });
-
-      renderProjectList(state, elems);
+      
       }
   }
 
@@ -332,11 +334,12 @@ const renderProject = (state, elems, project) => {
 }
 
 const renderProjectList = (state, elems) => {
+  console.log("rendering", state.projects/*.forEach(project => console.log(project))*/)
   const projectListHtml = state.projects
-    .map(project => renderProject(state, elems, project))
+    .map(project => {return renderProject(state, elems, project)})
     .sort((a,b) => a.position - b.position)
     .reverse();
-    
+  
   elems.projectList.html(projectListHtml);
 }
 
