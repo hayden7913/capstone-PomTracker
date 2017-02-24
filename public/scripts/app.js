@@ -66,7 +66,6 @@ Project.prototype.calculateTotalProjectTime = function () {
 
 const pushNewProject = (state, elems, data) => {
   state.projects.push(new Project(data.projectName, data.position, data.tasks, data._id));
-  console.log('new project pushed', state.projects, state.projects[state.projects.length-1]);
   renderProjectList(state, elems);
 }
 
@@ -162,7 +161,6 @@ const deleteProject = (state, elems, _project) => {
         type: 'DELETE',
         success: (data) => {
           state.projects.splice(projectIndex, 1);
-          console.log('project deleted', state.projects); 
           renderProjectList(state, elems);
         }
       });
@@ -334,7 +332,6 @@ const renderProject = (state, elems, project) => {
 }
 
 const renderProjectList = (state, elems) => {
-  console.log("rendering", state.projects/*.forEach(project => console.log(project))*/)
   const projectListHtml = state.projects
     .map(project => {return renderProject(state, elems, project)})
     .sort((a,b) => a.position - b.position)
