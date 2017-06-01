@@ -1,5 +1,7 @@
 require("file-loader?name=index.html!../index.html");
-import { myConfirm } from './modal'
+import { myConfirm } from './modal';
+
+console.log('hola')
 
 const state = {
   projects: [],

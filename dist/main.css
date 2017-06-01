@@ -1,0 +1,345 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-size: 20px;
+  font-family: 'Open Sans', sans-serif;
+}
+
+header {
+  position: relative;
+  width: 100%;
+  background-color: #0074D9;
+  padding: 5px;
+  height: 50px;
+}
+
+.header-contents-container {
+  position: absolute;
+  left: 35px;
+  bottom: 0px;
+  margin-left: -25px;
+  font-size: 35px;
+  display: inline-block;
+}
+
+.header-contents {
+  position: absolute;
+  display: inline-block;
+}
+
+.page-title {
+  line-height: 10px;
+  left: 50px;
+  bottom: 20px;
+}
+
+.logo {
+  position: absolute;
+  bottom: 2px;
+}
+
+/*Create New Project Form*/
+
+.new-project-form-style {
+  padding: 30px;
+}
+
+.new-project-input-style {
+   width: 225px;
+}
+
+.new-project-input-style:focus {
+  outline: none;
+}
+
+.no-wrap-input-submit {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.submit-button {
+  background-color: #4CAF50;
+  -webkit-border-radius: 100;
+  -moz-border-radius: 100;
+  border-radius: 100px;
+  color: white;
+  font-size: 15px;
+  padding: 7px 15px;
+  cursor:pointer;
+  display: inline-block;
+}
+
+.submit-button:hover {
+  background-color: #43A047;
+}
+
+.submit-button:hover,
+.submit-button:active,
+.submit-button:focus {
+  outline: 0;
+}
+
+.error {
+  color: red;
+  font-size: 15px;
+}
+
+/*Project Module*/
+
+
+.well {
+    border-radius: 7px;
+    padding: 10px;
+}
+
+.project-wrapper {
+  position: relative;
+  display: inline-block;
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  border: 1px solid #e3e3e3;
+  padding: 5px 18px;
+  vertical-align: top;
+  width: 337px;
+  min-height: 125px;
+  max-width: 600px;
+  position: relative;
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+.project-header {
+  position: relative;
+  margin-top: 12px;
+  margin-bottom: 10px;
+}
+
+.project-name {
+  display: inline-block;
+  font-weight: bold;
+  font-size: 25px;
+  width: 200px;
+}
+
+.total-project-time {
+  position: absolute;
+  right: 10px;
+  top: 5px;
+}
+
+.delete-project-button {
+   position: absolute;
+   top: 0;
+   right: 7px;
+   color: #aaa;
+   font-size: 25px;
+   font-weight: bold;
+   opacity: 1;
+}
+
+.delete-project-button:hover,
+.delete-project-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.add-new-task {
+  text-decoration: underline;
+  margin-bottom: 14px;
+  opacity: .45;
+  font-size: 18px;
+  padding-top: 2px;
+  padding-left: 2px;
+}
+
+.add-new-task:hover {
+  opacity: .8;
+  cursor: pointer;
+}
+
+/*Task Module*/
+
+.time-mod-wrapper {
+  margin-top: 0px;
+  width: 300px;
+  padding: -4px 21px;
+  margin-right: -21px;
+}
+
+.time-mod {
+  background-color: #ffffff;
+  border: 1px solid #e3e3e3;
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  border-radius: 7px;
+  padding: 0 10px;
+  padding-bottom: 15px;
+  margin-bottom: 10px;
+  width: 300px;
+}
+
+.hide {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+}
+
+.name-input {
+  padding: 0px 20px;
+  margin-bottom: 13px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  height: 33px;
+}
+
+.new-task-input {
+  width: 215px;
+}
+
+.new-task-input:focus,
+.new-task-input:active {
+  outline: none;
+}
+
+.task-error {
+  width: 300px;
+}
+
+.top-row {
+  position: relative;
+  top: 10px;
+  font-size: 20px;
+  margin-bottom: 5px;
+  display: inline-block;
+  width: 100%;
+}
+
+.task-name {
+  width: 160px;
+  margin-bottom: 17px;
+}
+
+.total-task-time {
+  position: absolute;
+  top: 0px;
+  right: 10px;
+}
+
+.button {
+  background-color: #337ab7;
+  border-color: #0495F3
+  -webkit-border-radius: 7;
+  -moz-border-radius: 7;
+  border-radius: 7px;
+  color: white;
+  font-size: 15px;
+  padding: 0 14px;
+  cursor:pointer;
+  height: 35px;
+  border: 1px solid #316282;
+}
+
+.button:hover,
+.button:active,
+.button:focus {
+  outline: 0;
+  background: #3cb0fd;
+}
+
+.button-group .button {
+  border-radius: 0;
+  float: left;
+  cursor:pointer;
+  padding: 8px 7px;
+}
+
+.button-group .button:not(:last-child) {
+    border-right: none;
+}
+
+.button.button-left {
+  border-bottom-left-radius: 7px;
+  border-top-left-radius: 7px;
+}
+
+
+.button-group .button:hover {
+  background: #3cb0fd;
+}
+
+.custom-input-form {
+  display: inline-block;
+}
+
+.custom-input {
+  width: 50px;
+  height: 35px;
+  border-radius: 0px 7px 7px 0px;
+  -moz-border-radius: 0px 7px 7px 0px;
+  -webkit-border-radius: 0px 7px 7px 0px;
+  float: left;
+}
+
+.custom-input:focus {
+  outline:none;
+}
+
+.custom-input,
+.custom-input::-webkit-input-placeholder {
+    font-size: 15px;
+    line-height: 3;
+    padding-left: 3px;
+
+}
+
+.custom-input-submit-button {
+  float: left;
+  margin-top: 5px;
+  background: none;
+  opacity: 1;
+  border: none;
+  font-size: 13px;
+  color: rgb(49, 98, 130);
+  padding-top: 5px;
+}
+
+.custom-input-submit-icon:hover {
+  color: #3cb0fd;
+  cursor: pointer;
+}
+
+.control-buttons {
+  display: inline-block;
+  margin-top: 10px;
+  clear: both;
+}
+
+@media only screen and (min-width : 320px) and (max-width : 480px) {
+  .new-project-form-style {
+    padding: 15px 10px;
+    margin-bottom: 0px;
+  }
+
+  .project-wrapper {
+    width: 285px;
+    padding: 5px 9px;
+    font-size: 17px;
+  }
+
+  .project-name {
+    wdith: 180px;
+  }
+  
+
+  .time-mod {
+    width: 265px;
+    padding: 20px 10px;
+  }
+  
+
+}
