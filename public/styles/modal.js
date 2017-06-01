@@ -1,4 +1,4 @@
-export const myConfirm = (message, okButtonClass, callback) => {
+const myConfirm = (message, okButtonClass, callback) => {
   const template = $(`
     <div id="myModal" class="modal-body">
       <div class="modal-content">
