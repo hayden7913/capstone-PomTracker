@@ -1,4 +1,3 @@
-require("file-loader?name=index.html!../index.html");
 import { myConfirm } from './modal';
 
 console.log('hola')

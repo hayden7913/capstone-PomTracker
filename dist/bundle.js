@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -74,51 +74,9 @@ module.exports = __webpack_require__.p + "index.html";
 
 /***/ }),
 /* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-const myConfirm = (message, okButtonClass, callback) => {
-  const template = $(`
-    <div id="myModal" class="modal-body">
-      <div class="modal-content">
-         <span id="modal-close">&times;</span>
-          <div id="modal-message">${message}</div>
-          <div id="button-wrapper">
-            <button id="btn-cancel" class="modal-btn">Cancel</button>
-            <button id="btn-ok" class="${okButtonClass} modal-btn">Okay</button>
-          </div>
-      </div>
-    </div>`);
-
-
-  template.find("#btn-cancel").click(() => {
-    callback(false);
-    $("#myModal").remove();
-  });
-
-  template.find("#btn-ok").click(() => {
-    callback(true);
-    $("#myModal").remove();
-  });
-
-  $("body").on('keyup', function(event){
-
-    if(event.keyCode == 13){
-      callback(true);
-      $("#myModal").remove();
-      $("body").off()
-    }
-  });
-
-  template.find("#modal-close").click(() => {
-    $("#myModal").remove();
-  });
-
-  $("body").append(template);
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = myConfirm;
-
-
+module.exports = __webpack_require__.p + "main.css";
 
 /***/ }),
 /* 2 */
@@ -126,11 +84,10 @@ const myConfirm = (message, okButtonClass, callback) => {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modal__ = __webpack_require__(1);
-__webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modal__ = __webpack_require__(3);
 
 
-
+console.log('hola')
 
 const state = {
   projects: [],
@@ -521,6 +478,63 @@ const main = () => {
 }
 
 $(main);
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+const myConfirm = (message, okButtonClass, callback) => {
+  const template = $(`
+    <div id="myModal" class="modal-body">
+      <div class="modal-content">
+         <span id="modal-close">&times;</span>
+          <div id="modal-message">${message}</div>
+          <div id="button-wrapper">
+            <button id="btn-cancel" class="modal-btn">Cancel</button>
+            <button id="btn-ok" class="${okButtonClass} modal-btn">Okay</button>
+          </div>
+      </div>
+    </div>`);
+
+
+  template.find("#btn-cancel").click(() => {
+    callback(false);
+    $("#myModal").remove();
+  });
+
+  template.find("#btn-ok").click(() => {
+    callback(true);
+    $("#myModal").remove();
+  });
+
+  $("body").on('keyup', function(event){
+
+    if(event.keyCode == 13){
+      callback(true);
+      $("#myModal").remove();
+      $("body").off()
+    }
+  });
+
+  template.find("#modal-close").click(() => {
+    $("#myModal").remove();
+  });
+
+  $("body").append(template);
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = myConfirm;
+
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(2);
+__webpack_require__(0);
+module.exports = __webpack_require__(1);
 
 
 /***/ })
