@@ -19,6 +19,16 @@ module.exports = {
     },
     
     module: {
+      rules: [{
+            test: /\.scss$/,
+            use: [{
+                loader: "style-loader" // creates style nodes from JS strings
+            }, {
+                loader: "css-loader" // translates CSS into CommonJS
+            }, {
+                loader: "sass-loader" // compiles Sass to CSS
+            }]
+        }], 
       loaders: [ 
       { 
         test   : /.js$/,
@@ -26,14 +36,10 @@ module.exports = {
         include: __dirname + '/src',
       },
       {
-        test: /\.css/,
-        loaders: ['style-loader', 'css-loader'],
-        include: __dirname + '/src'
-      },
-      {
         test: /\.(html|css)$/,
         loader: 'file-loader?name=[name].[ext]',
       },
+      
     ],
   }
 };
