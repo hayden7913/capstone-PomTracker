@@ -48,7 +48,9 @@
 	
 	var _modal = __webpack_require__(1);
 	
-	console.log('hola');
+	__webpack_require__(2);
+	
+	console.log('new js');
 	
 	var state = {
 	  projects: [],
@@ -509,6 +511,12 @@
 	}();
 
 	;
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
 
 /***/ }
 /******/ ]);
