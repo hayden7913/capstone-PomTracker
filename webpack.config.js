@@ -1,45 +1,42 @@
-var path = require("path");
+// https://medium.com/@srinisoundar/setting-up-environment-for-react-sass-es2015-babel-with-webpack-2f77445129
 
-var CLIENT_DIR = path.join(__dirname, "public", "scripts");
-var DIST_DIR   = path.join(__dirname, "dist"); 
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+function getDevTool() {
+    if (process.env.NODE_ENV !== 'production') {
+        return 'source-map'; //enables source map
+    }
+    
+    return false; 
+}
 
 module.exports = {
-    context: CLIENT_DIR,
-    entry: ["./app.js","../index.html", "../styles/main.css"],
+    entry: {
+        app: './public/scripts/app.js'
+    },
     output: {
-        path: DIST_DIR,
-        publicPath: "", 
-        filename: "bundle.js",
-         
+        filename: './dist/scripts/[name].js'
     },
-    
-    resolve: {
-      extensions: ['.js']
-    },
-    
+    devtool: getDevTool(),
     module: {
-      rules: [{
-            test: /\.scss$/,
-            use: [{
-                loader: "style-loader" // creates style nodes from JS strings
-            }, {
-                loader: "css-loader" // translates CSS into CommonJS
-            }, {
-                loader: "sass-loader" // compiles Sass to CSS
-            }]
-        }], 
-      loaders: [ 
-      { 
-        test   : /.js$/,
-        loader : 'babel-loader',
-        include: __dirname + '/src',
-      },
-      {
-        test: /\.(html|css)$/,
-        loader: 'file-loader?name=[name].[ext]',
-      },
-      
-    ],
-  }
+        loaders: [
+            {
+                test: /\.js$/,
+                exclude: /(node_modules|bower_components)/,
+                loader: 'babel',
+                query: {
+                    presets: ['react', 'es2015']
+                }
+            },
+            {
+                test: /\.scss$/,
+                loader: ExtractTextPlugin.extract('css!sass')
+            }
+        ]
+    },
+    plugins: [
+        new ExtractTextPlugin('dist/styles/main.css', {
+            allChunks: true
+        })
+    ]
 };
