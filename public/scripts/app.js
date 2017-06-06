@@ -2,7 +2,7 @@ import { myConfirm } from './modal';
 import style from '../styles/main.scss';
 
 
-console.log('hola')
+console.log('new log')
 
 const state = {
   projects: [],
